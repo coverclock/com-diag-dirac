@@ -1,6 +1,6 @@
 # com-diag-dirac
 
-Dirac is a work in progress to support complex number and matrix arithmetic in C.
+Dirac is a library to support matrix arithmetic with complex numbers in C99 and later.
 
 # Copyright
 
@@ -9,6 +9,12 @@ Copyright 2025 by the Digital Aggregates Corporation, Colorado, USA.
 # License
 
 Licensed under the terms in LICENSE.txt.
+
+# Disclaimer
+
+Dirac is a work in progress. Any rational person would have written
+this in Python. But I wanted to be able to include code using this repo
+in my other real-time and embedded projects that I have written in C.
 
 # Trademarks
 
@@ -29,6 +35,3 @@ Wheat Ridge CO 80033 USA
 
 # Abstract
 
-Any rational person would have written this in Python. But I wanted to be
-able to include code using this repo in my other real-time and embedded
-projects that I have written in C.
