@@ -32,14 +32,20 @@ int main(void)
 
         dirac_t * new2 = dirac_new(2, 3);
         ASSERT(new2 != (dirac_t *)0);
+        ASSERT(new2 != new1);
         dirac_dump(stderr);
 
         dirac_t * new3 = dirac_new(3, 2);
         ASSERT(new3 != (dirac_t *)0);
+        ASSERT(new3 != new1);
+        ASSERT(new3 != new2);
         dirac_dump(stderr);
 
         dirac_t * new4 = dirac_new(4, 4);
         ASSERT(new4 != (dirac_t *)0);
+        ASSERT(new4 != new1);
+        ASSERT(new4 != new2);
+        ASSERT(new4 != new3);
         dirac_dump(stderr);
 
         dirac_t * delete3 = dirac_delete(new3);
@@ -60,18 +66,23 @@ int main(void)
 
         dirac_t * new5 = dirac_new(0, 0);
         ASSERT(new5 != (dirac_t *)0);
+        ASSERT(new5 == new1);
         dirac_dump(stderr);
 
         dirac_t * new6 = dirac_new(2, 3);
         ASSERT(new6 != (dirac_t *)0);
+        ASSERT((new6 == new2) || (new6 == new3));
         dirac_dump(stderr);
 
         dirac_t * new7 = dirac_new(3, 2);
         ASSERT(new7 != (dirac_t *)0);
+        ASSERT((new7 == new2) || (new7 == new3));
+        ASSERT(new7 != new6);
         dirac_dump(stderr);
 
         dirac_t * new8 = dirac_new(4, 4);
         ASSERT(new8 != (dirac_t *)0);
+        ASSERT(new8 == new4);
         dirac_dump(stderr);
 
         dirac_t * delete7 = dirac_delete(new7);
