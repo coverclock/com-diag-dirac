@@ -13,6 +13,7 @@
 
 #include "com/diag/diminuto/diminuto_tree.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <complex.h>
 
 /*******************************************************************************
@@ -60,6 +61,12 @@ static inline dirac_t * dirac_fini(dirac_t * that) {
 extern dirac_t * dirac_new(size_t rows, size_t columns);
 
 extern dirac_t * dirac_delete(dirac_t * that);
+
+/*******************************************************************************
+ * AUDITING
+ ******************************************************************************/
+
+extern void dirac_audit(FILE * fp);
 
 /*******************************************************************************
  * INDEXING
