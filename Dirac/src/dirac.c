@@ -98,8 +98,9 @@ dirac_t * dirac_new(size_t rows, size_t columns)
 
 dirac_t * dirac_delete(dirac_t * that)
 {
+    size_t bytes = size(that->data.rows, that->data.columns);
     diminuto_tree_t * me = diminuto_tree_init(&(that->node.tree));
-    that->node.size = size(that->data.rows, that->data.columns);
+    that->node.size = bytes;
     diminuto_tree_t * you = diminuto_tree_search_insert_or_replace(&root, me, compare, !0);
     if (you == (diminuto_tree_t *)0) {
         /* Do  nothing. */
