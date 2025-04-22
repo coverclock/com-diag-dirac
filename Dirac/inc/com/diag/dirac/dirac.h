@@ -7,11 +7,63 @@
  *
  * Copyright 2025 Digital Aggregates Corporation, Colorado, USA.
  * Licensed under the terms in LICENSE.txt.
+ *
+ * Defines the public API for Dirac.
  */
 
 #include "com/diag/diminuto/diminuto_tree.h"
 #include <stdlib.h>
 #include <complex.h>
+
+/*******************************************************************************
+ * DATA STRUCTURES
+ ******************************************************************************/
+
+typedef struct DiracNode {
+    diminuto_tree_t tree;
+    size_t size;
+} dirac_node_t;
+
+typedef struct DiracData {
+    size_t rows;
+    size_t columns;
+    complex double matrix[0];
+} dirac_data_t;
+
+typedef union Dirac {
+    dirac_node_t node;
+    dirac_data_t data;
+} dirac_t;
+
+/*******************************************************************************
+ * MEMORY MANAGEMENT
+ ******************************************************************************/
+
+static inline size_t dirac_count(size_t rows, size_t columns) {
+    return rows * columns;
+}
+
+static inline size_t dirac_length(size_t rows, size_t columns) {
+    return dirac_count(rows, columns) * sizeof(complex double);
+}
+
+static inline size_t dirac_size(size_t rows, size_t columns) {
+    return dirac_length(rows, columns) + sizeof(dirac_t);
+}
+
+extern dirac_t * dirac_init(dirac_t * that, size_t rows, size_t columns);
+
+static inline dirac_t * dirac_fini(dirac_t * that) {
+    return that;
+}
+
+extern dirac_t * dirac_new(size_t rows, size_t columns);
+
+extern dirac_t * dirac_delete(dirac_t * that);
+
+/*******************************************************************************
+ * OPERATIONS
+ ******************************************************************************/
 
 /*
  * From complex (7) man page:
@@ -24,55 +76,5 @@
  *
  * z/w = ((a*c + b*d)/(c*c + d*d)) + ((b*c - a*d)/(c*c + d*d))*i
  */
-
-/*******************************************************************************
- * DATA STRUCTURES
- ******************************************************************************/
-
-typedef struct Dirac {
-    union DiracField {
-        struct DiracNode {
-            diminuto_tree_t tree;
-            size_t size;
-        } node;
-        struct DiracData {
-            size_t rows;
-            size_t columns;
-            complex double matrix[0];
-        } data;
-    } field;
-} dirac_t;
-
-/*******************************************************************************
- * MEMORY MANAGEMENT
- ******************************************************************************/
-
-static inline size_t dirac_matrix_payload(size_t rows, size_t columns) {
-    return rows * columns * sizeof(complex double);
-}
-
-static inline size_t dirac_matrix_size(size_t rows, size_t columns) {
-    return sizeof(dirac_t) + dirac_matrix_payload(rows, columns);
-}
-
-extern dirac_t * dirac_matrix_alloc(size_t rows, size_t columns);
-
-static inline void dirac_matrix_free(dirac_t * that) {
-    free(that);
-}
-
-extern dirac_t * dirac_matrix_init(dirac_t * that, size_t rows, size_t columns);
-
-static inline dirac_t * dirac_matrix_fini(dirac_t * that) {
-    return that;
-}
-
-extern dirac_t * dirac_matrix_new(size_t rows, size_t columns);
-
-extern dirac_t * dirac_matrix_delete(dirac_t * that);
-
-/*******************************************************************************
- * OPERATIONS
- ******************************************************************************/
 
 #endif
