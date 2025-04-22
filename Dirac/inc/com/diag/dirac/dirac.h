@@ -62,6 +62,34 @@ extern dirac_t * dirac_new(size_t rows, size_t columns);
 extern dirac_t * dirac_delete(dirac_t * that);
 
 /*******************************************************************************
+ * INDEXING
+ ******************************************************************************/
+
+static inline double complex * dirac_index_fast(dirac_t * that, size_t row, size_t column) {
+    return &(that->data.matrix[(row * that->data.columns) + column]);
+}
+
+static inline double complex * dirac_index_slow(dirac_t * that, size_t row, size_t column) {
+    double complex * here = (double complex *)0;
+    if (row >= that->data.rows) {
+        /* Do nothing. */
+    } else if (column >= that->data.columns) {
+        /* Do nothing. */
+    } else {
+        here = dirac_index_fast(that, row, column);
+    }
+    return here;
+}
+
+static inline double complex * dirac_index(dirac_t * that, size_t row, size_t column) {
+#if defined(DEBUG)
+    return dirac_index_slow(that, row, column);
+#else
+    return dirac_index_fast(that, row, column);
+#endif
+}
+
+/*******************************************************************************
  * OPERATIONS
  ******************************************************************************/
 
