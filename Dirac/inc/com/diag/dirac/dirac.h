@@ -40,33 +40,17 @@ typedef union Dirac {
  * MEMORY MANAGEMENT
  ******************************************************************************/
 
-static inline size_t dirac_count(size_t rows, size_t columns) {
-    return rows * columns;
-}
-
-static inline size_t dirac_length(size_t rows, size_t columns) {
-    return dirac_count(rows, columns) * sizeof(complex double);
-}
-
-static inline size_t dirac_size(size_t rows, size_t columns) {
-    return dirac_length(rows, columns) + sizeof(dirac_t);
-}
-
-extern dirac_t * dirac_init(dirac_t * that, size_t rows, size_t columns);
-
-static inline dirac_t * dirac_fini(dirac_t * that) {
-    return that;
-}
-
 extern dirac_t * dirac_new(size_t rows, size_t columns);
 
 extern dirac_t * dirac_delete(dirac_t * that);
 
+extern void dirac_free(void);
+
 /*******************************************************************************
- * AUDITING
+ * DUMPING
  ******************************************************************************/
 
-extern void dirac_audit(FILE * fp);
+extern void dirac_dump(FILE * fp);
 
 /*******************************************************************************
  * INDEXING

@@ -13,10 +13,4 @@
  * Defines the privae API for Dirac.
  */
 
-extern dirac_t * dirac_alloc(size_t rows, size_t columns);
-
-static inline void dirac_free(dirac_t * that) {
-    free(that);
-}
-
 #endif
