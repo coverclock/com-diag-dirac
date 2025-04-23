@@ -156,7 +156,7 @@ int main(void)
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
                 double complex value = (double)rr + ((double)cc * I);
-                fprintf(stderr, "value %lf + %lfi\n", creal(value), cimag(value));
+                fprintf(stderr, "value %lf%s%lfi\n", creal(value), (cimag(value) < 0) ? "" : "+", cimag(value));
                 ASSERT((*here)[rr][cc] == value);
                 ASSERT(((unsigned int)creal((*here)[rr][cc])) == rr);
                 ASSERT(((unsigned int)cimag((*here)[rr][cc])) == cc);
