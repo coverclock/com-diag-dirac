@@ -122,11 +122,14 @@ int main(void)
 
         that = dirac_new(ROWS, COLS);
         ASSERT(that != (dirac_t *)0);
+        ASSERT(that->data.rows == ROWS);
+        ASSERT(that->data.columns == COLS);
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
                 aa = dirac_index(that, rr, cc);
                 fprintf(stderr, "node[%u][%u]@%p\n", rr, cc, aa);
+                ASSERT(*aa == CMPLX(0, 0));
             }
         }
 
@@ -136,6 +139,7 @@ int main(void)
             for (cc = 0; cc < COLS; ++cc) {
                 bb = &((*here)[rr][cc]);
                 fprintf(stderr, "array[%u][%u]@%p\n", rr, cc, bb);
+                ASSERT((*here)[rr][cc] == CMPLX(0, 0));
             }
         }
 
