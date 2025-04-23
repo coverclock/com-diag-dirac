@@ -129,7 +129,7 @@ int main(void)
         array_t * here;
         dirac_complex_t * aa;
         dirac_complex_t * bb;
-        unsigned int rr, cc;
+        unsigned int rr, cc, ii;
 
         that = dirac_new(ROWS, COLS);
         ASSERT(that != (dirac_t *)0);
@@ -152,6 +152,15 @@ int main(void)
             for (cc = 0; cc < COLS; ++cc) {
                 aa = dirac_point(that, rr, cc);
                 fprintf(stderr, "node(%u,%u)@%p\n", rr, cc, aa);
+                ASSERT(*aa == CMPLX(0, 0));
+            }
+        }
+
+        for (rr = 0; rr < ROWS; ++rr) {
+            for (cc = 0; cc < COLS; ++cc) {
+                ii = dirac_index(that, rr, cc);
+                aa = &(that->data.matrix[ii]);
+                fprintf(stderr, "matrix(%u,%u)[%u]@%p\n", rr, cc, ii, aa);
                 ASSERT(*aa == CMPLX(0, 0));
             }
         }
