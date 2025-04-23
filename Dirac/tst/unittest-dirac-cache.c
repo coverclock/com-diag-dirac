@@ -125,7 +125,7 @@ int main(void)
         ASSERT(that->data.rows == ROWS);
         ASSERT(that->data.columns == COLS);
         ASSERT(dirac_index_slow(that, 0, 0) != (double complex *)0);
-        ASSERT(dirac_index_slow(that, ROWS - 1, ROWS - 1) != (double complex *)0);
+        ASSERT(dirac_index_slow(that, ROWS - 1, COLS - 1) != (double complex *)0);
         ASSERT(dirac_index_slow(that, ROWS, COLS - 1) == (double complex *)0);
         ASSERT(dirac_index_slow(that, ROWS - 1, COLS) == (double complex *)0);
 
