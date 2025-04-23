@@ -161,6 +161,7 @@ int main(void)
             for (cc = 0; cc < COLS; ++cc) {
                 double complex value = (double)rr + ((double)cc * I);
                 fprintf(stderr, "value %lf%+lfi\n", creal(value), cimag(value));
+                ASSERT(value == CMPLX(rr, cc));
                 ASSERT((*here)[rr][cc] == value);
                 ASSERT(((unsigned int)creal((*here)[rr][cc])) == rr);
                 ASSERT(((unsigned int)cimag((*here)[rr][cc])) == cc);
