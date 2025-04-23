@@ -142,11 +142,11 @@ int main(void)
         ASSERT(dirac_point_fast(that, ROWS - 1, COLS) != (dirac_complex_t *)0);
         ASSERT(dirac_point_fast(that, ROWS, COLS) != (dirac_complex_t *)0);
 
-        ASSERT(dirac_point_slow(that, 0, 0) != (dirac_complex_t *)0);
-        ASSERT(dirac_point_slow(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
-        ASSERT(dirac_point_slow(that, ROWS, COLS - 1) == (dirac_complex_t *)0);
-        ASSERT(dirac_point_slow(that, ROWS - 1, COLS) == (dirac_complex_t *)0);
-        ASSERT(dirac_point_slow(that, ROWS, COLS) == (dirac_complex_t *)0);
+        ASSERT(dirac_point_safe(that, 0, 0) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_safe(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_safe(that, ROWS, COLS - 1) == (dirac_complex_t *)0);
+        ASSERT(dirac_point_safe(that, ROWS - 1, COLS) == (dirac_complex_t *)0);
+        ASSERT(dirac_point_safe(that, ROWS, COLS) == (dirac_complex_t *)0);
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {

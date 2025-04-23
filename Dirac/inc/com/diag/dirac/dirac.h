@@ -97,11 +97,11 @@ static inline dirac_complex_t * dirac_point_fast(dirac_t * that, unsigned int ro
     return &(that->data.matrix[dirac_index(that, row, column)]);
 }
 
-extern dirac_complex_t * dirac_point_slow(dirac_t * that, unsigned int row, unsigned int column);
+extern dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column);
 
 static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, unsigned int column) {
 #if defined(DEBUG)
-    return dirac_point_slow(that, row, column);
+    return dirac_point_safe(that, row, column);
 #else
     return dirac_point_fast(that, row, column);
 #endif
