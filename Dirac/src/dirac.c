@@ -145,7 +145,7 @@ void dirac_free(void)
 }
 
 /*******************************************************************************
- * DUMPING
+ * AUDITING
  ******************************************************************************/
 
 void dirac_dump(FILE * fp)
@@ -155,19 +155,24 @@ void dirac_dump(FILE * fp)
     diminuto_tree_t * nextp;
     dirac_t * that;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
-        fprintf(fp, "dirac_dump: begin\n");
-        for (rootp = &root, nodep = diminuto_tree_first(rootp); nodep != DIMINUTO_TREE_NULL; nodep = diminuto_tree_next(nodep)) {
-            that = (dirac_t *)nodep;
-            fprintf(fp, "dirac_dump: @%p[%zu]", that, that->node.size);
-            nextp = nodep->data;
-            while (nextp != (void *)0) {
-                that = (dirac_t *)nextp;
-                fprintf(fp, " @%p[%zu]", that, that->node.size);
-                nextp = nextp->data;
+        nodep = diminuto_tree_audit(&root);
+        if (nodep == (diminuto_tree_t *)0) {
+            fprintf(fp, "dirac_dump: begin\n");
+            for (rootp = &root, nodep = diminuto_tree_first(rootp); nodep != DIMINUTO_TREE_NULL; nodep = diminuto_tree_next(nodep)) {
+                that = (dirac_t *)nodep;
+                fprintf(fp, "dirac_dump: @%p[%zu]", that, that->node.size);
+                nextp = nodep->data;
+                while (nextp != (void *)0) {
+                    that = (dirac_t *)nextp;
+                    fprintf(fp, " @%p[%zu]", that, that->node.size);
+                    nextp = nextp->data;
+                }
+                fputc('\n', fp);
             }
-            fputc('\n', fp);
+            fprintf(fp, "dirac_dump: end\n");
+        } else {
+            fprintf(fp, "dirac_dump: @%p FAIL!\n", nodep);
         }
-        fprintf(fp, "dirac_dump: end\n");
     DIMINUTO_CRITICAL_SECTION_END;
     fflush(fp);
 }

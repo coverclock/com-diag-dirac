@@ -12,6 +12,7 @@
  */
 
 #include "com/diag/diminuto/diminuto_tree.h"
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <complex.h>
@@ -47,7 +48,7 @@ extern dirac_t * dirac_delete(dirac_t * that);
 extern void dirac_free(void);
 
 /*******************************************************************************
- * DUMPING
+ * AUDITING
  ******************************************************************************/
 
 extern void dirac_dump(FILE * fp);
