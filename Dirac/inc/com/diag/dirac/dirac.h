@@ -18,8 +18,10 @@
 #include <complex.h>
 
 /*******************************************************************************
- * DATA STRUCTURES
+ * TYPES
  ******************************************************************************/
+
+typedef complex double dirac_complex_t;
 
 typedef struct DiracNode {
     diminuto_tree_t tree;
@@ -29,13 +31,21 @@ typedef struct DiracNode {
 typedef struct DiracData {
     size_t rows;
     size_t columns;
-    complex double matrix[0];
+    dirac_complex_t matrix[0];
 } dirac_data_t;
 
 typedef union Dirac {
     dirac_node_t node;
     dirac_data_t data;
 } dirac_t;
+
+/*******************************************************************************
+ * MACROS
+ ******************************************************************************/
+
+#define DIRAC_ARRAY_TYPE(_TYPE_, _ROWS_, _COLS_) typedef dirac_complex_t (_TYPE_)[_ROWS_][_COLS_]
+
+#define DIRAC_ARRAY_POINTER(_TYPE_, _THAT_) ((_TYPE_ *)(&((_THAT_)->data.matrix)))
 
 /*******************************************************************************
  * MEMORY MANAGEMENT
@@ -57,12 +67,12 @@ extern void dirac_dump(FILE * fp);
  * INDEXING
  ******************************************************************************/
 
-static inline double complex * dirac_index_fast(dirac_t * that, unsigned int row, unsigned int column) {
+static inline dirac_complex_t * dirac_index_fast(dirac_t * that, unsigned int row, unsigned int column) {
     return &(that->data.matrix[(row * that->data.columns) + column]);
 }
 
-static inline double complex * dirac_index_slow(dirac_t * that, unsigned int row, unsigned int column) {
-    double complex * here = (double complex *)0;
+static inline dirac_complex_t * dirac_index_slow(dirac_t * that, unsigned int row, unsigned int column) {
+    dirac_complex_t * here = (dirac_complex_t *)0;
     if (row >= that->data.rows) {
         /* Do nothing. */
     } else if (column >= that->data.columns) {
@@ -73,17 +83,13 @@ static inline double complex * dirac_index_slow(dirac_t * that, unsigned int row
     return here;
 }
 
-static inline double complex * dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
+static inline dirac_complex_t * dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
 #if defined(DEBUG)
     return dirac_index_slow(that, row, column);
 #else
     return dirac_index_fast(that, row, column);
 #endif
 }
-
-#define DIRAC_ARRAY_TYPE(_TYPE_, _ROWS_, _COLS_) typedef double complex (_TYPE_)[_ROWS_][_COLS_]
-
-#define DIRAC_ARRAY_POINTER(_TYPE_, _THAT_) ((_TYPE_ *)(&((_THAT_)->data.matrix)))
 
 /*******************************************************************************
  * OPERATIONS

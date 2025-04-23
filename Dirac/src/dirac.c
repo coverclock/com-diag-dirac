@@ -39,7 +39,7 @@ static inline size_t count(size_t rows, size_t columns) {
 }
 
 static inline size_t length(size_t rows, size_t columns) {
-    return count(rows, columns) * sizeof(complex double);
+    return count(rows, columns) * sizeof(dirac_complex_t);
 }
 
 static inline size_t size(size_t rows, size_t columns) {

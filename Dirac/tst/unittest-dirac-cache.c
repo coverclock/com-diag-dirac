@@ -22,6 +22,10 @@ int main(void)
     SETLOGMASK();
 
     {
+        ASSERT(sizeof(complex double) == sizeof(dirac_complex_t));
+    }
+
+    {
         TEST();
 
         dirac_free();
@@ -114,20 +118,20 @@ int main(void)
         static const size_t ROWS = 3;
         static const size_t COLS = 4;
         dirac_t * that;
-        typedef double complex (array_t)[ROWS][COLS];
+        typedef dirac_complex_t (array_t)[ROWS][COLS];
         array_t * here;
-        double complex * aa;
-        double complex * bb;
+        dirac_complex_t * aa;
+        dirac_complex_t * bb;
         unsigned int rr, cc;
 
         that = dirac_new(ROWS, COLS);
         ASSERT(that != (dirac_t *)0);
         ASSERT(that->data.rows == ROWS);
         ASSERT(that->data.columns == COLS);
-        ASSERT(dirac_index_slow(that, 0, 0) != (double complex *)0);
-        ASSERT(dirac_index_slow(that, ROWS - 1, COLS - 1) != (double complex *)0);
-        ASSERT(dirac_index_slow(that, ROWS, COLS - 1) == (double complex *)0);
-        ASSERT(dirac_index_slow(that, ROWS - 1, COLS) == (double complex *)0);
+        ASSERT(dirac_index_slow(that, 0, 0) != (dirac_complex_t *)0);
+        ASSERT(dirac_index_slow(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_index_slow(that, ROWS, COLS - 1) == (dirac_complex_t *)0);
+        ASSERT(dirac_index_slow(that, ROWS - 1, COLS) == (dirac_complex_t *)0);
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
@@ -163,7 +167,7 @@ int main(void)
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
-                double complex value = (double)rr + ((double)cc * I);
+                dirac_complex_t value = (double)rr + ((double)cc * I);
                 fprintf(stderr, "value %lf%+lfi\n", creal(value), cimag(value));
                 ASSERT(value == CMPLX(rr, cc));
                 ASSERT((*here)[rr][cc] == value);
@@ -187,8 +191,8 @@ int main(void)
         dirac_t * that;
         DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
         array3x4_t * array3x4p;
-        double complex * aa;
-        double complex * bb;
+        dirac_complex_t * aa;
+        dirac_complex_t * bb;
         unsigned int rr, cc;
 
         that = dirac_new(ROWS, COLS);
