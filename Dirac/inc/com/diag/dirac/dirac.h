@@ -8,12 +8,40 @@
  * Copyright 2025 Digital Aggregates Corporation, Colorado, USA.
  * Licensed under the terms in LICENSE.txt.
  *
- * Defines the public API for Dirac.
+ * Defines the public API for Dirac, a library that supports matrix
+ * arithmetic using complex numbers.
+ *
+ * Any rational person would have written this in Python. But I wanted to
+ * be able to incorporate some of this into the real-time/embedded systems
+ * I develop in C. It also gave me an excuse to develop the object caching
+ * code, which may eventually find its way mainstreamed into the Diminuto
+ * systems programming library on which this depends.
+ *
+ * REFERENCES
+ *
+ * This work was inspired by the course "Quantum Computing for Curious
+ * Minds" [Mark Siemens, Physics and Astronomy, University of Denver]
+ * which I took in April 2025.
+ *
+ * NOTES
+ *
+ * From the "complex" (7) man page:
+ *
+ *  Given z = a+b*i and w = c+d*i then
+ *
+ *      z+w = (a+c) + (b+d)*i
+ *
+ *      z*w = (a*c - b*d) + (a*d + b*c)*i
+ *
+ *      z/w = ((a*c + b*d)/(c*c + d*d)) + ((b*c - a*d)/(c*c + d*d))*i
  */
+
+/*******************************************************************************
+ * PREREQUISITES
+ ******************************************************************************/
 
 #include "com/diag/diminuto/diminuto_tree.h"
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <complex.h>
 
@@ -58,26 +86,24 @@ extern dirac_t * dirac_delete(dirac_t * that);
 extern void dirac_free(void);
 
 /*******************************************************************************
- * AUDITING
- ******************************************************************************/
-
-extern void dirac_dump(FILE * fp);
-
-/*******************************************************************************
  * INDEXING
  ******************************************************************************/
 
-static inline dirac_complex_t * dirac_index_fast(dirac_t * that, unsigned int row, unsigned int column) {
-    return &(that->data.matrix[(row * that->data.columns) + column]);
+static inline size_t dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
+    return (row * that->data.columns) + column;
 }
 
-extern dirac_complex_t * dirac_index_slow(dirac_t * that, unsigned int row, unsigned int column);
+static inline dirac_complex_t * dirac_point_fast(dirac_t * that, unsigned int row, unsigned int column) {
+    return &(that->data.matrix[dirac_index(that, row, column)]);
+}
 
-static inline dirac_complex_t * dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
+extern dirac_complex_t * dirac_point_slow(dirac_t * that, unsigned int row, unsigned int column);
+
+static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, unsigned int column) {
 #if defined(DEBUG)
-    return dirac_index_slow(that, row, column);
+    return dirac_point_slow(that, row, column);
 #else
-    return dirac_index_fast(that, row, column);
+    return dirac_point_fast(that, row, column);
 #endif
 }
 
@@ -85,16 +111,12 @@ static inline dirac_complex_t * dirac_index(dirac_t * that, unsigned int row, un
  * OPERATIONS
  ******************************************************************************/
 
-/*
- * From complex (7) man page:
- * 
- * Given z = a+b*i and w = c+d*i then
- *
- * z+w = (a+c) + (b+d)*i
- *
- * z*w = (a*c - b*d) + (a*d + b*c)*i
- *
- * z/w = ((a*c + b*d)/(c*c + d*d)) + ((b*c - a*d)/(c*c + d*d))*i
- */
+/*******************************************************************************
+ * AUDITING
+ ******************************************************************************/
+
+extern dirac_t * dirac_audit(void);
+
+extern void dirac_dump(FILE * fp);
 
 #endif

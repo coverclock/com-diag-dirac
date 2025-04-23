@@ -17,6 +17,7 @@
 #include "com/diag/dirac/dirac.h"
 #include "com/diag/diminuto/diminuto_criticalsection.h"
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include <math.h>
@@ -148,14 +149,14 @@ void dirac_free(void)
  * INDEXING
  ******************************************************************************/
 
-dirac_complex_t * dirac_index_slow(dirac_t * that, unsigned int row, unsigned int column) {
+dirac_complex_t * dirac_point_slow(dirac_t * that, unsigned int row, unsigned int column) {
     dirac_complex_t * here = (dirac_complex_t *)0;
     if (row >= that->data.rows) {
         /* Do nothing. */
     } else if (column >= that->data.columns) {
         /* Do nothing. */
     } else {
-        here = dirac_index_fast(that, row, column);
+        here = dirac_point_fast(that, row, column);
     }
     return here;
 }
@@ -165,6 +166,11 @@ dirac_complex_t * dirac_index_slow(dirac_t * that, unsigned int row, unsigned in
  * AUDITING
  ******************************************************************************/
 
+dirac_t * dirac_audit(void)
+{
+    return (dirac_t *)diminuto_tree_audit(&root);
+}
+
 void dirac_dump(FILE * fp)
 {
     diminuto_tree_root_t * rootp;
@@ -172,8 +178,8 @@ void dirac_dump(FILE * fp)
     diminuto_tree_t * nextp;
     dirac_t * that;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
-        nodep = diminuto_tree_audit(&root);
-        if (nodep == (diminuto_tree_t *)0) {
+        that = dirac_audit();
+        if (that == (dirac_t *)0) {
             fprintf(fp, "dirac_dump: begin\n");
             for (rootp = &root, nodep = diminuto_tree_first(rootp); nodep != DIMINUTO_TREE_NULL; nodep = diminuto_tree_next(nodep)) {
                 that = (dirac_t *)nodep;
@@ -188,7 +194,7 @@ void dirac_dump(FILE * fp)
             }
             fprintf(fp, "dirac_dump: end\n");
         } else {
-            fprintf(fp, "dirac_dump: @%p FAIL!\n", nodep);
+            fprintf(fp, "dirac_dump: @%p FAIL!\n", that);
         }
     DIMINUTO_CRITICAL_SECTION_END;
     fflush(fp);

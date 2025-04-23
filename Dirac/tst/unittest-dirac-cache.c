@@ -13,9 +13,6 @@
 #include "com/diag/diminuto/diminuto_unittest.h"
 #include "com/diag/diminuto/diminuto_log.h"
 #include "com/diag/dirac/dirac.h"
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
 
 int main(void)
 {
@@ -139,21 +136,21 @@ int main(void)
         ASSERT(that->data.rows == ROWS);
         ASSERT(that->data.columns == COLS);
 
-        ASSERT(dirac_index_fast(that, 0, 0) != (dirac_complex_t *)0);
-        ASSERT(dirac_index_fast(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
-        ASSERT(dirac_index_fast(that, ROWS, COLS - 1) != (dirac_complex_t *)0);
-        ASSERT(dirac_index_fast(that, ROWS - 1, COLS) != (dirac_complex_t *)0);
-        ASSERT(dirac_index_fast(that, ROWS, COLS) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_fast(that, 0, 0) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_fast(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_fast(that, ROWS, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_fast(that, ROWS - 1, COLS) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_fast(that, ROWS, COLS) != (dirac_complex_t *)0);
 
-        ASSERT(dirac_index_slow(that, 0, 0) != (dirac_complex_t *)0);
-        ASSERT(dirac_index_slow(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
-        ASSERT(dirac_index_slow(that, ROWS, COLS - 1) == (dirac_complex_t *)0);
-        ASSERT(dirac_index_slow(that, ROWS - 1, COLS) == (dirac_complex_t *)0);
-        ASSERT(dirac_index_slow(that, ROWS, COLS) == (dirac_complex_t *)0);
+        ASSERT(dirac_point_slow(that, 0, 0) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_slow(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_point_slow(that, ROWS, COLS - 1) == (dirac_complex_t *)0);
+        ASSERT(dirac_point_slow(that, ROWS - 1, COLS) == (dirac_complex_t *)0);
+        ASSERT(dirac_point_slow(that, ROWS, COLS) == (dirac_complex_t *)0);
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
-                aa = dirac_index(that, rr, cc);
+                aa = dirac_point(that, rr, cc);
                 fprintf(stderr, "node(%u,%u)@%p\n", rr, cc, aa);
                 ASSERT(*aa == CMPLX(0, 0));
             }
@@ -171,7 +168,7 @@ int main(void)
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
-                aa = dirac_index(that, rr, cc);
+                aa = dirac_point(that, rr, cc);
                 bb = &((*here)[rr][cc]);
                 ASSERT(aa == bb);
             }
@@ -211,19 +208,27 @@ int main(void)
         array3x4_t * array3x4p;
         dirac_complex_t * aa;
         dirac_complex_t * bb;
-        unsigned int rr, cc;
+        dirac_complex_t * cc;
+        unsigned int row, col;
 
         that = dirac_new(ROWS, COLS);
         array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
 
-        for (rr = 0; rr < ROWS; ++rr) {
-            for (cc = 0; cc < COLS; ++cc) {
-                (*array3x4p)[rr][cc] = CMPLX(rr, cc);
-                aa = dirac_index(that, rr, cc);
-                bb = &((*array3x4p)[rr][cc]);
+        for (row = 0; row < ROWS; ++row) {
+            for (col = 0; col < COLS; ++col) {
+                (*array3x4p)[row][col] = CMPLX(row, col);
+                aa = dirac_point(that, row, col);
+                bb = &((*array3x4p)[row][col]);
+                cc = &(that->data.matrix[dirac_index(that, row, col)]);
                 ASSERT(aa == bb);
-                ASSERT((unsigned int)creal(*bb) == rr);
-                ASSERT((unsigned int)cimag(*bb) == cc);
+                ASSERT(bb == cc);
+                ASSERT(aa == cc);
+                ASSERT((unsigned int)creal(*aa) == row);
+                ASSERT((unsigned int)cimag(*aa) == col);
+                ASSERT((unsigned int)creal(*bb) == row);
+                ASSERT((unsigned int)cimag(*bb) == col);
+                ASSERT((unsigned int)creal(*cc) == row);
+                ASSERT((unsigned int)cimag(*cc) == col);
             }
         }
 
