@@ -128,10 +128,18 @@ int main(void)
         ASSERT(that != (dirac_t *)0);
         ASSERT(that->data.rows == ROWS);
         ASSERT(that->data.columns == COLS);
+
+        ASSERT(dirac_index_fast(that, 0, 0) != (dirac_complex_t *)0);
+        ASSERT(dirac_index_fast(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_index_fast(that, ROWS, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_index_fast(that, ROWS - 1, COLS) != (dirac_complex_t *)0);
+        ASSERT(dirac_index_fast(that, ROWS, COLS) != (dirac_complex_t *)0);
+
         ASSERT(dirac_index_slow(that, 0, 0) != (dirac_complex_t *)0);
         ASSERT(dirac_index_slow(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
         ASSERT(dirac_index_slow(that, ROWS, COLS - 1) == (dirac_complex_t *)0);
         ASSERT(dirac_index_slow(that, ROWS - 1, COLS) == (dirac_complex_t *)0);
+        ASSERT(dirac_index_slow(that, ROWS, COLS) == (dirac_complex_t *)0);
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {

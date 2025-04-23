@@ -145,6 +145,23 @@ void dirac_free(void)
 }
 
 /*******************************************************************************
+ * INDEXING
+ ******************************************************************************/
+
+dirac_complex_t * dirac_index_slow(dirac_t * that, unsigned int row, unsigned int column) {
+    dirac_complex_t * here = (dirac_complex_t *)0;
+    if (row >= that->data.rows) {
+        /* Do nothing. */
+    } else if (column >= that->data.columns) {
+        /* Do nothing. */
+    } else {
+        here = dirac_index_fast(that, row, column);
+    }
+    return here;
+}
+
+
+/*******************************************************************************
  * AUDITING
  ******************************************************************************/
 
