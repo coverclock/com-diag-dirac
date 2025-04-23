@@ -81,6 +81,10 @@ static inline double complex * dirac_index(dirac_t * that, unsigned int row, uns
 #endif
 }
 
+#define DIRAC_ARRAY_TYPE(_TYPE_, _ROWS_, _COLS_) typedef double complex (_TYPE_)[_ROWS_][_COLS_]
+
+#define DIRAC_ARRAY_POINTER(_TYPE_, _THAT_) ((_TYPE_ *)(&((_THAT_)->data.matrix)))
+
 /*******************************************************************************
  * OPERATIONS
  ******************************************************************************/

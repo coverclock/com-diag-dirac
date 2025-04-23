@@ -179,5 +179,38 @@ int main(void)
         STATUS();
     }
 
+    {
+        TEST();
+
+        static const size_t ROWS = 3;
+        static const size_t COLS = 4;
+        dirac_t * that;
+        DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
+        array3x4_t * array3x4p;
+        double complex * aa;
+        double complex * bb;
+        unsigned int rr, cc;
+
+        that = dirac_new(ROWS, COLS);
+        array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
+
+        for (rr = 0; rr < ROWS; ++rr) {
+            for (cc = 0; cc < COLS; ++cc) {
+                (*array3x4p)[rr][cc] = CMPLX(rr, cc);
+                aa = dirac_index(that, rr, cc);
+                bb = &((*array3x4p)[rr][cc]);
+                ASSERT(aa == bb);
+                ASSERT((unsigned int)creal(*bb) == rr);
+                ASSERT((unsigned int)cimag(*bb) == cc);
+            }
+        }
+
+        dirac_delete(that);
+
+        dirac_free();
+
+        STATUS();
+    }
+
     EXIT();
 }
