@@ -114,8 +114,8 @@ int main(void)
         static const size_t ROWS = 3;
         static const size_t COLS = 4;
         dirac_t * that;
-        typedef double complex (array)[ROWS][COLS];
-        array * here;
+        typedef double complex (array_t)[ROWS][COLS];
+        array_t * here;
         double complex * aa;
         double complex * bb;
         unsigned int rr, cc;
@@ -123,7 +123,14 @@ int main(void)
         that = dirac_new(ROWS, COLS);
         ASSERT(that != (dirac_t *)0);
 
-        here = (array *)(&(that->data.matrix));
+        for (rr = 0; rr < ROWS; ++rr) {
+            for (cc = 0; cc < COLS; ++cc) {
+                aa = dirac_index(that, rr, cc);
+                fprintf(stderr, "node[%u][%u]@%p\n", rr, cc, aa);
+            }
+        }
+
+        here = (array_t *)(&(that->data.matrix));
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
@@ -135,15 +142,24 @@ int main(void)
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
                 aa = dirac_index(that, rr, cc);
-                fprintf(stderr, "node[%u][%u]@%p\n", rr, cc, aa);
+                bb = &((*here)[rr][cc]);
+                ASSERT(aa == bb);
             }
         }
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
-                aa = dirac_index(that, rr, cc);
-                bb = &((*here)[rr][cc]);
-                ASSERT(aa == bb);
+                (*here)[rr][cc] = CMPLX(rr, cc);
+            }
+        }
+
+        for (rr = 0; rr < ROWS; ++rr) {
+            for (cc = 0; cc < COLS; ++cc) {
+                double complex value = (double)rr + ((double)cc * I);
+                fprintf(stderr, "value %lf + %lfi\n", creal(value), cimag(value));
+                ASSERT((*here)[rr][cc] == value);
+                ASSERT(((unsigned int)creal((*here)[rr][cc])) == rr);
+                ASSERT(((unsigned int)cimag((*here)[rr][cc])) == cc);
             }
         }
 
