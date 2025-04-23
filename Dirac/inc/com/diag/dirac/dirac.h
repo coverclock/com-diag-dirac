@@ -57,11 +57,11 @@ extern void dirac_dump(FILE * fp);
  * INDEXING
  ******************************************************************************/
 
-static inline double complex * dirac_index_fast(dirac_t * that, size_t row, size_t column) {
+static inline double complex * dirac_index_fast(dirac_t * that, unsigned int row, unsigned int column) {
     return &(that->data.matrix[(row * that->data.columns) + column]);
 }
 
-static inline double complex * dirac_index_slow(dirac_t * that, size_t row, size_t column) {
+static inline double complex * dirac_index_slow(dirac_t * that, unsigned int row, unsigned int column) {
     double complex * here = (double complex *)0;
     if (row >= that->data.rows) {
         /* Do nothing. */
@@ -73,7 +73,7 @@ static inline double complex * dirac_index_slow(dirac_t * that, size_t row, size
     return here;
 }
 
-static inline double complex * dirac_index(dirac_t * that, size_t row, size_t column) {
+static inline double complex * dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
 #if defined(DEBUG)
     return dirac_index_slow(that, row, column);
 #else
