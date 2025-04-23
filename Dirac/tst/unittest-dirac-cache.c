@@ -22,7 +22,17 @@ int main(void)
     SETLOGMASK();
 
     {
+        TEST();
+
+        fprintf(stderr, "sizeof(dirac_complex_t)=%zu\n", sizeof(dirac_complex_t));
         ASSERT(sizeof(complex double) == sizeof(dirac_complex_t));
+        fprintf(stderr, "sizeof(dirac_data_t)=%zu\n", sizeof(dirac_data_t));
+        fprintf(stderr, "sizeof(dirac_node_t)=%zu\n", sizeof(dirac_node_t));
+        ASSERT(sizeof(dirac_node_t) > sizeof(dirac_data_t));
+        fprintf(stderr, "sizeof(dirac_t)=%zu\n", sizeof(dirac_t));
+        ASSERT(sizeof(dirac_t) == sizeof(dirac_node_t));
+
+        STATUS();
     }
 
     {
@@ -144,7 +154,7 @@ int main(void)
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
                 aa = dirac_index(that, rr, cc);
-                fprintf(stderr, "node[%u][%u]@%p\n", rr, cc, aa);
+                fprintf(stderr, "node(%u,%u)@%p\n", rr, cc, aa);
                 ASSERT(*aa == CMPLX(0, 0));
             }
         }
