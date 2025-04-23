@@ -15,6 +15,7 @@
  ******************************************************************************/
 
 #include "com/diag/dirac/dirac.h"
+#include "com/diag/diminuto/diminuto_criticalsection.h"
 #include <stddef.h>
 #include <string.h>
 #include <errno.h>
@@ -24,6 +25,8 @@
 /*******************************************************************************
  * GLOBALS
  ******************************************************************************/
+
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static diminuto_tree_root_t root = DIMINUTO_TREE_EMPTY;
 
@@ -82,17 +85,19 @@ dirac_t * dirac_new(size_t rows, size_t columns)
     dirac_t * that = (dirac_t *)&me;
     that->node.size = size(rows, columns);
     int rc = 0;
-    diminuto_tree_t * you = diminuto_tree_search(root, &me, compare, &rc);
-    if (you == (diminuto_tree_t *)0) {
-        that = allocate(rows, columns);
-    } else if (rc != 0) {
-        that = allocate(rows, columns);
-    } else if (you->data == (void *)0) {
-        that = (dirac_t *)diminuto_tree_remove(you);
-    } else {
-        that = (dirac_t *)(you->data);
-        you->data = ((diminuto_tree_t *)(you->data))->data;
-    }
+    DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
+        diminuto_tree_t * you = diminuto_tree_search(root, &me, compare, &rc);
+        if (you == (diminuto_tree_t *)0) {
+            that = allocate(rows, columns);
+        } else if (rc != 0) {
+            that = allocate(rows, columns);
+        } else if (you->data == (void *)0) {
+            that = (dirac_t *)diminuto_tree_remove(you);
+        } else {
+            that = (dirac_t *)(you->data);
+            you->data = ((diminuto_tree_t *)(you->data))->data;
+        }
+    DIMINUTO_CRITICAL_SECTION_END;
     return construct(that, rows, columns);;
 }
 
@@ -101,16 +106,18 @@ dirac_t * dirac_delete(dirac_t * that)
     size_t bytes = size(that->data.rows, that->data.columns);
     diminuto_tree_t * me = diminuto_tree_init(&(that->node.tree));
     that->node.size = bytes;
-    diminuto_tree_t * you = diminuto_tree_search_insert_or_replace(&root, me, compare, !0);
-    if (you == (diminuto_tree_t *)0) {
-        /* Do  nothing. */
-    } else if (you == me) {
-        me->data = (void *)0;
-        that = (dirac_t *)0;
-    } else {
-        me->data = (void *)you;
-        that = (dirac_t *)0;
-    }
+    DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
+        diminuto_tree_t * you = diminuto_tree_search_insert_or_replace(&root, me, compare, !0);
+        if (you == (diminuto_tree_t *)0) {
+            /* Do  nothing. */
+        } else if (you == me) {
+            me->data = (void *)0;
+            that = (dirac_t *)0;
+        } else {
+            me->data = (void *)you;
+            that = (dirac_t *)0;
+        }
+    DIMINUTO_CRITICAL_SECTION_END;
     return that;
 }
 
@@ -120,19 +127,21 @@ void dirac_free(void)
     diminuto_tree_t * nextp;
     diminuto_tree_t * peerp;
     diminuto_tree_t * linkp;
-    nodep = diminuto_tree_first(&root);
-    while (nodep != DIMINUTO_TREE_NULL) {
-        nextp = diminuto_tree_next(nodep);
-        (void)diminuto_tree_remove(nodep);
-        peerp = nodep->data;
-        while (peerp != DIMINUTO_TREE_NULL) {
-            linkp = peerp->data;
-            free(peerp);
-            peerp = linkp;
+    DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
+        nodep = diminuto_tree_first(&root);
+        while (nodep != DIMINUTO_TREE_NULL) {
+            nextp = diminuto_tree_next(nodep);
+            (void)diminuto_tree_remove(nodep);
+            peerp = nodep->data;
+            while (peerp != DIMINUTO_TREE_NULL) {
+                linkp = peerp->data;
+                free(peerp);
+                peerp = linkp;
+            }
+            free(nodep);
+            nodep = nextp;
         }
-        free(nodep);
-        nodep = nextp;
-    }
+    DIMINUTO_CRITICAL_SECTION_END;
 }
 
 /*******************************************************************************
@@ -145,19 +154,21 @@ void dirac_dump(FILE * fp)
     diminuto_tree_t * nodep;
     diminuto_tree_t * nextp;
     dirac_t * that;
-    fprintf(fp, "dirac_dump: begin\n");
-    for (rootp = &root, nodep = diminuto_tree_first(rootp); nodep != DIMINUTO_TREE_NULL; nodep = diminuto_tree_next(nodep)) {
-        that = (dirac_t *)nodep;
-        fprintf(fp, "dirac_dump: @%p[%zu]", that, that->node.size);
-        nextp = nodep->data;
-        while (nextp != (void *)0) {
-            that = (dirac_t *)nextp;
-            fprintf(fp, " @%p[%zu]", that, that->node.size);
-            nextp = nextp->data;
+    DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
+        fprintf(fp, "dirac_dump: begin\n");
+        for (rootp = &root, nodep = diminuto_tree_first(rootp); nodep != DIMINUTO_TREE_NULL; nodep = diminuto_tree_next(nodep)) {
+            that = (dirac_t *)nodep;
+            fprintf(fp, "dirac_dump: @%p[%zu]", that, that->node.size);
+            nextp = nodep->data;
+            while (nextp != (void *)0) {
+                that = (dirac_t *)nextp;
+                fprintf(fp, " @%p[%zu]", that, that->node.size);
+                nextp = nextp->data;
+            }
+            fputc('\n', fp);
         }
-        fputc('\n', fp);
-    }
-    fprintf(fp, "dirac_dump: end\n");
+        fprintf(fp, "dirac_dump: end\n");
+    DIMINUTO_CRITICAL_SECTION_END;
     fflush(fp);
 }
 

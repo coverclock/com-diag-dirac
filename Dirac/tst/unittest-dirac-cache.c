@@ -71,12 +71,12 @@ int main(void)
 
         dirac_t * new6 = dirac_new(2, 3);
         ASSERT(new6 != (dirac_t *)0);
-        ASSERT((new6 == new2) || (new6 == new3));
+        ASSERT(new6 == new3);
         dirac_dump(stderr);
 
         dirac_t * new7 = dirac_new(3, 2);
         ASSERT(new7 != (dirac_t *)0);
-        ASSERT((new7 == new2) || (new7 == new3));
+        ASSERT(new7 == new2);
         ASSERT(new7 != new6);
         dirac_dump(stderr);
 
