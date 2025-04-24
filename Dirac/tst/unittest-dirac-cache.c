@@ -277,7 +277,7 @@ int main(void)
         TEST();
 
         DIRAC_STATIC_DECL(0, 0) thing = DIRAC_STATIC_INIT(0, 0);
-        dirac_t * that = DIRAC_STATIC_POINTER(thing);
+        dirac_t * that = (dirac_t *)&thing;
 
         ASSERT(dirac_rows_get(that) == 0);
         ASSERT(dirac_columns_get(that) == 0);
@@ -294,7 +294,7 @@ int main(void)
 #define COLS 7
 
         DIRAC_STATIC_DECL(ROWS, COLS) thing = DIRAC_STATIC_INIT(ROWS, COLS);
-        dirac_t * that = DIRAC_STATIC_POINTER(thing);
+        dirac_t * that = (dirac_t *)&thing;
         DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
         array3x4_t * array3x4p;
         dirac_complex_t * aa;
