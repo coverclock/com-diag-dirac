@@ -60,12 +60,14 @@ typedef struct DiracNode {
 typedef struct DiracData {
     size_t rows;
     size_t columns;
-    dirac_complex_t matrix[0];
 } dirac_data_t;
 
-typedef union Dirac {
-    dirac_data_t data;
-    dirac_node_t node;
+typedef union Dirac { \
+    struct { \
+        dirac_data_t head; \
+        dirac_complex_t body[0]; \
+    } data; \
+    dirac_node_t node; \
 } dirac_t;
 
 /*******************************************************************************
@@ -74,7 +76,7 @@ typedef union Dirac {
 
 #define DIRAC_ARRAY_TYPE(_TYPE_, _ROWS_, _COLS_) typedef dirac_complex_t (_TYPE_)[_ROWS_][_COLS_]
 
-#define DIRAC_ARRAY_POINTER(_TYPE_, _THAT_) ((_TYPE_ *)(&((_THAT_)->data.matrix)))
+#define DIRAC_ARRAY_POINTER(_TYPE_, _THAT_) ((_TYPE_ *)(&((_THAT_)->data.body)))
 
 #define DIRAC_STATIC_DECL(_ROWS_, _COLS_) \
     union { \
@@ -91,6 +93,22 @@ typedef union Dirac {
 #define DIRAC_STATIC_POINTER(_NAME_) ((dirac_t *)(&(_NAME_).data.head))
 
 /*******************************************************************************
+ * HELPERS
+ ******************************************************************************/
+
+static inline size_t dirac_rows_get(const dirac_t * that) {
+    return that->data.head.rows;
+}
+
+static inline size_t dirac_columns_get(const dirac_t * that) {
+    return that->data.head.columns;
+}
+
+static inline dirac_complex_t * dirac_body_get(dirac_t * that) {
+    return &(that->data.body[0]);
+}
+
+/*******************************************************************************
  * MEMORY MANAGEMENT
  ******************************************************************************/
 
@@ -105,11 +123,11 @@ extern void dirac_free(void);
  ******************************************************************************/
 
 static inline size_t dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
-    return (row * that->data.columns) + column;
+    return (row * dirac_columns_get(that)) + column;
 }
 
 static inline dirac_complex_t * dirac_point_fast(dirac_t * that, unsigned int row, unsigned int column) {
-    return &(that->data.matrix[dirac_index(that, row, column)]);
+    return &(that->data.body[dirac_index(that, row, column)]);
 }
 
 extern dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column);
@@ -120,22 +138,6 @@ static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, un
 #else
     return dirac_point_fast(that, row, column);
 #endif
-}
-
-/*******************************************************************************
- * HELPERS
- ******************************************************************************/
-
-static inline size_t dirac_rows_get(const dirac_t * that) {
-    return that->data.rows;
-}
-
-static inline size_t dirac_columns_get(const dirac_t * that) {
-    return that->data.columns;
-}
-
-static inline dirac_complex_t * dirac_matrix_get(dirac_t * that) {
-    return &(that->data.matrix[0]);
 }
 
 /*******************************************************************************

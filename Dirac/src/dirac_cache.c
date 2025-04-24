@@ -50,9 +50,9 @@ static inline size_t size(size_t rows, size_t columns) {
 static dirac_t * construct(dirac_t * that, size_t rows, size_t columns)
 {
     if (that != (dirac_t *)0) {
-        memset(&(that->data.matrix), 0, length(rows, columns));
-        that->data.rows = rows;
-        that->data.columns = columns;
+        memset(dirac_body_get(that), 0, length(rows, columns));
+        that->data.head.rows = rows;
+        that->data.head.columns = columns;
     }
     return that;
 }
@@ -104,7 +104,7 @@ dirac_t * dirac_new(size_t rows, size_t columns)
 
 dirac_t * dirac_delete(dirac_t * that)
 {
-    size_t bytes = size(that->data.rows, that->data.columns);
+    size_t bytes = size(dirac_rows_get(that), dirac_columns_get(that));
     diminuto_tree_t * me = diminuto_tree_init(&(that->node.tree));
     that->node.size = bytes;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
@@ -151,9 +151,9 @@ void dirac_free(void)
 
 dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column) {
     dirac_complex_t * here = (dirac_complex_t *)0;
-    if (row >= that->data.rows) {
+    if (row >= dirac_rows_get(that)) {
         /* Do nothing. */
-    } else if (column >= that->data.columns) {
+    } else if (column >= dirac_columns_get(that)) {
         /* Do nothing. */
     } else {
         here = dirac_point_fast(that, row, column);
