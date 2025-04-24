@@ -271,5 +271,52 @@ int main(void)
         STATUS();
     }
 
+    {
+        TEST();
+
+#define ROWS 5
+#define COLS 7
+
+        DIRAC_STATIC_DECL(ROWS, COLS) thing = DIRAC_STATIC_INIT(ROWS, COLS);
+        dirac_t * that = DIRAC_STATIC_POINTER(thing);
+        DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
+        array3x4_t * array3x4p;
+        dirac_complex_t * aa;
+        dirac_complex_t * bb;
+        dirac_complex_t * cc;
+        unsigned int row, col;
+
+        fprintf(stderr, "sizeof(thing)=%zu\n", sizeof(thing));
+        ASSERT(sizeof(thing) == 584);
+
+        ASSERT(that->data.rows == ROWS);
+        ASSERT(that->data.columns == COLS);
+
+        array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
+
+        for (row = 0; row < ROWS; ++row) {
+            for (col = 0; col < COLS; ++col) {
+                (*array3x4p)[row][col] = CMPLX(row, col);
+                aa = dirac_point(that, row, col);
+                bb = &((*array3x4p)[row][col]);
+                cc = &(that->data.matrix[dirac_index(that, row, col)]);
+                ASSERT(aa == bb);
+                ASSERT(bb == cc);
+                ASSERT(aa == cc);
+                ASSERT((unsigned int)creal(*aa) == row);
+                ASSERT((unsigned int)cimag(*aa) == col);
+                ASSERT((unsigned int)creal(*bb) == row);
+                ASSERT((unsigned int)cimag(*bb) == col);
+                ASSERT((unsigned int)creal(*cc) == row);
+                ASSERT((unsigned int)cimag(*cc) == col);
+            }
+        }
+
+#undef COLS
+#undef ROWS
+
+        STATUS();
+    }
+
     EXIT();
 }

@@ -43,6 +43,7 @@
 #include "com/diag/diminuto/diminuto_tree.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <complex.h>
 
 /*******************************************************************************
@@ -63,17 +64,28 @@ typedef struct DiracData {
 } dirac_data_t;
 
 typedef union Dirac {
-    dirac_node_t node;
     dirac_data_t data;
+    dirac_node_t node;
 } dirac_t;
 
 /*******************************************************************************
- * MACROS
+ * CODE GENERATORS
  ******************************************************************************/
 
 #define DIRAC_ARRAY_TYPE(_TYPE_, _ROWS_, _COLS_) typedef dirac_complex_t (_TYPE_)[_ROWS_][_COLS_]
 
 #define DIRAC_ARRAY_POINTER(_TYPE_, _THAT_) ((_TYPE_ *)(&((_THAT_)->data.matrix)))
+
+#define DIRAC_STATIC_DECL(_ROWS_, _COLS_) \
+    struct { \
+        dirac_t head; \
+        dirac_complex_t body[((_ROWS_) * (_COLS_)) - ((sizeof(dirac_node_t) - sizeof(dirac_data_t)) / sizeof (dirac_complex_t))]; \
+    }
+
+#define DIRAC_STATIC_INIT(_ROWS_, _COLS_) \
+    { { { _ROWS_, _COLS_ } } }
+
+#define DIRAC_STATIC_POINTER(_NAME_) (&(_NAME_).head)
 
 /*******************************************************************************
  * MEMORY MANAGEMENT
@@ -86,7 +98,7 @@ extern dirac_t * dirac_delete(dirac_t * that);
 extern void dirac_free(void);
 
 /*******************************************************************************
- * MEMORY MANAGEMENT
+ * INDEXING AND POINTING
  ******************************************************************************/
 
 static inline size_t dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
