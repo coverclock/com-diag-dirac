@@ -47,30 +47,6 @@
 #include <complex.h>
 
 /*******************************************************************************
- * TYPES
- ******************************************************************************/
-
-typedef complex double dirac_complex_t;
-
-typedef struct DiracNode {
-    diminuto_tree_t tree;
-    size_t size;
-} dirac_node_t;
-
-typedef struct DiracData {
-    size_t rows;
-    size_t columns;
-} dirac_data_t;
-
-typedef union Dirac { \
-    struct { \
-        dirac_data_t head; \
-        dirac_complex_t body[0]; \
-    } data; \
-    dirac_node_t node; \
-} dirac_t;
-
-/*******************************************************************************
  * CODE GENERATORS
  ******************************************************************************/
 
@@ -91,6 +67,24 @@ typedef union Dirac { \
     { { { _ROWS_, _COLS_ } } }
 
 #define DIRAC_STATIC_POINTER(_NAME_) ((dirac_t *)(&(_NAME_).data.head))
+
+/*******************************************************************************
+ * TYPES
+ ******************************************************************************/
+
+typedef complex double dirac_complex_t;
+
+typedef struct DiracNode {
+    diminuto_tree_t tree;
+    size_t size;
+} dirac_node_t;
+
+typedef struct DiracData {
+    size_t rows;
+    size_t columns;
+} dirac_data_t;
+
+typedef DIRAC_STATIC_DECL(0, 0) dirac_t;
 
 /*******************************************************************************
  * GETTORS
