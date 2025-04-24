@@ -86,7 +86,7 @@ extern dirac_t * dirac_delete(dirac_t * that);
 extern void dirac_free(void);
 
 /*******************************************************************************
- * INDEXING
+ * MEMORY MANAGEMENT
  ******************************************************************************/
 
 static inline size_t dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
@@ -108,6 +108,22 @@ static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, un
 }
 
 /*******************************************************************************
+ * HELPERS
+ ******************************************************************************/
+
+static inline size_t dirac_rows_get(const dirac_t * that) {
+    return that->data.rows;
+}
+
+static inline size_t dirac_columns_get(const dirac_t * that) {
+    return that->data.columns;
+}
+
+static inline dirac_complex_t * dirac_matrix_get(dirac_t * that) {
+    return &(that->data.matrix[0]);
+}
+
+/*******************************************************************************
  * OPERATIONS
  ******************************************************************************/
 
@@ -118,5 +134,9 @@ static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, un
 extern dirac_t * dirac_audit(void);
 
 extern void dirac_dump(FILE * fp);
+
+/*******************************************************************************
+ * END
+ ******************************************************************************/
 
 #endif

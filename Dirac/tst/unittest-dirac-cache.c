@@ -35,6 +35,29 @@ int main(void)
     {
         TEST();
 
+        dirac_t that;
+        size_t rows;
+        size_t columns;
+        dirac_complex_t * matrix;
+
+        that.data.rows = 5;
+        that.data.columns = 7;
+
+        rows = dirac_rows_get(&that);
+        ASSERT(rows == that.data.rows);
+
+        columns = dirac_columns_get(&that);
+        ASSERT(columns == that.data.columns);
+
+        matrix = dirac_matrix_get(&that);
+        ASSERT(matrix == &(that.data.matrix[0]));
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
         dirac_free();
         dirac_dump(stderr);
 

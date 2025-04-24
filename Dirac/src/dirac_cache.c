@@ -7,7 +7,7 @@
  * Chip Overclock (mailto:coverclock@diag.com)<BR>
  * https://github.com/coverclock/com-diag-cdirac<BR>
  *
- * Defines the implementation for Dirac.
+ * This is the implementation of the cache-related portions of Dirac.
  */
 
 /*******************************************************************************
@@ -201,5 +201,5 @@ void dirac_dump(FILE * fp)
 }
 
 /*******************************************************************************
- * OPERATIONS
+ * END
  ******************************************************************************/
