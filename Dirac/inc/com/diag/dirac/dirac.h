@@ -79,7 +79,7 @@ typedef union Dirac {
 #define DIRAC_STATIC_DECL(_ROWS_, _COLS_) \
     struct { \
         dirac_t head; \
-        dirac_complex_t body[((_ROWS_) * (_COLS_)) - ((sizeof(dirac_node_t) - sizeof(dirac_data_t)) / sizeof (dirac_complex_t))]; \
+        dirac_complex_t body[((_ROWS_) * (_COLS_)) - ((sizeof(dirac_t) - sizeof(dirac_data_t)) / sizeof (dirac_complex_t))]; \
     }
 
 #define DIRAC_STATIC_INIT(_ROWS_, _COLS_) \

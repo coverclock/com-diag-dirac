@@ -11,6 +11,7 @@
  */
 
 #include "com/diag/diminuto/diminuto_unittest.h"
+#include "com/diag/diminuto/diminuto_countof.h"
 #include "com/diag/diminuto/diminuto_log.h"
 #include "com/diag/dirac/dirac.h"
 
@@ -248,6 +249,7 @@ int main(void)
 
         for (row = 0; row < ROWS; ++row) {
             for (col = 0; col < COLS; ++col) {
+                ASSERT((*array3x4p)[row][col] == (0+(0*I)));
                 (*array3x4p)[row][col] = CMPLX(row, col);
                 aa = dirac_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
@@ -277,6 +279,16 @@ int main(void)
 #define ROWS 5
 #define COLS 7
 
+        /*
+         * 5 * 7 * sizeof(dirac_complex_t) = 560
+         * 560 + sizeof(dirac_data_t) = 576
+         * sizeof(dirac_t) - sizeof(dirac_data_t) = 40
+         * 40 / sizeof(direc_complex_t) = 2.5
+         * floor(2.5) * sizeof(direc_complex_t) = 32
+         * 576 - 32 = 544
+         * 544 + 40 = 584
+         */
+
         DIRAC_STATIC_DECL(ROWS, COLS) thing = DIRAC_STATIC_INIT(ROWS, COLS);
         dirac_t * that = DIRAC_STATIC_POINTER(thing);
         DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
@@ -284,18 +296,33 @@ int main(void)
         dirac_complex_t * aa;
         dirac_complex_t * bb;
         dirac_complex_t * cc;
+        dirac_complex_t * dd;
         unsigned int row, col;
-
-        fprintf(stderr, "sizeof(thing)=%zu\n", sizeof(thing));
-        ASSERT(sizeof(thing) == 584);
 
         ASSERT(that->data.rows == ROWS);
         ASSERT(that->data.columns == COLS);
+
+        fprintf(stderr, "sizeof(thing)=%zu\n", sizeof(thing));
+        fprintf(stderr, "sizeof(thing.head)=%zu\n", sizeof(thing.head));
+        fprintf(stderr, "sizeof(thing.head.node)=%zu\n", sizeof(thing.head.node));
+        fprintf(stderr, "sizeof(thing.head.data)=%zu\n", sizeof(thing.head.data));
+        fprintf(stderr, "sizeof(thing.body)=%zu\n", sizeof(thing.body));
+        ASSERT(sizeof(thing.head) == sizeof(dirac_t));
+
+        aa = &(thing.head.data.matrix[0]);
+        bb = &(thing.head.data.matrix[(ROWS * COLS) - 1]);
+        cc = &(thing.body[0]);
+        dd = &(thing.body[countof(thing.body) - 1]);
+        fprintf(stderr, "&matrix[%u]=%p\n", 0, aa);
+        fprintf(stderr, "&matrix[%zu]=%p\n", (ROWS * COLS) - 1, bb);
+        fprintf(stderr, "&body[%u]=%p\n", 0, cc);
+        fprintf(stderr, "&body[%zu]=%p\n", countof(thing.body) - 1, dd);
 
         array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
 
         for (row = 0; row < ROWS; ++row) {
             for (col = 0; col < COLS; ++col) {
+                ASSERT((*array3x4p)[row][col] == (0+(0*I)));
                 (*array3x4p)[row][col] = CMPLX(row, col);
                 aa = dirac_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
