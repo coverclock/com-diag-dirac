@@ -93,7 +93,7 @@ typedef union Dirac { \
 #define DIRAC_STATIC_POINTER(_NAME_) ((dirac_t *)(&(_NAME_).data.head))
 
 /*******************************************************************************
- * HELPERS
+ * GETTORS
  ******************************************************************************/
 
 static inline size_t dirac_rows_get(const dirac_t * that) {
