@@ -77,15 +77,18 @@ typedef union Dirac {
 #define DIRAC_ARRAY_POINTER(_TYPE_, _THAT_) ((_TYPE_ *)(&((_THAT_)->data.matrix)))
 
 #define DIRAC_STATIC_DECL(_ROWS_, _COLS_) \
-    struct { \
-        dirac_t head; \
-        dirac_complex_t body[((_ROWS_) * (_COLS_)) - ((sizeof(dirac_t) - sizeof(dirac_data_t)) / sizeof (dirac_complex_t))]; \
+    union { \
+        struct { \
+            dirac_data_t head; \
+            dirac_complex_t body[(_ROWS_) * (_COLS_)]; \
+        } data; \
+        dirac_node_t node; \
     }
 
 #define DIRAC_STATIC_INIT(_ROWS_, _COLS_) \
     { { { _ROWS_, _COLS_ } } }
 
-#define DIRAC_STATIC_POINTER(_NAME_) (&(_NAME_).head)
+#define DIRAC_STATIC_POINTER(_NAME_) (dirac_t *)(&(_NAME_).data.head)
 
 /*******************************************************************************
  * MEMORY MANAGEMENT

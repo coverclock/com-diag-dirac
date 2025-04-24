@@ -303,20 +303,19 @@ int main(void)
         ASSERT(that->data.columns == COLS);
 
         fprintf(stderr, "sizeof(thing)=%zu\n", sizeof(thing));
-        fprintf(stderr, "sizeof(thing.head)=%zu\n", sizeof(thing.head));
-        fprintf(stderr, "sizeof(thing.head.node)=%zu\n", sizeof(thing.head.node));
-        fprintf(stderr, "sizeof(thing.head.data)=%zu\n", sizeof(thing.head.data));
-        fprintf(stderr, "sizeof(thing.body)=%zu\n", sizeof(thing.body));
-        ASSERT(sizeof(thing.head) == sizeof(dirac_t));
+        fprintf(stderr, "sizeof(thing.data)=%zu\n", sizeof(thing.data));
+        fprintf(stderr, "sizeof(thing.data.head)=%zu\n", sizeof(thing.data.head));
+        fprintf(stderr, "sizeof(thing.data.body)=%zu\n", sizeof(thing.data.body));
+        fprintf(stderr, "sizeof(thing.node)=%zu\n", sizeof(thing.node));
 
-        aa = &(thing.head.data.matrix[0]);
-        bb = &(thing.head.data.matrix[(ROWS * COLS) - 1]);
-        cc = &(thing.body[0]);
-        dd = &(thing.body[countof(thing.body) - 1]);
+        aa = &(thing.data.head.matrix[0]);
+        bb = &(thing.data.head.matrix[(ROWS * COLS) - 1]);
+        cc = &(thing.data.body[0]);
+        dd = &(thing.data.body[countof(thing.data.body) - 1]);
         fprintf(stderr, "&matrix[%u]=%p\n", 0, aa);
         fprintf(stderr, "&matrix[%zu]=%p\n", (ROWS * COLS) - 1, bb);
         fprintf(stderr, "&body[%u]=%p\n", 0, cc);
-        fprintf(stderr, "&body[%zu]=%p\n", countof(thing.body) - 1, dd);
+        fprintf(stderr, "&body[%zu]=%p\n", countof(thing.data.body) - 1, dd);
 
         array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
 
