@@ -88,7 +88,7 @@ typedef union Dirac {
 #define DIRAC_STATIC_INIT(_ROWS_, _COLS_) \
     { { { _ROWS_, _COLS_ } } }
 
-#define DIRAC_STATIC_POINTER(_NAME_) (dirac_t *)(&(_NAME_).data.head)
+#define DIRAC_STATIC_POINTER(_NAME_) ((dirac_t *)(&(_NAME_).data.head))
 
 /*******************************************************************************
  * MEMORY MANAGEMENT

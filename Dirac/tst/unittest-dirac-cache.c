@@ -276,18 +276,22 @@ int main(void)
     {
         TEST();
 
+        DIRAC_STATIC_DECL(0, 0) thing = DIRAC_STATIC_INIT(0, 0);
+        dirac_t * that = DIRAC_STATIC_POINTER(thing);
+
+        ASSERT(that->data.rows == 0);
+        ASSERT(that->data.columns == 0);
+
+        ASSERT(sizeof(thing) == sizeof(dirac_t));
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
 #define ROWS 5
 #define COLS 7
-
-        /*
-         * 5 * 7 * sizeof(dirac_complex_t) = 560
-         * 560 + sizeof(dirac_data_t) = 576
-         * sizeof(dirac_t) - sizeof(dirac_data_t) = 40
-         * 40 / sizeof(direc_complex_t) = 2.5
-         * floor(2.5) * sizeof(direc_complex_t) = 32
-         * 576 - 32 = 544
-         * 544 + 40 = 584
-         */
 
         DIRAC_STATIC_DECL(ROWS, COLS) thing = DIRAC_STATIC_INIT(ROWS, COLS);
         dirac_t * that = DIRAC_STATIC_POINTER(thing);
@@ -301,6 +305,8 @@ int main(void)
 
         ASSERT(that->data.rows == ROWS);
         ASSERT(that->data.columns == COLS);
+
+        ASSERT(sizeof(thing) > sizeof(dirac_t));
 
         fprintf(stderr, "sizeof(thing)=%zu\n", sizeof(thing));
         fprintf(stderr, "sizeof(thing.data)=%zu\n", sizeof(thing.data));
@@ -316,6 +322,8 @@ int main(void)
         fprintf(stderr, "&matrix[%zu]=%p\n", (ROWS * COLS) - 1, bb);
         fprintf(stderr, "&body[%u]=%p\n", 0, cc);
         fprintf(stderr, "&body[%zu]=%p\n", countof(thing.data.body) - 1, dd);
+        ASSERT(aa == cc);
+        ASSERT(bb == dd);
 
         array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
 
