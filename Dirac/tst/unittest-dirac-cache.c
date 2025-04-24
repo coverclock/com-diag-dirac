@@ -253,7 +253,7 @@ int main(void)
                 (*array3x4p)[row][col] = CMPLX(row, col);
                 aa = dirac_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
-                cc = &(that->data.body[dirac_index(that, row, col)]);
+                cc = &(dirac_body_get(that)[dirac_index(that, row, col)]);
                 ASSERT(aa == bb);
                 ASSERT(bb == cc);
                 ASSERT(aa == cc);
@@ -333,7 +333,7 @@ int main(void)
                 (*array3x4p)[row][col] = CMPLX(row, col);
                 aa = dirac_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
-                cc = &(that->data.body[dirac_index(that, row, col)]);
+                cc = &(dirac_body_get(that)[dirac_index(that, row, col)]);
                 ASSERT(aa == bb);
                 ASSERT(bb == cc);
                 ASSERT(aa == cc);
