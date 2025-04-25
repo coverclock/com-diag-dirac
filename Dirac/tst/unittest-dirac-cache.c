@@ -190,8 +190,17 @@ int main(void)
 
         ASSERT(sizeof(dirac_t) == sizeof(dirac_node_t));
 
-        DIRAC_STATIC_DECL(0, 0) thing = DIRAC_STATIC_INIT(0, 0);
-        ASSERT(sizeof(thing) == sizeof(dirac_node_t));
+        DIRAC_STATIC_DECL(0, 0) thing1 = DIRAC_STATIC_INIT(0, 0);
+        ASSERT(sizeof(thing1) == sizeof(dirac_node_t));
+
+        DIRAC_STATIC_DECL(1, 1) thing2 = DIRAC_STATIC_INIT(1, 1);
+        ASSERT(sizeof(thing2) == sizeof(dirac_node_t));
+
+        DIRAC_STATIC_DECL(1, 2) thing3 = DIRAC_STATIC_INIT(1, 2);
+        ASSERT(sizeof(thing3) == sizeof(dirac_node_t));
+
+        DIRAC_STATIC_DECL(1, 3) thing4 = DIRAC_STATIC_INIT(1, 3);
+        ASSERT(sizeof(thing4) > sizeof(dirac_node_t));
 
         dirac_t * that = dirac_new(0, 0);
         ASSERT(sizeof(*that) == sizeof(dirac_node_t));
@@ -200,6 +209,8 @@ int main(void)
         that = dirac_audit();
         ASSERT(that == (dirac_t *)0);
         dirac_free();
+        that = dirac_audit();
+        ASSERT(that == (dirac_t *)0);
 
         STATUS();
     }
