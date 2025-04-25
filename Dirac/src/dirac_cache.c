@@ -146,7 +146,7 @@ void dirac_free(void)
 }
 
 /*******************************************************************************
- * INDEXING
+ * ADDRESSING AND INDEXING
  ******************************************************************************/
 
 dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column) {
@@ -194,7 +194,7 @@ void dirac_dump(FILE * fp)
             }
             fprintf(fp, "dirac_dump: end\n");
         } else {
-            fprintf(fp, "dirac_dump: @%p FAIL!\n", that);
+            fprintf(fp, "dirac_dump: @%p[%zu] FAILED!\n", that, that->node.size);
         }
     DIMINUTO_CRITICAL_SECTION_END;
     fflush(fp);

@@ -238,6 +238,78 @@ int main(void)
     {
         TEST();
 
+        DIRAC_STATIC_DECL(3, 5) thing1 = DIRAC_STATIC_INIT(3, 5);
+        DIRAC_STATIC_DECL(3, 5) thing2 = DIRAC_STATIC_INIT(3, 5);
+        DIRAC_STATIC_DECL(5, 7) thing3 = DIRAC_STATIC_INIT(5, 7);
+
+        dirac_t * that;
+
+        that = dirac_new_pro((dirac_t *)&thing1, (dirac_t *)&thing2);
+        ASSERT(that == (dirac_t *)0);
+
+        that = dirac_new_pro((dirac_t *)&thing1, (dirac_t *)&thing3);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_rows_get(that) == 5);
+        ASSERT(dirac_columns_get(that) == 5);
+
+        that = dirac_delete(that);
+        ASSERT(that == (dirac_t *)0);
+        dirac_free();
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        DIRAC_STATIC_DECL(3, 5) thing1 = DIRAC_STATIC_INIT(3, 5);
+        DIRAC_STATIC_DECL(7, 11) thing2 = DIRAC_STATIC_INIT(7, 11);
+
+        dirac_t * that;
+
+        that = dirac_new_kro((dirac_t *)&thing1, (dirac_t *)&thing2);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_rows_get((dirac_t *)that) == (3 * 7));
+        ASSERT(dirac_columns_get((dirac_t *)that) == (5 * 11));
+
+        that = dirac_delete(that);
+        ASSERT(that == (dirac_t *)0);
+        dirac_free();
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        DIRAC_STATIC_DECL(3, 5) thing1 = DIRAC_STATIC_INIT(3, 5);
+        DIRAC_STATIC_DECL(3, 11) thing2 = DIRAC_STATIC_INIT(7, 11);
+        DIRAC_STATIC_DECL(7, 5) thing3 = DIRAC_STATIC_INIT(7, 11);
+        DIRAC_STATIC_DECL(3, 5) thing4 = DIRAC_STATIC_INIT(3, 5);
+
+        dirac_t * that;
+
+        that = dirac_new_had((dirac_t *)&thing1, (dirac_t *)&thing2);
+        ASSERT(that == (dirac_t *)0);
+
+        that = dirac_new_had((dirac_t *)&thing1, (dirac_t *)&thing3);
+        ASSERT(that == (dirac_t *)0);
+
+        that = dirac_new_had((dirac_t *)&thing1, (dirac_t *)&thing4);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_rows_get((dirac_t *)that) == 3);
+        ASSERT(dirac_columns_get((dirac_t *)that) == 5);
+
+        that = dirac_delete(that);
+        ASSERT(that == (dirac_t *)0);
+        dirac_free();
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
         static const size_t ROWS = 3;
         static const size_t COLS = 4;
         dirac_t * that;
