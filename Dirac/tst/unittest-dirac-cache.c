@@ -3,15 +3,16 @@
  * @file
  * @copyright Copyright 2025 Digital Aggregates Corporation, Colorado, USA.
  * @note Licensed under the terms in LICENSE.txt.
- * @brief This is a unit test of the Tree feature.
+ * @brief This is a unit test of the Dirac memory management and related.
  * @author Chip Overclock <mailto:coverclock@diag.com>
  * @see Diminuto <https://github.com/coverclock/com-diag-dirac>
  * @details
- * This is a unit test of the Dirac memory management>
+ * This is a unit test of the Dirac memory management and related.
  */
 
 #include "com/diag/diminuto/diminuto_unittest.h"
 #include "com/diag/diminuto/diminuto_countof.h"
+#include "com/diag/diminuto/diminuto_dump.h"
 #include "com/diag/diminuto/diminuto_log.h"
 #include "com/diag/dirac/dirac.h"
 
@@ -22,8 +23,49 @@ int main(void)
     {
         TEST();
 
+        fprintf(stderr, "sizeof(double)=%zu\n", sizeof(double));
+        fprintf(stderr, "sizeof(complex double)=%zu\n", sizeof(complex double));
         fprintf(stderr, "sizeof(dirac_complex_t)=%zu\n", sizeof(dirac_complex_t));
         ASSERT(sizeof(complex double) == sizeof(dirac_complex_t));
+
+        static const double thirteen = 13.0;
+        fprintf(stderr, "sizeof(thirteen)=%zu\n", sizeof(thirteen));
+        fprintf(stderr, "thirteen=%lf\n", thirteen);
+        diminuto_dump(stderr, &thirteen, sizeof(thirteen));
+
+        static const double seventeen = 17.0;
+        fprintf(stderr, "sizeof(seventeen)=%zu\n", sizeof(seventeen));
+        fprintf(stderr, "seventeen=%lf\n", seventeen);
+        diminuto_dump(stderr, &seventeen, sizeof(seventeen));
+
+        dirac_complex_t value13plus17i = 13 + (17*I);
+        fprintf(stderr, "value13plus17i=%lf%+lfi\n", creal(value13plus17i), cimag(value13plus17i));
+        diminuto_dump(stderr, &value13plus17i, sizeof(value13plus17i));
+
+        fprintf(stderr, "sizeof(I)=%zu\n", sizeof(I));
+        fprintf(stderr, "I=%lf%+lfi\n", creal(I), cimag(I));
+
+        dirac_complex_t i = I;
+        fprintf(stderr, "i=%lf%+lfi\n", creal(i), cimag(i));
+        diminuto_dump(stderr, &i, sizeof(i));
+        fprintf(stderr, "i^2=%lf%+lfi\n", creal(i*i), cimag(i*i));
+
+        dirac_complex_t j = -I;
+        fprintf(stderr, "j=%lf%+lfi\n", creal(j), cimag(j));
+        diminuto_dump(stderr, &j, sizeof(j));
+        fprintf(stderr, "j^2=%lf%+lfi\n", creal(j*j), cimag(j*j));
+
+        dirac_complex_t k = 0 + (-1*I);
+        fprintf(stderr, "k=%lf%+lfi\n", creal(k), cimag(k));
+        diminuto_dump(stderr, &k, sizeof(k));
+        fprintf(stderr, "k^2=%lf%+lfi\n", creal(k*k), cimag(k*k));
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
         fprintf(stderr, "sizeof(dirac_data_t)=%zu\n", sizeof(dirac_data_t));
         fprintf(stderr, "sizeof(dirac_node_t)=%zu\n", sizeof(dirac_node_t));
         ASSERT(sizeof(dirac_node_t) > sizeof(dirac_data_t));
@@ -266,7 +308,7 @@ int main(void)
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
                 dirac_complex_t value = (double)rr + ((double)cc * I);
-                fprintf(stderr, "value %lf%+lfi\n", creal(value), cimag(value));
+                fprintf(stderr, "value=%lf%+lfi\n", creal(value), cimag(value));
                 ASSERT(value == CMPLX(rr, cc));
                 ASSERT((*here)[rr][cc] == value);
                 ASSERT(((unsigned int)creal((*here)[rr][cc])) == rr);

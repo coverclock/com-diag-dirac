@@ -110,14 +110,6 @@ extern dirac_t * dirac_delete(dirac_t * that);
 
 extern void dirac_free(void);
 
-static inline dirac_t * dirac_new_dup(const dirac_t * that) {
-    return dirac_new(dirac_rows_get(that), dirac_columns_get(that));
-}
-
-static inline dirac_t * dirac_new_inv(const dirac_t * that) {
-    return dirac_new(dirac_columns_get(that), dirac_rows_get(that));
-}
-
 /*******************************************************************************
  * INDEXING AND POINTING
  ******************************************************************************/
@@ -151,6 +143,42 @@ static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, un
 extern dirac_t * dirac_audit(void);
 
 extern void dirac_dump(FILE * fp);
+
+/*******************************************************************************
+ * HELPERS
+ ******************************************************************************/
+
+static inline dirac_t * dirac_new_dup(const dirac_t * that) {
+    return dirac_new(dirac_rows_get(that), dirac_columns_get(that));
+}
+
+static inline dirac_t * dirac_new_inv(const dirac_t * that) {
+    return dirac_new(dirac_columns_get(that), dirac_rows_get(that));
+}
+
+static inline dirac_t * dirac_new_pro(const dirac_t * thata, const dirac_t * thatb) {
+    if (dirac_columns_get(thata) != dirac_rows_get(thatb)) {
+        return (dirac_t *)0;
+    } else {
+        return dirac_new(dirac_columns_get(thata), dirac_rows_get(thatb));
+    }
+}
+
+/* Kronecker product */
+static inline dirac_t * dirac_new_kro(const dirac_t * thata, const dirac_t * thatb) {
+    return dirac_new(dirac_rows_get(thata) * dirac_rows_get(thatb), dirac_columns_get(thata) * dirac_columns_get(thatb));
+}
+
+/* Hadamard product */
+static inline dirac_t * dirac_new_had(const dirac_t * thata, const dirac_t * thatb) {
+    if (dirac_rows_get(thata) != dirac_rows_get(thatb)) {
+        return (dirac_t *)0;
+    } else if (dirac_columns_get(thata) != dirac_columns_get(thatb)) {
+        return (dirac_t *)0;
+    } else {
+        return dirac_new(dirac_rows_get(thata), dirac_columns_get(thatb));
+    }
+}
 
 /*******************************************************************************
  * END
