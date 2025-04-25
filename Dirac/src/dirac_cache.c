@@ -44,7 +44,9 @@ static inline size_t length(size_t rows, size_t columns) {
 }
 
 static inline size_t size(size_t rows, size_t columns) {
-    return length(rows, columns) + sizeof(dirac_t);
+    size_t bytes = length(rows, columns) + sizeof(dirac_data_t);
+    if (bytes < sizeof(dirac_node_t)) { bytes = sizeof(dirac_node_t); }
+    return bytes;
 }
 
 static dirac_t * construct(dirac_t * that, size_t rows, size_t columns)
@@ -99,7 +101,7 @@ dirac_t * dirac_new(size_t rows, size_t columns)
             you->data = ((diminuto_tree_t *)(you->data))->data;
         }
     DIMINUTO_CRITICAL_SECTION_END;
-    return construct(that, rows, columns);;
+    return construct(that, rows, columns);
 }
 
 dirac_t * dirac_delete(dirac_t * that)

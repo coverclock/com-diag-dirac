@@ -188,6 +188,26 @@ int main(void)
     {
         TEST();
 
+        ASSERT(sizeof(dirac_t) == sizeof(dirac_node_t));
+
+        DIRAC_STATIC_DECL(0, 0) thing = DIRAC_STATIC_INIT(0, 0);
+
+        ASSERT(sizeof(thing) == sizeof(dirac_node_t));
+
+        dirac_t * that = dirac_new(0, 0);
+        ASSERT(sizeof(*that) == sizeof(dirac_node_t));
+        that = dirac_delete(that);
+        ASSERT(that == (dirac_t *)0);
+        that = dirac_audit();
+        ASSERT(that == (dirac_t *)0);
+        dirac_free();
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
         static const size_t ROWS = 11;
         static const size_t COLS = 17;
 
