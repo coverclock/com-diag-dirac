@@ -35,3 +35,8 @@ Wheat Ridge CO 80033 USA
 
 # Abstract
 
+# Acknowledgements
+
+This work was inspired by the course "Quantum Computing for Curious Minds"
+(Mark Siemens, Ph.D., Physics and Astronomy, University of Denver)
+which I took in April 2025.
