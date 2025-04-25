@@ -191,7 +191,6 @@ int main(void)
         ASSERT(sizeof(dirac_t) == sizeof(dirac_node_t));
 
         DIRAC_STATIC_DECL(0, 0) thing = DIRAC_STATIC_INIT(0, 0);
-
         ASSERT(sizeof(thing) == sizeof(dirac_node_t));
 
         dirac_t * that = dirac_new(0, 0);
