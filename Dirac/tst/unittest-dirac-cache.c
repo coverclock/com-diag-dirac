@@ -146,6 +146,56 @@ int main(void)
     {
         TEST();
 
+        static const size_t ROWS = 11;
+        static const size_t COLS = 17;
+
+        dirac_t * that = dirac_new(ROWS, COLS);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_rows_get(that) == ROWS);
+        ASSERT(dirac_columns_get(that) == COLS);
+
+        dirac_t * same = dirac_new_dup(that);
+        ASSERT(same != (dirac_t *)0);
+        ASSERT(dirac_rows_get(same) == ROWS);
+        ASSERT(dirac_columns_get(same) == COLS);
+
+        same = dirac_delete(same);
+        ASSERT(same == (dirac_t *)0);
+        that = dirac_delete(that);
+        ASSERT(that == (dirac_t *)0);
+        dirac_free();
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        static const size_t ROWS = 19;
+        static const size_t COLS = 23;
+
+        dirac_t * that = dirac_new(ROWS, COLS);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_rows_get(that) == ROWS);
+        ASSERT(dirac_columns_get(that) == COLS);
+
+        dirac_t * inverted = dirac_new_inv(that);
+        ASSERT(inverted != (dirac_t *)0);
+        ASSERT(dirac_rows_get(inverted) == COLS);
+        ASSERT(dirac_columns_get(inverted) == ROWS);
+
+        inverted = dirac_delete(inverted);
+        ASSERT(inverted == (dirac_t *)0);
+        that = dirac_delete(that);
+        ASSERT(that == (dirac_t *)0);
+        dirac_free();
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
         static const size_t ROWS = 3;
         static const size_t COLS = 4;
         dirac_t * that;

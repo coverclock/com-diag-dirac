@@ -110,11 +110,19 @@ extern dirac_t * dirac_delete(dirac_t * that);
 
 extern void dirac_free(void);
 
+static inline dirac_t * dirac_new_dup(const dirac_t * that) {
+    return dirac_new(dirac_rows_get(that), dirac_columns_get(that));
+}
+
+static inline dirac_t * dirac_new_inv(const dirac_t * that) {
+    return dirac_new(dirac_columns_get(that), dirac_rows_get(that));
+}
+
 /*******************************************************************************
  * INDEXING AND POINTING
  ******************************************************************************/
 
-static inline size_t dirac_index(dirac_t * that, unsigned int row, unsigned int column) {
+static inline size_t dirac_index(const dirac_t * that, unsigned int row, unsigned int column) {
     return (row * dirac_columns_get(that)) + column;
 }
 
