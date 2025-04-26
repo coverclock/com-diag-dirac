@@ -29,7 +29,7 @@
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static diminuto_tree_root_t root = DIMINUTO_TREE_EMPTY;
+static diminuto_tree_root_t cache = DIMINUTO_TREE_EMPTY;
 
 /*******************************************************************************
  * HELPERS
@@ -89,7 +89,7 @@ dirac_t * dirac_new(size_t rows, size_t columns)
     that->node.size = size(rows, columns);
     int rc = 0;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
-        diminuto_tree_t * you = diminuto_tree_search(root, &me, compare, &rc);
+        diminuto_tree_t * you = diminuto_tree_search(cache, &me, compare, &rc);
         if (you == (diminuto_tree_t *)0) {
             that = allocate(rows, columns);
         } else if (rc != 0) {
@@ -110,7 +110,7 @@ dirac_t * dirac_delete(dirac_t * that)
     diminuto_tree_t * me = diminuto_tree_init(&(that->node.tree));
     that->node.size = bytes;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
-        diminuto_tree_t * you = diminuto_tree_search_insert_or_replace(&root, me, compare, !0);
+        diminuto_tree_t * you = diminuto_tree_search_insert_or_replace(&cache, me, compare, !0);
         if (you == (diminuto_tree_t *)0) {
             /* Do  nothing. */
         } else if (you == me) {
@@ -131,7 +131,7 @@ void dirac_free(void)
     diminuto_tree_t * peerp;
     diminuto_tree_t * linkp;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
-        nodep = diminuto_tree_first(&root);
+        nodep = diminuto_tree_first(&cache);
         while (nodep != DIMINUTO_TREE_NULL) {
             nextp = diminuto_tree_next(nodep);
             (void)diminuto_tree_remove(nodep);
@@ -170,7 +170,7 @@ dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned in
 
 dirac_t * dirac_audit(void)
 {
-    return (dirac_t *)diminuto_tree_audit(&root);
+    return (dirac_t *)diminuto_tree_audit(&cache);
 }
 
 void dirac_dump(FILE * fp)
@@ -183,7 +183,7 @@ void dirac_dump(FILE * fp)
         that = dirac_audit();
         if (that == (dirac_t *)0) {
             fprintf(fp, "dirac_dump: begin\n");
-            for (rootp = &root, nodep = diminuto_tree_first(rootp); nodep != DIMINUTO_TREE_NULL; nodep = diminuto_tree_next(nodep)) {
+            for (rootp = &cache, nodep = diminuto_tree_first(rootp); nodep != DIMINUTO_TREE_NULL; nodep = diminuto_tree_next(nodep)) {
                 that = (dirac_t *)nodep;
                 fprintf(fp, "dirac_dump: @%p[%zu]", that, that->node.size);
                 nextp = nodep->data;

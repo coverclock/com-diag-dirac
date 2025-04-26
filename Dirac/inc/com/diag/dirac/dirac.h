@@ -190,6 +190,15 @@ static inline dirac_t * dirac_new_had(const dirac_t * thata, const dirac_t * tha
  * OPERATIONS
  ******************************************************************************/
 
+/*
+ * Matrix operations may allocate (new) from the cache, but if the do so,
+ * the resulting dynamically allocated object must either be deallocated
+ * (delete) or returned to the caller. The only objects they may deallocate
+ * back to the cache are objects they themselves allocate; this allows the
+ * use of statically allocated (i.e. on the C stack) objects in matrix
+ * operations.
+ */
+
 /*******************************************************************************
  * END
  ******************************************************************************/
