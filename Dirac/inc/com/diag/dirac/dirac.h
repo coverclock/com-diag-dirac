@@ -138,7 +138,7 @@ static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, un
 
 extern dirac_t * dirac_audit(void);
 
-extern void dirac_dump(FILE * fp);
+extern ssize_t dirac_dump(FILE * fp);
 
 /*******************************************************************************
  * HELPERS

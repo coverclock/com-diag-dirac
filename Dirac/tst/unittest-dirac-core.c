@@ -103,78 +103,78 @@ int main(void)
 
         dirac_t * new1 = dirac_new(0, 0);
         ASSERT(new1 != (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new2 = dirac_new(2, 3);
         ASSERT(new2 != (dirac_t *)0);
         ASSERT(new2 != new1);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new3 = dirac_new(3, 2);
         ASSERT(new3 != (dirac_t *)0);
         ASSERT(new3 != new1);
         ASSERT(new3 != new2);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new4 = dirac_new(4, 4);
         ASSERT(new4 != (dirac_t *)0);
         ASSERT(new4 != new1);
         ASSERT(new4 != new2);
         ASSERT(new4 != new3);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * delete3 = dirac_delete(new3);
         ASSERT(delete3 == (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * delete1 = dirac_delete(new1);
         ASSERT(delete1 == (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * delete4 = dirac_delete(new4);
         ASSERT(delete4 == (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * delete2 = dirac_delete(new2);
         ASSERT(delete2 == (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new5 = dirac_new(0, 0);
         ASSERT(new5 != (dirac_t *)0);
         ASSERT(new5 == new1);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new6 = dirac_new(2, 3);
         ASSERT(new6 != (dirac_t *)0);
         ASSERT(new6 == new3);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new7 = dirac_new(3, 2);
         ASSERT(new7 != (dirac_t *)0);
         ASSERT(new7 == new2);
         ASSERT(new7 != new6);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new8 = dirac_new(4, 4);
         ASSERT(new8 != (dirac_t *)0);
         ASSERT(new8 == new4);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * delete7 = dirac_delete(new7);
         ASSERT(delete7 == (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * delete5 = dirac_delete(new5);
         ASSERT(delete5 == (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * delete8 = dirac_delete(new8);
         ASSERT(delete8 == (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * delete6 = dirac_delete(new6);
         ASSERT(delete6 == (dirac_t *)0);
-        dirac_dump(stderr);
+        ASSERT(dirac_dump(stderr) >= 0);
 
         STATUS();
     }
@@ -542,9 +542,14 @@ int main(void)
 
         dirac_t * that = dirac_audit();
         ASSERT(that == (dirac_t *)0);
-        dirac_dump(stderr);
+
+        ssize_t total = dirac_dump(stderr);
+        fprintf(stderr, "cache[%zd]\n", total);
+        ASSERT(total >= 0);
+
         dirac_free();
-        dirac_dump(stderr);
+        total = dirac_dump((FILE *)0);
+        ASSERT(total == 0);
 
         STATUS();
     }
