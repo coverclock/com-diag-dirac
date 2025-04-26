@@ -101,9 +101,6 @@ int main(void)
     {
         TEST();
 
-        dirac_free();
-        dirac_dump(stderr);
-
         dirac_t * new1 = dirac_new(0, 0);
         ASSERT(new1 != (dirac_t *)0);
         dirac_dump(stderr);
@@ -179,9 +176,6 @@ int main(void)
         ASSERT(delete6 == (dirac_t *)0);
         dirac_dump(stderr);
 
-        dirac_free();
-        dirac_dump(stderr);
-
         STATUS();
     }
 
@@ -206,10 +200,21 @@ int main(void)
         ASSERT(sizeof(*that) == sizeof(dirac_node_t));
         that = dirac_delete(that);
         ASSERT(that == (dirac_t *)0);
-        that = dirac_audit();
-        ASSERT(that == (dirac_t *)0);
-        dirac_free();
-        that = dirac_audit();
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        DIRAC_STATIC_DECL(11, 17) thing = DIRAC_STATIC_INIT(11, 17);
+
+        dirac_t * that = dirac_new_dup((dirac_t *)&thing);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_rows_get(that) == 11);
+        ASSERT(dirac_columns_get(that) == 17);
+
+        that = dirac_delete(that);
         ASSERT(that == (dirac_t *)0);
 
         STATUS();
@@ -218,24 +223,15 @@ int main(void)
     {
         TEST();
 
-        static const size_t ROWS = 11;
-        static const size_t COLS = 17;
+        DIRAC_STATIC_DECL(19, 23) thing = DIRAC_STATIC_INIT(19, 23);
 
-        dirac_t * that = dirac_new(ROWS, COLS);
+        dirac_t * that = dirac_new_trn((dirac_t *)&thing);
         ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get(that) == ROWS);
-        ASSERT(dirac_columns_get(that) == COLS);
+        ASSERT(dirac_rows_get(that) == 23);
+        ASSERT(dirac_columns_get(that) == 19);
 
-        dirac_t * same = dirac_new_dup(that);
-        ASSERT(same != (dirac_t *)0);
-        ASSERT(dirac_rows_get(same) == ROWS);
-        ASSERT(dirac_columns_get(same) == COLS);
-
-        same = dirac_delete(same);
-        ASSERT(same == (dirac_t *)0);
         that = dirac_delete(that);
         ASSERT(that == (dirac_t *)0);
-        dirac_free();
 
         STATUS();
     }
@@ -243,24 +239,26 @@ int main(void)
     {
         TEST();
 
-        static const size_t ROWS = 19;
-        static const size_t COLS = 23;
+        DIRAC_STATIC_DECL(2, 3) thing1 = DIRAC_STATIC_INIT(2, 3);
+        DIRAC_STATIC_DECL(2, 4) thing2 = DIRAC_STATIC_INIT(2, 4);
+        DIRAC_STATIC_DECL(3, 3) thing3 = DIRAC_STATIC_INIT(3, 3);
+        DIRAC_STATIC_DECL(2, 3) thing4 = DIRAC_STATIC_INIT(2, 3);
 
-        dirac_t * that = dirac_new(ROWS, COLS);
+        dirac_t * that;
+
+        that = dirac_new_sum((dirac_t *)&thing1, (dirac_t *)&thing2);
+        ASSERT(that == (dirac_t *)0);
+
+        that = dirac_new_sum((dirac_t *)&thing1, (dirac_t *)&thing3);
+        ASSERT(that == (dirac_t *)0);
+
+        that = dirac_new_sum((dirac_t *)&thing1, (dirac_t *)&thing4);
         ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get(that) == ROWS);
-        ASSERT(dirac_columns_get(that) == COLS);
+        ASSERT(dirac_rows_get((dirac_t *)that) == 2);
+        ASSERT(dirac_columns_get((dirac_t *)that) == 3);
 
-        dirac_t * inverted = dirac_new_inv(that);
-        ASSERT(inverted != (dirac_t *)0);
-        ASSERT(dirac_rows_get(inverted) == COLS);
-        ASSERT(dirac_columns_get(inverted) == ROWS);
-
-        inverted = dirac_delete(inverted);
-        ASSERT(inverted == (dirac_t *)0);
         that = dirac_delete(that);
         ASSERT(that == (dirac_t *)0);
-        dirac_free();
 
         STATUS();
     }
@@ -284,7 +282,6 @@ int main(void)
 
         that = dirac_delete(that);
         ASSERT(that == (dirac_t *)0);
-        dirac_free();
 
         STATUS();
     }
@@ -304,7 +301,6 @@ int main(void)
 
         that = dirac_delete(that);
         ASSERT(that == (dirac_t *)0);
-        dirac_free();
 
         STATUS();
     }
@@ -332,7 +328,6 @@ int main(void)
 
         that = dirac_delete(that);
         ASSERT(that == (dirac_t *)0);
-        dirac_free();
 
         STATUS();
     }
@@ -420,8 +415,6 @@ int main(void)
 
         dirac_delete(that);
 
-        dirac_free();
-
         STATUS();
     }
 
@@ -461,8 +454,6 @@ int main(void)
         }
 
         dirac_delete(that);
-
-        dirac_free();
 
         STATUS();
     }
@@ -542,6 +533,18 @@ int main(void)
 
 #undef COLS
 #undef ROWS
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        dirac_t * that = dirac_audit();
+        ASSERT(that == (dirac_t *)0);
+        dirac_dump(stderr);
+        dirac_free();
+        dirac_dump(stderr);
 
         STATUS();
     }
