@@ -11,7 +11,7 @@
  */
 
 /*******************************************************************************
- * HEADERS
+ * PREREQUISITES
  ******************************************************************************/
 
 #include "com/diag/dirac/dirac.h"
@@ -52,7 +52,7 @@ static inline size_t size(size_t rows, size_t columns) {
 static dirac_t * construct(dirac_t * that, size_t rows, size_t columns)
 {
     if (that != (dirac_t *)0) {
-        memset(dirac_body_get(that), 0, length(rows, columns));
+        memset(dirac_body_mut(that), 0, length(rows, columns));
         that->data.head.rows = rows;
         that->data.head.columns = columns;
     }
@@ -126,10 +126,10 @@ dirac_t * dirac_delete(dirac_t * that)
 
 void dirac_free(void)
 {
-    diminuto_tree_t * nodep;
-    diminuto_tree_t * nextp;
-    diminuto_tree_t * peerp;
-    diminuto_tree_t * linkp;
+    diminuto_tree_t * nodep = (diminuto_tree_t *)0;
+    diminuto_tree_t * nextp = (diminuto_tree_t *)0;
+    diminuto_tree_t * peerp = (diminuto_tree_t *)0;
+    diminuto_tree_t * linkp = (diminuto_tree_t *)0;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
         nodep = diminuto_tree_first(&cache);
         while (nodep != DIMINUTO_TREE_NULL) {
@@ -176,10 +176,10 @@ dirac_t * dirac_audit(void)
 ssize_t dirac_dump(FILE * fp)
 {
     ssize_t total = 0;
-    diminuto_tree_root_t * rootp;
-    diminuto_tree_t * nodep;
-    diminuto_tree_t * nextp;
-    dirac_t * that;
+    diminuto_tree_root_t * rootp = (diminuto_tree_root_t *)0;
+    diminuto_tree_t * nodep = (diminuto_tree_t *)0;
+    diminuto_tree_t * nextp = (diminuto_tree_t *)0;
+    dirac_t * that = (dirac_t *)0;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
         that = dirac_audit();
         if (that == (dirac_t *)0) {

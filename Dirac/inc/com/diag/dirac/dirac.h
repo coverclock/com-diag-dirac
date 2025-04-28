@@ -41,6 +41,7 @@
  ******************************************************************************/
 
 #include "com/diag/diminuto/diminuto_tree.h"
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -85,7 +86,7 @@ typedef struct DiracData {
 typedef DIRAC_STATIC_DECL(0, 0) dirac_t;
 
 /*******************************************************************************
- * GETTORS
+ * GETTORS AND MUTATORS
  ******************************************************************************/
 
 static inline size_t dirac_rows_get(const dirac_t * that) {
@@ -96,7 +97,11 @@ static inline size_t dirac_columns_get(const dirac_t * that) {
     return that->data.head.columns;
 }
 
-static inline dirac_complex_t * dirac_body_get(dirac_t * that) {
+static inline const dirac_complex_t * dirac_body_get(const dirac_t * that) {
+    return &(that->data.body[0]);
+}
+
+static inline dirac_complex_t * dirac_body_mut(dirac_t * that) {
     return &(that->data.body[0]);
 }
 
@@ -144,18 +149,20 @@ extern ssize_t dirac_dump(FILE * fp);
  * HELPERS
  ******************************************************************************/
 
-static inline dirac_t * dirac_new_dup(const dirac_t * that) {
-    return dirac_new(dirac_rows_get(that), dirac_columns_get(that));
+static inline dirac_t * dirac_new_dup(const dirac_t * thata) {
+    return dirac_new(dirac_rows_get(thata), dirac_columns_get(thata));
 }
 
-static inline dirac_t * dirac_new_trn(const dirac_t * that) {
-    return dirac_new(dirac_columns_get(that), dirac_rows_get(that));
+static inline dirac_t * dirac_new_trn(const dirac_t * thata) {
+    return dirac_new(dirac_columns_get(thata), dirac_rows_get(thata));
 }
 
 static inline dirac_t * dirac_new_sum(const dirac_t * thata, const dirac_t * thatb) {
     if (dirac_rows_get(thata) != dirac_rows_get(thatb)) {
+        errno = EINVAL;
         return (dirac_t *)0;
     } else if (dirac_columns_get(thata) != dirac_columns_get(thatb)) {
+        errno = EINVAL;
         return (dirac_t *)0;
     } else {
         return dirac_new(dirac_rows_get(thata), dirac_columns_get(thatb));
@@ -164,6 +171,7 @@ static inline dirac_t * dirac_new_sum(const dirac_t * thata, const dirac_t * tha
 
 static inline dirac_t * dirac_new_pro(const dirac_t * thata, const dirac_t * thatb) {
     if (dirac_columns_get(thata) != dirac_rows_get(thatb)) {
+        errno = EINVAL;
         return (dirac_t *)0;
     } else {
         return dirac_new(dirac_columns_get(thata), dirac_rows_get(thatb));
@@ -178,8 +186,10 @@ static inline dirac_t * dirac_new_kro(const dirac_t * thata, const dirac_t * tha
 /* Hadamard product */
 static inline dirac_t * dirac_new_had(const dirac_t * thata, const dirac_t * thatb) {
     if (dirac_rows_get(thata) != dirac_rows_get(thatb)) {
+        errno = EINVAL;
         return (dirac_t *)0;
     } else if (dirac_columns_get(thata) != dirac_columns_get(thatb)) {
+        errno = EINVAL;
         return (dirac_t *)0;
     } else {
         return dirac_new(dirac_rows_get(thata), dirac_columns_get(thatb));
@@ -190,14 +200,13 @@ static inline dirac_t * dirac_new_had(const dirac_t * thata, const dirac_t * tha
  * OPERATIONS
  ******************************************************************************/
 
-/*
- * Matrix operations may allocate (new) from the cache, but if the do so,
- * the resulting dynamically allocated object must either be deallocated
- * (delete) or returned to the caller. The only objects they may deallocate
- * back to the cache are objects they themselves allocate; this allows the
- * use of statically allocated (i.e. on the C stack) objects in matrix
- * operations.
- */
+extern dirac_t * dirac_matrix_trn(const dirac_t * thata);
+
+extern dirac_t * dirac_matrix_add(const dirac_t * thata, const dirac_t * thatb);
+
+extern dirac_t * dirac_matrix_sub(const dirac_t * thata, const dirac_t * thatb);
+
+extern dirac_t * dirac_matrix_mul(const dirac_t * thata, const dirac_t * thatb);
 
 /*******************************************************************************
  * END

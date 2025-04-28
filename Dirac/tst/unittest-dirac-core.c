@@ -81,7 +81,7 @@ int main(void)
         dirac_t that;
         size_t rows;
         size_t columns;
-        dirac_complex_t * matrix;
+        const dirac_complex_t * matrix;
 
         that.data.head.rows = 5;
         that.data.head.columns = 7;
@@ -440,7 +440,7 @@ int main(void)
                 (*array3x4p)[row][col] = CMPLX(row, col);
                 aa = dirac_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
-                cc = &(dirac_body_get(that)[dirac_index(that, row, col)]);
+                cc = &(dirac_body_mut(that)[dirac_index(that, row, col)]);
                 ASSERT(aa == bb);
                 ASSERT(bb == cc);
                 ASSERT(aa == cc);
@@ -518,7 +518,7 @@ int main(void)
                 (*array3x4p)[row][col] = CMPLX(row, col);
                 aa = dirac_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
-                cc = &(dirac_body_get(that)[dirac_index(that, row, col)]);
+                cc = &(dirac_body_mut(that)[dirac_index(that, row, col)]);
                 ASSERT(aa == bb);
                 ASSERT(bb == cc);
                 ASSERT(aa == cc);
