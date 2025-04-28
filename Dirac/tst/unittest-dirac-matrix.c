@@ -43,6 +43,27 @@ int main(void)
     {
         TEST();
 
+        DIRAC_OBJECT_DECL(2, 3) thing = DIRAC_OBJECT_INIT(2, 3);
+        size_t rows = dirac_rows_get((dirac_t *)(&thing));
+        size_t cols = dirac_columns_get((dirac_t *)(&thing));
+        size_t rr;
+        size_t cc;
+
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                thing.data.body[rr][cc] = CMPLX((double)rr, (double)cc);
+            }
+        }
+
+        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+
+        STATUS();
+
+    }
+
+    {
+        TEST();
+
         dirac_t * that = dirac_audit();
         ASSERT(that == (dirac_t *)0);
 

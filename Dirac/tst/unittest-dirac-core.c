@@ -93,7 +93,7 @@ int main(void)
         ASSERT(columns == 7);
 
         matrix = dirac_body_get(&that);
-        ASSERT(matrix == &(that.data.body[0]));
+        ASSERT(matrix == &(that.data.body[0][0]));
 
         STATUS();
     }
@@ -372,13 +372,13 @@ int main(void)
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
                 ii = dirac_index(that, rr, cc);
-                aa = &(that->data.body[ii]);
+                aa = &((dirac_body_mut(that))[ii]);
                 fprintf(stderr, "body(%u,%u)[%u]@%p\n", rr, cc, ii, aa);
                 ASSERT(*aa == CMPLX(0, 0));
             }
         }
 
-        here = (array_t *)(&(that->data.body));
+        here = (array_t *)(&(that->data.body[0][0]));
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
@@ -499,10 +499,10 @@ int main(void)
         fprintf(stderr, "sizeof(thing.data.body)=%zu\n", sizeof(thing.data.body));
         fprintf(stderr, "sizeof(thing.node)=%zu\n", sizeof(thing.node));
 
-        aa = &(that->data.body[0]);
-        bb = &(that->data.body[(ROWS * COLS) - 1]);
-        cc = &(thing.data.body[0]);
-        dd = &(thing.data.body[countof(thing.data.body) - 1]);
+        aa = &((dirac_body_mut(that))[0]);
+        bb = &((dirac_body_mut(that))[(ROWS * COLS) - 1]);
+        cc = &(thing.data.body[0][0]);
+        dd = &(thing.data.body[ROWS - 1][COLS - 1]);
         fprintf(stderr, "that[%u]=%p\n", 0, aa);
         fprintf(stderr, "that[%zu]=%p\n", (ROWS * COLS) - 1, bb);
         fprintf(stderr, "thing[%u]=%p\n", 0, cc);

@@ -59,7 +59,7 @@
     union { \
         struct { \
             dirac_data_t head; \
-            dirac_complex_t body[(_ROWS_) * (_COLS_)]; \
+            dirac_complex_t body[_ROWS_][_COLS_]; \
         } data; \
         dirac_node_t node; \
     }
@@ -98,11 +98,11 @@ static inline size_t dirac_columns_get(const dirac_t * that) {
 }
 
 static inline const dirac_complex_t * dirac_body_get(const dirac_t * that) {
-    return that->data.body;
+    return &(that->data.body[0][0]);
 }
 
 static inline dirac_complex_t * dirac_body_mut(dirac_t * that) {
-    return that->data.body;
+    return &(that->data.body[0][0]);
 }
 
 /*******************************************************************************
@@ -124,7 +124,7 @@ static inline size_t dirac_index(const dirac_t * that, unsigned int row, unsigne
 }
 
 static inline dirac_complex_t * dirac_point_fast(dirac_t * that, unsigned int row, unsigned int column) {
-    return &(that->data.body[dirac_index(that, row, column)]);
+    return &((dirac_body_mut(that))[dirac_index(that, row, column)]);
 }
 
 extern dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column);
