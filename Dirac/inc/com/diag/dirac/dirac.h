@@ -98,11 +98,11 @@ static inline size_t dirac_columns_get(const dirac_t * that) {
 }
 
 static inline const dirac_complex_t * dirac_body_get(const dirac_t * that) {
-    return &(that->data.body[0]);
+    return that->data.body;
 }
 
 static inline dirac_complex_t * dirac_body_mut(dirac_t * that) {
-    return &(that->data.body[0]);
+    return that->data.body;
 }
 
 /*******************************************************************************
