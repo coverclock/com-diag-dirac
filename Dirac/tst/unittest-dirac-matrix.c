@@ -20,21 +20,23 @@ int main(void)
     {
         TEST();
 
-        DIRAC_OBJECT_DECL(2, 3) thing = DIRAC_OBJECT_INIT(2, 3);
+        dirac_t * that = dirac_new(2, 3);
         DIRAC_ARRAY_TYPE(thing2x3_t, 2, 3);
-        thing2x3_t * that = DIRAC_ARRAY_POINTER(thing2x3_t, &thing);
-        size_t rows = dirac_rows_get((dirac_t *)(&thing));
-        size_t cols = dirac_columns_get((dirac_t *)(&thing));
+        thing2x3_t * matrix = DIRAC_ARRAY_POINTER(thing2x3_t, that);
+        size_t rows = dirac_rows_get(that);
+        size_t cols = dirac_columns_get(that);
         size_t rr;
         size_t cc;
 
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                (*that)[rr][cc] = CMPLX((double)rr, (double)cc);
+                (*matrix)[rr][cc] = CMPLX((double)rr, (double)cc);
             }
         }
 
-        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+        dirac_matrix_print(stdout, that);
+
+        dirac_delete(that);
 
         STATUS();
 
@@ -52,6 +54,29 @@ int main(void)
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
                 thing.data.body[rr][cc] = CMPLX((double)rr, (double)cc);
+            }
+        }
+
+        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+
+        STATUS();
+
+    }
+
+    {
+        TEST();
+
+        DIRAC_OBJECT_DECL(2, 3) thing = DIRAC_OBJECT_INIT(2, 3);
+        DIRAC_ARRAY_TYPE(thing2x3_t, 2, 3);
+        thing2x3_t * matrix = DIRAC_ARRAY_POINTER(thing2x3_t, &thing);
+        size_t rows = dirac_rows_get((dirac_t *)(&thing));
+        size_t cols = dirac_columns_get((dirac_t *)(&thing));
+        size_t rr;
+        size_t cc;
+
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                (*matrix)[rr][cc] = CMPLX((double)rr, (double)cc);
             }
         }
 
