@@ -184,16 +184,16 @@ int main(void)
 
         ASSERT(sizeof(dirac_t) == sizeof(dirac_node_t));
 
-        DIRAC_STATIC_DECL(0, 0) thing1 = DIRAC_STATIC_INIT(0, 0);
+        DIRAC_OBJECT_DECL(0, 0) thing1 = DIRAC_OBJECT_INIT(0, 0);
         ASSERT(sizeof(thing1) == sizeof(dirac_node_t));
 
-        DIRAC_STATIC_DECL(1, 1) thing2 = DIRAC_STATIC_INIT(1, 1);
+        DIRAC_OBJECT_DECL(1, 1) thing2 = DIRAC_OBJECT_INIT(1, 1);
         ASSERT(sizeof(thing2) == sizeof(dirac_node_t));
 
-        DIRAC_STATIC_DECL(1, 2) thing3 = DIRAC_STATIC_INIT(1, 2);
+        DIRAC_OBJECT_DECL(1, 2) thing3 = DIRAC_OBJECT_INIT(1, 2);
         ASSERT(sizeof(thing3) == sizeof(dirac_node_t));
 
-        DIRAC_STATIC_DECL(1, 3) thing4 = DIRAC_STATIC_INIT(1, 3);
+        DIRAC_OBJECT_DECL(1, 3) thing4 = DIRAC_OBJECT_INIT(1, 3);
         ASSERT(sizeof(thing4) > sizeof(dirac_node_t));
 
         dirac_t * that = dirac_new(0, 0);
@@ -207,7 +207,7 @@ int main(void)
     {
         TEST();
 
-        DIRAC_STATIC_DECL(11, 17) thing = DIRAC_STATIC_INIT(11, 17);
+        DIRAC_OBJECT_DECL(11, 17) thing = DIRAC_OBJECT_INIT(11, 17);
 
         dirac_t * that = dirac_new_dup((dirac_t *)&thing);
         ASSERT(that != (dirac_t *)0);
@@ -223,7 +223,7 @@ int main(void)
     {
         TEST();
 
-        DIRAC_STATIC_DECL(19, 23) thing = DIRAC_STATIC_INIT(19, 23);
+        DIRAC_OBJECT_DECL(19, 23) thing = DIRAC_OBJECT_INIT(19, 23);
 
         dirac_t * that = dirac_new_trn((dirac_t *)&thing);
         ASSERT(that != (dirac_t *)0);
@@ -239,10 +239,10 @@ int main(void)
     {
         TEST();
 
-        DIRAC_STATIC_DECL(2, 3) thing1 = DIRAC_STATIC_INIT(2, 3);
-        DIRAC_STATIC_DECL(2, 4) thing2 = DIRAC_STATIC_INIT(2, 4);
-        DIRAC_STATIC_DECL(3, 3) thing3 = DIRAC_STATIC_INIT(3, 3);
-        DIRAC_STATIC_DECL(2, 3) thing4 = DIRAC_STATIC_INIT(2, 3);
+        DIRAC_OBJECT_DECL(2, 3) thing1 = DIRAC_OBJECT_INIT(2, 3);
+        DIRAC_OBJECT_DECL(2, 4) thing2 = DIRAC_OBJECT_INIT(2, 4);
+        DIRAC_OBJECT_DECL(3, 3) thing3 = DIRAC_OBJECT_INIT(3, 3);
+        DIRAC_OBJECT_DECL(2, 3) thing4 = DIRAC_OBJECT_INIT(2, 3);
 
         dirac_t * that;
 
@@ -266,9 +266,9 @@ int main(void)
     {
         TEST();
 
-        DIRAC_STATIC_DECL(3, 5) thing1 = DIRAC_STATIC_INIT(3, 5);
-        DIRAC_STATIC_DECL(3, 5) thing2 = DIRAC_STATIC_INIT(3, 5);
-        DIRAC_STATIC_DECL(5, 7) thing3 = DIRAC_STATIC_INIT(5, 7);
+        DIRAC_OBJECT_DECL(3, 5) thing1 = DIRAC_OBJECT_INIT(3, 5);
+        DIRAC_OBJECT_DECL(3, 5) thing2 = DIRAC_OBJECT_INIT(3, 5);
+        DIRAC_OBJECT_DECL(5, 7) thing3 = DIRAC_OBJECT_INIT(5, 7);
 
         dirac_t * that;
 
@@ -289,8 +289,8 @@ int main(void)
     {
         TEST();
 
-        DIRAC_STATIC_DECL(3, 5) thing1 = DIRAC_STATIC_INIT(3, 5);
-        DIRAC_STATIC_DECL(7, 11) thing2 = DIRAC_STATIC_INIT(7, 11);
+        DIRAC_OBJECT_DECL(3, 5) thing1 = DIRAC_OBJECT_INIT(3, 5);
+        DIRAC_OBJECT_DECL(7, 11) thing2 = DIRAC_OBJECT_INIT(7, 11);
 
         dirac_t * that;
 
@@ -308,10 +308,10 @@ int main(void)
     {
         TEST();
 
-        DIRAC_STATIC_DECL(3, 5) thing1 = DIRAC_STATIC_INIT(3, 5);
-        DIRAC_STATIC_DECL(3, 11) thing2 = DIRAC_STATIC_INIT(7, 11);
-        DIRAC_STATIC_DECL(7, 5) thing3 = DIRAC_STATIC_INIT(7, 11);
-        DIRAC_STATIC_DECL(3, 5) thing4 = DIRAC_STATIC_INIT(3, 5);
+        DIRAC_OBJECT_DECL(3, 5) thing1 = DIRAC_OBJECT_INIT(3, 5);
+        DIRAC_OBJECT_DECL(3, 11) thing2 = DIRAC_OBJECT_INIT(7, 11);
+        DIRAC_OBJECT_DECL(7, 5) thing3 = DIRAC_OBJECT_INIT(7, 11);
+        DIRAC_OBJECT_DECL(3, 5) thing4 = DIRAC_OBJECT_INIT(3, 5);
 
         dirac_t * that;
 
@@ -461,7 +461,7 @@ int main(void)
     {
         TEST();
 
-        DIRAC_STATIC_DECL(0, 0) thing = DIRAC_STATIC_INIT(0, 0);
+        DIRAC_OBJECT_DECL(0, 0) thing = DIRAC_OBJECT_INIT(0, 0);
         dirac_t * that = (dirac_t *)&thing;
 
         ASSERT(dirac_rows_get(that) == 0);
@@ -478,7 +478,7 @@ int main(void)
 #define ROWS 5
 #define COLS 7
 
-        DIRAC_STATIC_DECL(ROWS, COLS) thing = DIRAC_STATIC_INIT(ROWS, COLS);
+        DIRAC_OBJECT_DECL(ROWS, COLS) thing = DIRAC_OBJECT_INIT(ROWS, COLS);
         dirac_t * that = (dirac_t *)&thing;
         DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
         array3x4_t * array3x4p;

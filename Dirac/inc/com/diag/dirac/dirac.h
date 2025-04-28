@@ -55,7 +55,7 @@
 
 #define DIRAC_ARRAY_POINTER(_TYPE_, _THAT_) ((_TYPE_ *)(&((_THAT_)->data.body)))
 
-#define DIRAC_STATIC_DECL(_ROWS_, _COLS_) \
+#define DIRAC_OBJECT_DECL(_ROWS_, _COLS_) \
     union { \
         struct { \
             dirac_data_t head; \
@@ -64,7 +64,7 @@
         dirac_node_t node; \
     }
 
-#define DIRAC_STATIC_INIT(_ROWS_, _COLS_) \
+#define DIRAC_OBJECT_INIT(_ROWS_, _COLS_) \
     { { { _ROWS_, _COLS_ } } }
 
 /*******************************************************************************
@@ -83,7 +83,7 @@ typedef struct DiracData {
     size_t columns;
 } dirac_data_t;
 
-typedef DIRAC_STATIC_DECL(0, 0) dirac_t;
+typedef DIRAC_OBJECT_DECL(0, 0) dirac_t;
 
 /*******************************************************************************
  * GETTORS AND MUTATORS

@@ -11,8 +11,6 @@
  */
 
 #include "com/diag/diminuto/diminuto_unittest.h"
-#include "com/diag/diminuto/diminuto_dump.h"
-#include "com/diag/diminuto/diminuto_log.h"
 #include "com/diag/dirac/dirac.h"
 
 int main(void)
@@ -22,9 +20,9 @@ int main(void)
     {
         TEST();
 
-        DIRAC_STATIC_DECL(2, 3) thing = DIRAC_STATIC_INIT(2, 3);
-        DIRAC_ARRAY_TYPE(thing_t, 2, 3);
-        thing_t * that = DIRAC_ARRAY_POINTER(thing_t, &thing);
+        DIRAC_OBJECT_DECL(2, 3) thing = DIRAC_OBJECT_INIT(2, 3);
+        DIRAC_ARRAY_TYPE(thing2x3_t, 2, 3);
+        thing2x3_t * that = DIRAC_ARRAY_POINTER(thing2x3_t, &thing);
         size_t rows = dirac_rows_get((dirac_t *)(&thing));
         size_t cols = dirac_columns_get((dirac_t *)(&thing));
         size_t rr;
