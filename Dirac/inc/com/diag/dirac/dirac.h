@@ -158,24 +158,25 @@ static inline dirac_t * dirac_new_trn(const dirac_t * thata) {
 }
 
 static inline dirac_t * dirac_new_sum(const dirac_t * thata, const dirac_t * thatb) {
+    dirac_t * that = (dirac_t *)0;
     if (dirac_rows_get(thata) != dirac_rows_get(thatb)) {
         errno = EINVAL;
-        return (dirac_t *)0;
     } else if (dirac_columns_get(thata) != dirac_columns_get(thatb)) {
         errno = EINVAL;
-        return (dirac_t *)0;
     } else {
-        return dirac_new(dirac_rows_get(thata), dirac_columns_get(thatb));
+        that = dirac_new(dirac_rows_get(thata), dirac_columns_get(thatb));
     }
+    return that;
 }
 
 static inline dirac_t * dirac_new_pro(const dirac_t * thata, const dirac_t * thatb) {
+    dirac_t * that = (dirac_t *)0;
     if (dirac_columns_get(thata) != dirac_rows_get(thatb)) {
         errno = EINVAL;
-        return (dirac_t *)0;
     } else {
-        return dirac_new(dirac_columns_get(thata), dirac_rows_get(thatb));
+        that = dirac_new(dirac_columns_get(thata), dirac_rows_get(thatb));
     }
+    return that;
 }
 
 /* Kronecker product */
@@ -185,16 +186,22 @@ static inline dirac_t * dirac_new_kro(const dirac_t * thata, const dirac_t * tha
 
 /* Hadamard product */
 static inline dirac_t * dirac_new_had(const dirac_t * thata, const dirac_t * thatb) {
+    dirac_t * that = (dirac_t *)0;
     if (dirac_rows_get(thata) != dirac_rows_get(thatb)) {
         errno = EINVAL;
-        return (dirac_t *)0;
     } else if (dirac_columns_get(thata) != dirac_columns_get(thatb)) {
         errno = EINVAL;
-        return (dirac_t *)0;
     } else {
-        return dirac_new(dirac_rows_get(thata), dirac_columns_get(thatb));
+        that = dirac_new(dirac_rows_get(thata), dirac_columns_get(thatb));
     }
+    return that;
 }
+
+/*******************************************************************************
+ * UTILITIES
+ ******************************************************************************/
+
+extern void dirac_matrix_print(FILE * fp, const dirac_t * that);
 
 /*******************************************************************************
  * OPERATIONS

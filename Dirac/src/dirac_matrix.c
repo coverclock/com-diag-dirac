@@ -29,7 +29,33 @@
 #include "dirac.h"
 
 /*******************************************************************************
- * HEADERS
+ * UTILITIES
+ ******************************************************************************/
+
+void dirac_matrix_print(FILE * fp, const dirac_t * that)
+{
+    if (that == (dirac_t *)0) {
+        fprintf(fp, "dirac@%p\n", that);
+    } else {
+        size_t rows = dirac_rows_get(that);
+        size_t cols = dirac_columns_get(that);
+        fprintf(fp, "dirac@%p[%zu][%zu]\n", that, rows, cols);
+        const dirac_complex_t * tt = dirac_body_get(that);
+        int rr;
+        int cc;
+        int ii;
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                ii = dirac_index(that, rr, cc);
+                fprintf(stderr, " (%le%+lei)", creal((tt)[ii]), cimag((tt)[ii]));
+            }
+            fputc('\n', fp);
+        }
+    }
+}
+
+/*******************************************************************************
+ * OPERATIONS
  ******************************************************************************/
 
 dirac_t * dirac_matrix_trn(const dirac_t * thata)
