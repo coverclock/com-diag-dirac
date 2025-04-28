@@ -28,6 +28,9 @@ int main(void)
         size_t rr;
         size_t cc;
 
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
                 (*matrix)[rr][cc] = CMPLX((double)rr, (double)cc);
@@ -39,7 +42,32 @@ int main(void)
         dirac_delete(that);
 
         STATUS();
+    }
 
+    {
+        TEST();
+
+        typedef DIRAC_OBJECT_DECL(2, 3) thing2x3_t;
+        thing2x3_t * that = (thing2x3_t *)dirac_new(2, 3);
+        size_t rows = dirac_rows_get((dirac_t *)that);
+        size_t cols = dirac_columns_get((dirac_t *)that);
+        size_t rr;
+        size_t cc;
+
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                that->data.body[rr][cc] = CMPLX((double)rr, (double)cc);
+            }
+        }
+
+        dirac_matrix_print(stdout, (dirac_t *)that);
+
+        dirac_delete((dirac_t *)that);
+
+        STATUS();
     }
 
     {
@@ -51,6 +79,9 @@ int main(void)
         size_t rr;
         size_t cc;
 
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
                 thing.data.body[rr][cc] = CMPLX((double)rr, (double)cc);
@@ -60,7 +91,6 @@ int main(void)
         dirac_matrix_print(stdout, (dirac_t *)(&thing));
 
         STATUS();
-
     }
 
     {
@@ -74,6 +104,9 @@ int main(void)
         size_t rr;
         size_t cc;
 
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
                 (*matrix)[rr][cc] = CMPLX((double)rr, (double)cc);
@@ -83,7 +116,6 @@ int main(void)
         dirac_matrix_print(stdout, (dirac_t *)(&thing));
 
         STATUS();
-
     }
 
     {
