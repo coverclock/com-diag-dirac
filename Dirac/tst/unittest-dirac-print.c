@@ -3,11 +3,13 @@
  * @file
  * @copyright Copyright 2025 Digital Aggregates Corporation, Colorado, USA.
  * @note Licensed under the terms in LICENSE.txt.
- * @brief This is a unit test of the Dirac matrix arithmetic and related.
+ * @brief This is a unit test of the Dirac print function and related.
  * @author Chip Overclock <mailto:coverclock@diag.com>
  * @see Diminuto <https://github.com/coverclock/com-diag-dirac>
  * @details
- * This is a unit test of the Dirac matri arithmetic and related.
+ * This is a unit test of the Dirac print function and related. It's also an
+ * excuse to try different coding patterns to use either dynamic or static Dirac
+ * objects.
  */
 
 #include "com/diag/diminuto/diminuto_unittest.h"
@@ -17,6 +19,10 @@ int main(void)
 {
     SETLOGMASK();
 
+    /*
+     * Dynamic objects allocated from the heap.
+     */
+
     {
         TEST();
 
@@ -25,8 +31,8 @@ int main(void)
         thing2x3_t * matrix = DIRAC_ARRAY_POINTER(thing2x3_t, that);
         size_t rows = dirac_rows_get(that);
         size_t cols = dirac_columns_get(that);
-        size_t rr;
-        size_t cc;
+        int rr;
+        int cc;
 
         ASSERT(rows == 2);
         ASSERT(cols == 3);
@@ -51,8 +57,8 @@ int main(void)
         thing2x3_t * that = (thing2x3_t *)dirac_new(2, 3);
         size_t rows = dirac_rows_get((dirac_t *)that);
         size_t cols = dirac_columns_get((dirac_t *)that);
-        size_t rr;
-        size_t cc;
+        int rr;
+        int cc;
 
         ASSERT(rows == 2);
         ASSERT(cols == 3);
@@ -70,14 +76,43 @@ int main(void)
         STATUS();
     }
 
+    /*
+     * Static objects allocated on the stack.
+     */
+
+    {
+        TEST();
+
+        DIRAC_OBJECT_DECL(2, 3) thing = DIRAC_OBJECT_INIT(2, 3);
+        DIRAC_ARRAY_TYPE(thing2x3_t, 2, 3);
+        thing2x3_t * matrix = DIRAC_ARRAY_POINTER(thing2x3_t, &thing);
+        size_t rows = dirac_rows_get((dirac_t *)(&thing));
+        size_t cols = dirac_columns_get((dirac_t *)(&thing));
+        int rr;
+        int cc;
+
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                (*matrix)[rr][cc] = CMPLX((double)rr, (double)cc);
+            }
+        }
+
+        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+
+        STATUS();
+    }
+
     {
         TEST();
 
         DIRAC_OBJECT_DECL(2, 3) thing = DIRAC_OBJECT_INIT(2, 3);
         size_t rows = dirac_rows_get((dirac_t *)(&thing));
         size_t cols = dirac_columns_get((dirac_t *)(&thing));
-        size_t rr;
-        size_t cc;
+        int rr;
+        int cc;
 
         ASSERT(rows == 2);
         ASSERT(cols == 3);
@@ -93,23 +128,60 @@ int main(void)
         STATUS();
     }
 
+    /*
+     * Variable Length Array (VLA) objects allocated on the stack.
+     */
+
     {
         TEST();
 
-        DIRAC_OBJECT_DECL(2, 3) thing = DIRAC_OBJECT_INIT(2, 3);
-        DIRAC_ARRAY_TYPE(thing2x3_t, 2, 3);
+        const size_t ROWS = 2;
+        const size_t COLS = 3;
+        DIRAC_OBJECT_DECL(ROWS, COLS) thing;
+        DIRAC_ARRAY_TYPE(thing2x3_t, ROWS, COLS);
         thing2x3_t * matrix = DIRAC_ARRAY_POINTER(thing2x3_t, &thing);
-        size_t rows = dirac_rows_get((dirac_t *)(&thing));
-        size_t cols = dirac_columns_get((dirac_t *)(&thing));
-        size_t rr;
-        size_t cc;
+        int rr;
+        int cc;
 
-        ASSERT(rows == 2);
-        ASSERT(cols == 3);
+        dirac_t * that = dirac_init((dirac_t *)&thing, ROWS, COLS);
+        ASSERT(that == (dirac_t *)&thing);
+
+        size_t rows = dirac_rows_get(that);
+        size_t cols = dirac_columns_get(that);
+        ASSERT(rows == ROWS);
+        ASSERT(cols == COLS);
 
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
                 (*matrix)[rr][cc] = CMPLX((double)rr, (double)cc);
+            }
+        }
+
+        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        const size_t ROWS = 2;
+        const size_t COLS = 3;
+        DIRAC_OBJECT_DECL(ROWS, COLS) thing;
+        int rr;
+        int cc;
+
+        dirac_t * that = dirac_init((dirac_t *)&thing, ROWS, COLS);
+        ASSERT(that == (dirac_t *)&thing);
+
+        size_t rows = dirac_rows_get(that);
+        size_t cols = dirac_columns_get(that);
+        ASSERT(rows == ROWS);
+        ASSERT(cols == COLS);
+
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                thing.data.body[rr][cc] = CMPLX((double)rr, (double)cc);
             }
         }
 

@@ -684,7 +684,7 @@ install-include:
 
 ########## Unit Test
 
-.PHONY: sanity
+.PHONY: sanity grind
 
 sanity:
 	R="PASSED."; \
@@ -698,4 +698,18 @@ sanity:
 		test "$$T" = "FAILED!" && R="$$T"; \
 	done; \
 	echo $$R 1>&2
+	cat $(OUT)/log/unit-test.log
 
+grind:
+	R="PASSED."; \
+	mkdir -p $(OUT)/log; \
+	cp /dev/null $(OUT)/log/unit-test.log; \
+	for U in $(TARGETUNITTESTS); do \
+		echo "UNIT TEST" $$U >> $(OUT)/log/unit-test.log; \
+		T="PASSED."; \
+		valgrind $$U >> $(OUT)/log/unit-test.log 2>&1 || T="FAILED!"; \
+		echo "UNIT TEST" $$U: $$T; \
+		test "$$T" = "FAILED!" && R="$$T"; \
+	done; \
+	echo $$R 1>&2
+	cat $(OUT)/log/unit-test.log
