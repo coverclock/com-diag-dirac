@@ -9,6 +9,10 @@
  * Licensed under the terms in LICENSE.txt<BR>
  * Chip Overclock (mailto:coverclock@diag.com)<BR>
  * https://github.com/coverclock/com-diag-codex<BR>
+ *
+ * REFERENCES
+ *
+ * <https://t5k.org/lists/small/1000.txt>
  */
 
 static const int PRIMES[] = {
