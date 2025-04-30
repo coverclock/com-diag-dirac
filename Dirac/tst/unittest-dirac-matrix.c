@@ -35,7 +35,8 @@ int main(void)
                 (*matrix2x3a)[rr][cc] = CMPLX((double)PRIMES[ii++], (double)PRIMES[ii++]);
             }
         }
-        dirac_matrix_print(stdout, (dirac_t *)&thing2x3a);
+
+        ASSERT(dirac_print(stdout, (dirac_t *)&thing2x3a) == (dirac_t *)&thing2x3a);
 
         STATUS();
     }
@@ -54,7 +55,8 @@ int main(void)
                 (*matrix2x3b)[rr][cc] = CMPLX((double)PRIMES[ii++], (double)PRIMES[ii++]);
             }
         }
-        dirac_matrix_print(stdout, (dirac_t *)&thing2x3b);
+
+        ASSERT(dirac_print(stdout, (dirac_t *)&thing2x3b) == (dirac_t *)&thing2x3b);
 
         STATUS();
     }
@@ -74,7 +76,8 @@ int main(void)
                 (*matrix3x2c)[rr][cc] = CMPLX((double)PRIMES[ii++], (double)PRIMES[ii++]);
             }
         }
-        dirac_matrix_print(stdout, (dirac_t *)&thing3x2c);
+
+        ASSERT(dirac_print(stdout, (dirac_t *)&thing3x2c) == (dirac_t *)&thing3x2c);
 
         STATUS();
     }
@@ -94,13 +97,35 @@ int main(void)
                 (*matrix5x7d)[rr][cc] = CMPLX((double)PRIMES[ii++], (double)PRIMES[ii++]);
             }
         }
-        dirac_matrix_print(stdout, (dirac_t *)&thing5x7d);
+
+        ASSERT(dirac_print(stdout, (dirac_t *)&thing5x7d) == (dirac_t *)&thing5x7d);
 
         STATUS();
     }
 
     {
         TEST();
+
+        dirac_t * that = dirac_matrix_add((dirac_t *)&thing2x3a, (dirac_t *)&thing2x3b);
+        ASSERT(dirac_print(stdout, that) == that);
+        ASSERT(dirac_delete(that) == (dirac_t *)0);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        dirac_t * that = dirac_audit();
+        ASSERT(that == (dirac_t *)0);
+
+        ssize_t total = dirac_dump(stderr);
+        fprintf(stderr, "cache[%zd]\n", total);
+        ASSERT(total >= 0);
+
+        dirac_free();
+        total = dirac_dump((FILE *)0);
+        ASSERT(total == 0);
 
         STATUS();
     }

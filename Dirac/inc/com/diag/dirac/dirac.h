@@ -146,12 +146,14 @@ static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, un
 }
 
 /*******************************************************************************
- * AUDITING
+ * DEBUGGING
  ******************************************************************************/
 
 extern dirac_t * dirac_audit(void);
 
 extern ssize_t dirac_dump(FILE * fp);
+
+extern const dirac_t * dirac_print(FILE * fp, const dirac_t * that);
 
 /*******************************************************************************
  * HELPERS
@@ -204,12 +206,6 @@ static inline dirac_t * dirac_new_had(const dirac_t * thata, const dirac_t * tha
     }
     return that;
 }
-
-/*******************************************************************************
- * DEBUGGING
- ******************************************************************************/
-
-extern void dirac_matrix_print(FILE * fp, const dirac_t * that);
 
 /*******************************************************************************
  * OPERATIONS

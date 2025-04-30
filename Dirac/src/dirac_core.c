@@ -174,7 +174,7 @@ dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned in
 
 
 /*******************************************************************************
- * AUDITING
+ * DEBUGGING
  ******************************************************************************/
 
 dirac_t * dirac_audit(void)
@@ -213,6 +213,30 @@ ssize_t dirac_dump(FILE * fp)
     DIMINUTO_CRITICAL_SECTION_END;
     fflush(fp);
     return total;
+}
+
+const dirac_t * dirac_print(FILE * fp, const dirac_t * that)
+{
+    if (that == (dirac_t *)0) {
+        fprintf(fp, "dirac@%p\n", that);
+    } else {
+        size_t rows = dirac_rows_get(that);
+        size_t cols = dirac_columns_get(that);
+        fprintf(fp, "dirac@%p[%zu][%zu]\n", that, rows, cols);
+        const dirac_complex_t * tt = dirac_body_get(that);
+        int rr;
+        int cc;
+        int ii;
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                ii = dirac_index(that, rr, cc);
+                fprintf(fp, " (%7.4le%+7.4lei)", creal((tt)[ii]), cimag((tt)[ii]));
+            }
+            fputc('\n', fp);
+        }
+    }
+    fflush(fp);
+    return that;
 }
 
 /*******************************************************************************

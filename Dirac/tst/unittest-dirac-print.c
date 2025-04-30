@@ -43,7 +43,7 @@ int main(void)
             }
         }
 
-        dirac_matrix_print(stdout, that);
+        (void)dirac_print(stdout, that);
 
         dirac_delete(that);
 
@@ -69,7 +69,7 @@ int main(void)
             }
         }
 
-        dirac_matrix_print(stdout, (dirac_t *)that);
+        (void)dirac_print(stdout, (dirac_t *)that);
 
         dirac_delete((dirac_t *)that);
 
@@ -100,7 +100,7 @@ int main(void)
             }
         }
 
-        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+        (void)dirac_print(stdout, (dirac_t *)(&thing));
 
         STATUS();
     }
@@ -123,7 +123,7 @@ int main(void)
             }
         }
 
-        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+        (void)dirac_print(stdout, (dirac_t *)(&thing));
 
         STATUS();
     }
@@ -157,7 +157,7 @@ int main(void)
             }
         }
 
-        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+        (void)dirac_print(stdout, (dirac_t *)(&thing));
 
         STATUS();
     }
@@ -185,7 +185,7 @@ int main(void)
             }
         }
 
-        dirac_matrix_print(stdout, (dirac_t *)(&thing));
+        (void)dirac_print(stdout, (dirac_t *)(&thing));
 
         STATUS();
     }
