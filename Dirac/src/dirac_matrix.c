@@ -7,15 +7,18 @@
  * Chip Overclock (mailto:coverclock@diag.com)<BR>
  * https://github.com/coverclock/com-diag-cdirac<BR>
  * This is the implementation of the matrix-related portions of Dirac.
- */
-
-/*
- * Matrix operations may allocate (new) from the cache, but if the do so,
- * the resulting dynamically allocated object must either be deallocated
- * (delete) or returned to the caller. The only objects they may deallocate
- * back to the cache are objects they themselves allocate; this allows the
- * use of statically allocated (i.e. on the C stack) objects in matrix
- * operations.
+ *
+ * REFERENCES
+ *
+ * Wikipedia, "Matrix (mathematics)", 2025-04-19
+ *
+ * Wikipedia, "Matrix multiplication", 2025-04-25
+ *
+ * Wikipedia, "Hadamard product (matrices)", 2025-04-25
+ *
+ * Wikipedia, "Kronecker product", 2025-04-23
+ *
+ * J. Kun, A PROGRAMMER"S INTRODUCTION TO MATHEMATICS, pimbook.org, 2020
  */
 
 /*******************************************************************************
@@ -57,6 +60,15 @@ void dirac_matrix_print(FILE * fp, const dirac_t * that)
 /*******************************************************************************
  * OPERATIONS
  ******************************************************************************/
+
+/*
+ * Matrix operations may allocate (new) from the cache, but if they do so,
+ * the resulting dynamically allocated object must either be explicitly
+ * deallocated (delete) or returned to the caller. The only objects they may
+ * deallocate back to the cache are objects they themselves allocate; this
+ * allows the use of statically allocated (C stack) objects in
+ * matrix operations.
+ */
 
 dirac_t * dirac_matrix_trn(const dirac_t * thata)
 {
