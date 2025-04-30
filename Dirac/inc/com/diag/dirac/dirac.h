@@ -11,6 +11,8 @@
  * Defines the public API for Dirac, a library that supports matrix
  * arithmetic using complex numbers.
  *
+ * DISCLAIMER
+ *
  * Any rational person would have written this in Python. But I wanted to
  * be able to incorporate some of this into the real-time/embedded systems
  * I develop in C. It also gave me an excuse to develop the object caching
@@ -204,7 +206,7 @@ static inline dirac_t * dirac_new_had(const dirac_t * thata, const dirac_t * tha
 }
 
 /*******************************************************************************
- * UTILITIES
+ * DEBUGGING
  ******************************************************************************/
 
 extern void dirac_matrix_print(FILE * fp, const dirac_t * that);
@@ -220,6 +222,10 @@ extern dirac_t * dirac_matrix_add(const dirac_t * thata, const dirac_t * thatb);
 extern dirac_t * dirac_matrix_sub(const dirac_t * thata, const dirac_t * thatb);
 
 extern dirac_t * dirac_matrix_mul(const dirac_t * thata, const dirac_t * thatb);
+
+extern dirac_t * dirac_matrix_had(const dirac_t * thata, const dirac_t * thatb);
+
+extern dirac_t * dirac_matrix_kro(const dirac_t * thata, const dirac_t * thatb);
 
 /*******************************************************************************
  * END
