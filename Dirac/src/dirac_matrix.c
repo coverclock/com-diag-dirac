@@ -49,7 +49,7 @@ void dirac_matrix_print(FILE * fp, const dirac_t * that)
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
                 ii = dirac_index(that, rr, cc);
-                fprintf(fp, " (%le%+lei)", creal((tt)[ii]), cimag((tt)[ii]));
+                fprintf(fp, " (%7.4le%+7.4lei)", creal((tt)[ii]), cimag((tt)[ii]));
             }
             fputc('\n', fp);
         }
