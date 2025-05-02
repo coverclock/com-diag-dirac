@@ -10,6 +10,11 @@
  *
  * REFERENCES
  *
+ * J. Kun, A PROGRAMMER"S INTRODUCTION TO MATHEMATICS, pimbook.org, 2020
+ *
+ * M. Siemens, "Quantum Computing for Curious Minds", University of
+ * Denver, 2025-04
+ *
  * Wikipedia, "Matrix (mathematics)", 2025-04-19
  *
  * Wikipedia, "Matrix multiplication", 2025-04-25
@@ -17,8 +22,6 @@
  * Wikipedia, "Hadamard product (matrices)", 2025-04-25
  *
  * Wikipedia, "Kronecker product", 2025-04-23
- *
- * J. Kun, A PROGRAMMER"S INTRODUCTION TO MATHEMATICS, pimbook.org, 2020
  */
 
 /*******************************************************************************

@@ -69,6 +69,12 @@
 #define DIRAC_OBJECT_INIT(_ROWS_, _COLS_) \
     { { { _ROWS_, _COLS_ } } }
 
+#define DIRAC_STACK_CODE(_NAME_, _ROWS_, _COLS_) \
+    DIRAC_OBJECT_DECL(_ROWS_, _COLS_) _NAME_ = DIRAC_OBJECT_INIT(_ROWS_, _COLS_); \
+    dirac_t * _NAME_##_p = (dirac_t *)(&_NAME_); \
+    DIRAC_ARRAY_TYPE(_NAME_##_t, _ROWS_, _COLS_); \
+    _NAME_##_t * _NAME_##_m = DIRAC_ARRAY_POINTER(_NAME_##_t, _NAME_##_p);
+
 /*******************************************************************************
  * TYPES
  ******************************************************************************/

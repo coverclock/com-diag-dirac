@@ -190,6 +190,37 @@ int main(void)
         STATUS();
     }
 
+    /*
+     * Stack code generator.
+     */
+
+    {
+        TEST();
+
+        DIRAC_STACK_CODE(thing, 2, 3);
+        size_t rows = dirac_rows_get(thing_p);
+        size_t cols = dirac_columns_get(thing_p);
+        int rr;
+        int cc;
+
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                (*thing_m)[rr][cc] = CMPLX((double)rr, (double)cc);
+            }
+        }
+
+        (void)dirac_print(stdout, thing_p);
+
+        STATUS();
+    }
+
+    /*
+     * End.
+     */
+
     {
         TEST();
 
