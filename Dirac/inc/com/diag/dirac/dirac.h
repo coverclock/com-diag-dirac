@@ -11,6 +11,27 @@
  * Defines the public API for Dirac, a library that supports matrix
  * arithmetic using complex numbers.
  *
+ * REFERENCES
+ *
+ * S. Boyd, L. Vandenberghe, INTRODUCTION TO APPLIED LINEAR ALGEBRA,
+ * Cambridge University Press, 2018
+ *
+ * J. Kun, A PROGRAMMER"S INTRODUCTION TO MATHEMATICS, pimbook.org, 2020
+ *
+ * M. Siemens, "Quantum Computing for Curious Minds", University of
+ * Denver, 2025-04
+ *
+ * Wikipedia, "Matrix (mathematics)", 2025-04-19
+ *
+ * Wikipedia, "Matrix multiplication", 2025-04-25
+ *
+ * Wikipedia, "Hadamard product (matrices)", 2025-04-25
+ *
+ * Wikipedia, "Kronecker product", 2025-04-23
+ *
+ * T. Wong, INTRODUCTION TO CLASSICAL AND QUANTUM COMPUTING, Rooted Grove,
+ * 2022
+ *
  * DISCLAIMER
  *
  * Any rational person would have written this in Python. But I wanted to
@@ -18,12 +39,6 @@
  * I develop in C. It also gave me an excuse to develop the object caching
  * code, which may eventually find its way mainstreamed into the Diminuto
  * systems programming library on which this depends.
- *
- * REFERENCES
- *
- * This work was inspired by the course "Quantum Computing for Curious
- * Minds" [Mark Siemens, Physics and Astronomy, University of Denver]
- * which I took in April 2025.
  *
  * NOTES
  *
