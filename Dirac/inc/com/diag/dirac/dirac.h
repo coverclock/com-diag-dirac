@@ -58,6 +58,7 @@
  ******************************************************************************/
 
 #include "com/diag/diminuto/diminuto_tree.h"
+#include "com/diag/diminuto/diminuto_containerof.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -132,11 +133,26 @@ static inline dirac_complex_t * dirac_body_mut(dirac_t * that) {
  * MEMORY MANAGEMENT
  ******************************************************************************/
 
+// (dirac_complex_t (*)[_ROWS_][_COLS_])new int[2]
+
 extern dirac_t * dirac_new(size_t rows, size_t columns);
 
 extern dirac_t * dirac_delete(dirac_t * that);
 
+static inline void * dirac_matrix(dirac_t * that) {
+    return (that != (dirac_t *)0) ? (void *)dirac_body_mut(that) : (void *)0;
+}
+
+#define dirac_new_matrix(_ROWS_, _COLS_) \
+    ((dirac_complex_t (*)[_ROWS_][_COLS_])dirac_matrix(dirac_new(_ROWS_, _COLS_)))
+
 extern void dirac_free(void);
+
+static inline void dirac_free_matrix(void * that) {
+    if (that != (void *)0) {
+        dirac_delete(diminuto_containerof(dirac_t, data.body[0][0], that));
+    }
+}
 
 /*******************************************************************************
  * INITIALIZERS
@@ -175,6 +191,10 @@ extern dirac_t * dirac_audit(void);
 extern ssize_t dirac_dump(FILE * fp);
 
 extern const dirac_t * dirac_print(FILE * fp, const dirac_t * that);
+
+static inline const dirac_t * dirac_matrix_print(FILE * fp, void * that) {
+    return dirac_print(fp, (that != (void *)0) ? diminuto_containerof(dirac_t, data.body[0][0], that) : (dirac_t *)0);
+}
 
 /*******************************************************************************
  * HELPERS

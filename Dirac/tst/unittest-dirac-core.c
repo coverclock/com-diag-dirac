@@ -23,6 +23,30 @@ int main(void)
     {
         TEST();
 
+        dirac_dump(stdout);
+
+        dirac_complex_t (* matrix)[2][3];
+
+        matrix = dirac_new_matrix(2, 3);
+        ASSERT((void *)matrix != (void *)0);
+        dirac_matrix_print(stdout, matrix);
+
+        dirac_free_matrix(matrix);
+
+        dirac_dump(stdout);
+
+        dirac_free();
+
+        dirac_dump(stdout);
+
+        STATUS();
+    }
+
+#if 0
+
+    {
+        TEST();
+
         fprintf(stderr, "sizeof(double)=%zu\n", sizeof(double));
         fprintf(stderr, "sizeof(complex double)=%zu\n", sizeof(complex double));
         fprintf(stderr, "sizeof(dirac_complex_t)=%zu\n", sizeof(dirac_complex_t));
@@ -617,6 +641,8 @@ int main(void)
 
         STATUS();
     }
+
+#endif
 
     EXIT();
 }

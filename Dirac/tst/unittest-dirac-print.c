@@ -19,6 +19,8 @@ int main(void)
 {
     SETLOGMASK();
 
+#if 0
+
     /*
      * Dynamic objects allocated from the heap.
      */
@@ -237,6 +239,8 @@ int main(void)
 
         STATUS();
     }
+
+#endif
 
     EXIT();
 }

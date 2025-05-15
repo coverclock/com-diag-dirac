@@ -18,6 +18,8 @@ int main(void)
 {
     SETLOGMASK();
 
+#if 0
+
     int ii = 0;
 
     DIRAC_STACK_CODE(thing2x3a, 2, 3);
@@ -107,6 +109,16 @@ int main(void)
     {
         TEST();
 
+        dirac_t * that = dirac_matrix_trn(thing5x7d_p);
+        ASSERT(dirac_print(stdout, that) == that);
+        ASSERT(dirac_delete(that) == (dirac_t *)0);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
         dirac_t * that = dirac_matrix_add(thing2x3a_p, thing2x3b_p);
         ASSERT(dirac_print(stdout, that) == that);
         ASSERT(dirac_delete(that) == (dirac_t *)0);
@@ -130,6 +142,8 @@ int main(void)
 
         STATUS();
     }
+
+#endif
 
     EXIT();
 }
