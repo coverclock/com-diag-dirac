@@ -137,21 +137,29 @@ int main(void)
         TEST();
 
         dirac_t * new1 = dirac_new(0, 0);
+        fprintf(stderr, "new1=%p\n", new1);
+        dirac_print(stderr, new1);
         ASSERT(new1 != (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new2 = dirac_new(2, 3);
+        fprintf(stderr, "new2=%p\n", new2);
+        dirac_print(stderr, new2);
         ASSERT(new2 != (dirac_t *)0);
         ASSERT(new2 != new1);
         ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new3 = dirac_new(3, 2);
+        fprintf(stderr, "new3=%p\n", new3);
+        dirac_print(stderr, new3);
         ASSERT(new3 != (dirac_t *)0);
         ASSERT(new3 != new1);
         ASSERT(new3 != new2);
         ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new4 = dirac_new(4, 4);
+        fprintf(stderr, "new4=%p\n", new4);
+        dirac_print(stderr, new4);
         ASSERT(new4 != (dirac_t *)0);
         ASSERT(new4 != new1);
         ASSERT(new4 != new2);
@@ -175,22 +183,30 @@ int main(void)
         ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new5 = dirac_new(0, 0);
+        fprintf(stderr, "new5=%p\n", new5);
+        dirac_print(stderr, new5);
         ASSERT(new5 != (dirac_t *)0);
         ASSERT(new5 == new1);
         ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new6 = dirac_new(2, 3);
+        fprintf(stderr, "new6=%p\n", new6);
+        dirac_print(stderr, new6);
         ASSERT(new6 != (dirac_t *)0);
         ASSERT(new6 == new3);
         ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new7 = dirac_new(3, 2);
+        fprintf(stderr, "new7=%p\n", new7);
+        dirac_print(stderr, new7);
         ASSERT(new7 != (dirac_t *)0);
         ASSERT(new7 == new2);
         ASSERT(new7 != new6);
         ASSERT(dirac_dump(stderr) >= 0);
 
         dirac_t * new8 = dirac_new(4, 4);
+        fprintf(stderr, "new8=%p\n", new8);
+        dirac_print(stderr, new8);
         ASSERT(new8 != (dirac_t *)0);
         ASSERT(new8 == new4);
         ASSERT(dirac_dump(stderr) >= 0);
@@ -539,7 +555,7 @@ int main(void)
         cc = &(thing.data.body[0][0]);
         dd = &(thing.data.body[ROWS - 1][COLS - 1]);
         fprintf(stderr, "that[%u]=%p\n", 0, aa);
-        fprintf(stderr, "that[%zu]=%p\n", (ROWS * COLS) - 1, bb);
+        fprintf(stderr, "that[%u]=%p\n", (ROWS * COLS) - 1, bb);
         fprintf(stderr, "thing[%u]=%p\n", 0, cc);
         fprintf(stderr, "thing[%zu]=%p\n", countof(thing.data.body) - 1, dd);
         ASSERT(aa == cc);

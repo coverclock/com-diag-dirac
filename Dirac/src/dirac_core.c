@@ -84,12 +84,13 @@ static inline dirac_t * allocate(size_t rows, size_t columns)
 
 dirac_t * dirac_core_allocate(size_t rows, size_t columns)
 {
-    diminuto_tree_t me = DIMINUTO_TREE_NULLINIT;
-    dirac_t * that = (dirac_t *)&me;
-    that->node.size = size(rows, columns);
+    dirac_t target;
+    target.node.size = size(rows, columns);
+    diminuto_tree_t * me = diminuto_tree_init(&(target.node.tree));
+    dirac_t * that = (dirac_t *)0;
     int rc = 0;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
-        diminuto_tree_t * you = diminuto_tree_search(cache, &me, compare, &rc);
+        diminuto_tree_t * you = diminuto_tree_search(cache, me, compare, &rc);
         if (you == (diminuto_tree_t *)0) {
             that = allocate(rows, columns);
         } else if (rc != 0) {
