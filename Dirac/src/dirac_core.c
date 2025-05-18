@@ -82,7 +82,7 @@ static inline dirac_t * allocate(size_t rows, size_t columns)
  * MEMORY MANAGEMENT
  ******************************************************************************/
 
-dirac_t * dirac_new(size_t rows, size_t columns)
+dirac_t * dirac_core_allocate(size_t rows, size_t columns)
 {
     diminuto_tree_t me = DIMINUTO_TREE_NULLINIT;
     dirac_t * that = (dirac_t *)&me;
@@ -104,23 +104,25 @@ dirac_t * dirac_new(size_t rows, size_t columns)
     return construct(that, rows, columns);
 }
 
-dirac_t * dirac_delete(dirac_t * that)
+dirac_t * dirac_core_free(dirac_t * that)
 {
-    size_t bytes = size(dirac_rows_get(that), dirac_columns_get(that));
-    diminuto_tree_t * me = diminuto_tree_init(&(that->node.tree));
-    that->node.size = bytes;
-    DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
-        diminuto_tree_t * you = diminuto_tree_search_insert_or_replace(&cache, me, compare, !0);
-        if (you == (diminuto_tree_t *)0) {
-            /* Do  nothing. */
-        } else if (you == me) {
-            me->data = (void *)0;
-            that = (dirac_t *)0;
-        } else {
-            me->data = (void *)you;
-            that = (dirac_t *)0;
-        }
-    DIMINUTO_CRITICAL_SECTION_END;
+    if (that != (dirac_t *)0) {
+        size_t bytes = size(dirac_rows_get(that), dirac_columns_get(that));
+        diminuto_tree_t * me = diminuto_tree_init(&(that->node.tree));
+        that->node.size = bytes;
+        DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
+            diminuto_tree_t * you = diminuto_tree_search_insert_or_replace(&cache, me, compare, !0);
+            if (you == (diminuto_tree_t *)0) {
+                /* Do  nothing. */
+            } else if (you == me) {
+                me->data = (void *)0;
+                that = (dirac_t *)0;
+            } else {
+                me->data = (void *)you;
+                that = (dirac_t *)0;
+            }
+        DIMINUTO_CRITICAL_SECTION_END;
+    }
     return that;
 }
 

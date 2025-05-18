@@ -25,10 +25,21 @@ int main(void)
 
         dirac_dump(stdout);
 
-        dirac_complex_t (* matrix)[2][3];
+        dirac_complex_t (*matrix)[2][3];
 
-        matrix = dirac_new_matrix(2, 3);
+        matrix = dirac_new(2, 3);
         ASSERT((void *)matrix != (void *)0);
+        dirac_matrix_print(stdout, matrix);
+
+        size_t rows = dirac_rows_get(matrix);
+        size_t cols = dirac_cols_get(matrix);
+        int rr;
+        int cc;
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                (*matrix)[rr][cc] = CMPLS((double)rr, (double)cc);
+            }
+        }
         dirac_matrix_print(stdout, matrix);
 
         dirac_free_matrix(matrix);
