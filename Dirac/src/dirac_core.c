@@ -175,7 +175,7 @@ size_t dirac_cols_get(const dirac_matrix_t * them) {
 }
 
 /*******************************************************************************
- * HELPERS
+ * ALLOCATORS
  ******************************************************************************/
 
 dirac_t * dirac_core_dup(const dirac_t * thata) {

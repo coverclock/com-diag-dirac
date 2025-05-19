@@ -24,39 +24,6 @@ int main(void)
     {
         TEST();
 
-        dirac_dump(stdout);
-
-        dirac_complex_t (*matrix)[2][3];
-
-        matrix = dirac_new(2, 3);
-        ASSERT((void *)matrix != (void *)0);
-        dirac_print(stdout, matrix);
-
-        size_t rows = dirac_rows_get(matrix);
-        size_t cols = dirac_cols_get(matrix);
-        int rr;
-        int cc;
-        for (rr = 0; rr < rows; ++rr) {
-            for (cc = 0; cc < cols; ++cc) {
-                (*matrix)[rr][cc] = CMPLX((double)rr, (double)cc);
-            }
-        }
-        dirac_print(stdout, matrix);
-
-        dirac_delete(matrix);
-
-        dirac_dump(stdout);
-
-        dirac_free();
-
-        dirac_dump(stdout);
-
-        STATUS();
-    }
-
-    {
-        TEST();
-
         fprintf(stderr, "sizeof(double)=%zu\n", sizeof(double));
         fprintf(stderr, "sizeof(complex double)=%zu\n", sizeof(complex double));
         fprintf(stderr, "sizeof(dirac_complex_t)=%zu\n", sizeof(dirac_complex_t));
@@ -257,25 +224,43 @@ int main(void)
 
         dirac_matrix_t * them = dirac_new(0, 0);
         ASSERT(them != (dirac_matrix_t *)0);
+        dirac_print(stdout, them);
         dirac_delete(them);
 
         STATUS();
     }
 
-#if 0
-
     {
         TEST();
 
-        DIRAC_OBJECT_DECL(11, 17) thing = DIRAC_OBJECT_INIT(11, 17);
+        dirac_dump(stdout);
 
-        dirac_t * that = dirac_new_dup((dirac_t *)&thing);
-        ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get(that) == 11);
-        ASSERT(dirac_columns_get(that) == 17);
+        dirac_complex_t (*them)[2][3] = dirac_new(2, 3);
+        ASSERT((void *)them != (void *)0);
 
-        that = dirac_delete(that);
-        ASSERT(that == (dirac_t *)0);
+        dirac_print(stdout, them);
+
+        size_t rows = dirac_rows_get(them);
+        size_t cols = dirac_cols_get(them);
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
+        int rr;
+        int cc;
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                (*them)[rr][cc] = CMPLX((double)rr, (double)cc);
+            }
+        }
+        dirac_print(stdout, them);
+
+        dirac_delete(them);
+
+        dirac_dump(stdout);
+
+        dirac_free();
+
+        dirac_dump(stdout);
 
         STATUS();
     }
@@ -283,15 +268,21 @@ int main(void)
     {
         TEST();
 
-        DIRAC_OBJECT_DECL(19, 23) thing = DIRAC_OBJECT_INIT(19, 23);
+        dirac_t * that0 = dirac_core_allocate(11, 17);
+        ASSERT(that0 != (dirac_t *)0);
+        ASSERT(dirac_core_rows_get(that0) == 11);
+        ASSERT(dirac_core_cols_get(that0) == 17);
 
-        dirac_t * that = dirac_new_trn((dirac_t *)&thing);
-        ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get(that) == 23);
-        ASSERT(dirac_columns_get(that) == 19);
+        dirac_t * that1 = dirac_core_dup(that0);
+        ASSERT(that1 != (dirac_t *)0);
+        ASSERT(dirac_core_rows_get(that1) == 11);
+        ASSERT(dirac_core_cols_get(that1) == 17);
 
-        that = dirac_delete(that);
-        ASSERT(that == (dirac_t *)0);
+        that1 = dirac_core_free(that1);
+        ASSERT(that1 == (dirac_t *)0);
+
+        that0 = dirac_core_free(that0);
+        ASSERT(that0 == (dirac_t *)0);
 
         STATUS();
     }
@@ -299,30 +290,72 @@ int main(void)
     {
         TEST();
 
-        DIRAC_OBJECT_DECL(2, 3) thing1 = DIRAC_OBJECT_INIT(2, 3);
-        DIRAC_OBJECT_DECL(2, 4) thing2 = DIRAC_OBJECT_INIT(2, 4);
-        DIRAC_OBJECT_DECL(3, 3) thing3 = DIRAC_OBJECT_INIT(3, 3);
-        DIRAC_OBJECT_DECL(2, 3) thing4 = DIRAC_OBJECT_INIT(2, 3);
+        dirac_t * that0 = dirac_core_allocate(11, 17);
+        ASSERT(that0 != (dirac_t *)0);
+        ASSERT(dirac_core_rows_get(that0) == 11);
+        ASSERT(dirac_core_cols_get(that0) == 17);
+
+        dirac_t * that1 = dirac_core_trn(that0);
+        ASSERT(that1 != (dirac_t *)0);
+        ASSERT(dirac_core_rows_get(that1) == 17);
+        ASSERT(dirac_core_cols_get(that1) == 11);
+
+        that1 = dirac_core_free(that1);
+        ASSERT(that1 == (dirac_t *)0);
+
+        that0 = dirac_core_free(that0);
+        ASSERT(that0 == (dirac_t *)0);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        dirac_t * that1 = dirac_core_allocate(2, 3);
+        ASSERT(that1 != (dirac_t *)0);
+
+        dirac_t * that2 = dirac_core_allocate(2, 4);
+        ASSERT(that2 != (dirac_t *)0);
+
+        dirac_t * that3 = dirac_core_allocate(4, 3);
+        ASSERT(that3 != (dirac_t *)0);
+
+        dirac_t * that4 = dirac_core_allocate(2, 3);
+        ASSERT(that4 != (dirac_t *)0);
 
         dirac_t * that;
 
-        that = dirac_new_sum((dirac_t *)&thing1, (dirac_t *)&thing2);
+        that = dirac_core_sum(that1, that2);
         ASSERT(that == (dirac_t *)0);
 
-        that = dirac_new_sum((dirac_t *)&thing1, (dirac_t *)&thing3);
+        that = dirac_core_sum(that1, that3);
         ASSERT(that == (dirac_t *)0);
 
-        that = dirac_new_sum((dirac_t *)&thing1, (dirac_t *)&thing4);
+        that = dirac_core_sum(that1, that4);
         ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get((dirac_t *)that) == 2);
-        ASSERT(dirac_columns_get((dirac_t *)that) == 3);
+        ASSERT(dirac_core_rows_get(that) == 2);
+        ASSERT(dirac_core_cols_get(that) == 3);
 
-        that = dirac_delete(that);
+        that = dirac_core_free(that);
         ASSERT(that == (dirac_t *)0);
+
+        that4 = dirac_core_free(that4);
+        ASSERT(that4 == (dirac_t *)0);
+
+        that3 = dirac_core_free(that3);
+        ASSERT(that3 == (dirac_t *)0);
+
+        that2 = dirac_core_free(that2);
+        ASSERT(that2 == (dirac_t *)0);
+
+        that1 = dirac_core_free(that1);
+        ASSERT(that1 == (dirac_t *)0);
 
         STATUS();
     }
 
+#if 0
     {
         TEST();
 

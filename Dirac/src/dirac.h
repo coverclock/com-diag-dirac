@@ -70,7 +70,7 @@ static inline dirac_t * dirac_core_object_mut(dirac_matrix_t * them) {
 }
 
 /*******************************************************************************
- * HELPERS
+ * ALLOCATORS
  ******************************************************************************/
 
 extern dirac_t * dirac_core_dup(const dirac_t * thata);
