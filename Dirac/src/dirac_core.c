@@ -230,14 +230,14 @@ dirac_t * dirac_core_had(const dirac_t * thata, const dirac_t * thatb) {
  * ADDRESSING AND INDEXING
  ******************************************************************************/
 
-dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column) {
+dirac_complex_t * dirac_core_point_safe(dirac_t * that, unsigned int row, unsigned int column) {
     dirac_complex_t * here = (dirac_complex_t *)0;
     if (row >= dirac_core_rows_get(that)) {
         /* Do nothing. */
     } else if (column >= dirac_core_cols_get(that)) {
         /* Do nothing. */
     } else {
-        here = dirac_point_fast(that, row, column);
+        here = dirac_core_point_fast(that, row, column);
     }
     return here;
 }
@@ -262,7 +262,7 @@ const dirac_t * dirac_core_print(FILE * fp, const dirac_t * that)
         for (rr = 0; rr < rows; ++rr) {
             fprintf(fp, " matrix@%p:", them);
             for (cc = 0; cc < cols; ++cc) {
-                ii = dirac_index(that, rr, cc);
+                ii = dirac_core_index(that, rr, cc);
                 fprintf(fp, " (%7.4le%+7.4lei)", creal((tt)[ii]), cimag((tt)[ii]));
             }
             fputc('\n', fp);

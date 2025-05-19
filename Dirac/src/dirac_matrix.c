@@ -48,8 +48,8 @@ dirac_matrix_t * dirac_matrix_trn(const dirac_matrix_t * thema)
         int jj;
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                ii = dirac_index(thata, rr, cc);
-                jj = dirac_index(that, cc, rr);
+                ii = dirac_core_index(thata, rr, cc);
+                jj = dirac_core_index(that, cc, rr);
                 (tt)[jj] = (aa)[ii];
             }
         }
@@ -75,7 +75,7 @@ dirac_matrix_t * dirac_matrix_add(const dirac_matrix_t * thema, const dirac_matr
         int ii;
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                ii = dirac_index(that, rr, cc);
+                ii = dirac_core_index(that, rr, cc);
                 (tt)[ii] = (aa)[ii] + (bb)[ii];
             }
         }
@@ -101,7 +101,7 @@ dirac_matrix_t * dirac_matrix_sub(const dirac_matrix_t * thema, const dirac_matr
         int ii;
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                ii = dirac_index(that, rr, cc);
+                ii = dirac_core_index(that, rr, cc);
                 (tt)[ii] = (aa)[ii] - (bb)[ii];
             }
         }
@@ -132,9 +132,9 @@ dirac_matrix_t * dirac_matrix_mul(const dirac_matrix_t * thema, const dirac_matr
         for (rr = 0; rr < rows; ++rr) {
             for (mm = 0; mm < muls; ++rr) {
                 for (cc = 0; cc < cols; ++cc) {
-                    ii = dirac_index(thata, rr, mm);
-                    jj = dirac_index(thatb, mm, cc);
-                    kk = dirac_index(that, rr, cc);
+                    ii = dirac_core_index(thata, rr, mm);
+                    jj = dirac_core_index(thatb, mm, cc);
+                    kk = dirac_core_index(that, rr, cc);
                     (tt)[kk] = (aa)[ii] * (bb)[jj];
                 }
             }
@@ -173,9 +173,9 @@ dirac_matrix_t * dirac_matrix_kro(const dirac_matrix_t * thema, const dirac_matr
                     for (bc = 0; bc < colsb; ++bc) {
                         tr = (ar * rowsb) + br;
                         tc = (ac * colsb) + bc;
-                        ai = dirac_index(thata, ar, ac);
-                        bi = dirac_index(thatb, br, bc);
-                        ti = dirac_index(that, tr, tc);
+                        ai = dirac_core_index(thata, ar, ac);
+                        bi = dirac_core_index(thatb, br, bc);
+                        ti = dirac_core_index(that, tr, tc);
                         (tt)[ti] = (aa)[ai] * (bb)[bi];
                     }
                 }
@@ -204,7 +204,7 @@ dirac_matrix_t * dirac_matrix_had(const dirac_matrix_t * thema, const dirac_matr
         int ii;
         for (rr = 0; ii < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                ii = dirac_index(that, rr, cc);
+                ii = dirac_core_index(that, rr, cc);
                 (tt)[ii] = (aa)[ii] * (bb)[ii];
             }
         }

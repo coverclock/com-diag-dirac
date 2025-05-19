@@ -461,7 +461,6 @@ int main(void)
         STATUS();
     }
 
-#if 0
     {
         TEST();
 
@@ -474,26 +473,26 @@ int main(void)
         dirac_complex_t * bb;
         unsigned int rr, cc, ii;
 
-        that = dirac_new(ROWS, COLS);
+        that = dirac_core_allocate(ROWS, COLS);
         ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get(that) == ROWS);
-        ASSERT(dirac_columns_get(that) == COLS);
+        ASSERT(dirac_core_rows_get(that) == ROWS);
+        ASSERT(dirac_core_cols_get(that) == COLS);
 
-        ASSERT(dirac_point_fast(that, 0, 0) != (dirac_complex_t *)0);
-        ASSERT(dirac_point_fast(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
-        ASSERT(dirac_point_fast(that, ROWS, COLS - 1) != (dirac_complex_t *)0);
-        ASSERT(dirac_point_fast(that, ROWS - 1, COLS) != (dirac_complex_t *)0);
-        ASSERT(dirac_point_fast(that, ROWS, COLS) != (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_fast(that, 0, 0) != (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_fast(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_fast(that, ROWS, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_fast(that, ROWS - 1, COLS) != (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_fast(that, ROWS, COLS) != (dirac_complex_t *)0);
 
-        ASSERT(dirac_point_safe(that, 0, 0) != (dirac_complex_t *)0);
-        ASSERT(dirac_point_safe(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
-        ASSERT(dirac_point_safe(that, ROWS, COLS - 1) == (dirac_complex_t *)0);
-        ASSERT(dirac_point_safe(that, ROWS - 1, COLS) == (dirac_complex_t *)0);
-        ASSERT(dirac_point_safe(that, ROWS, COLS) == (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_safe(that, 0, 0) != (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_safe(that, ROWS - 1, COLS - 1) != (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_safe(that, ROWS, COLS - 1) == (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_safe(that, ROWS - 1, COLS) == (dirac_complex_t *)0);
+        ASSERT(dirac_core_point_safe(that, ROWS, COLS) == (dirac_complex_t *)0);
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
-                aa = dirac_point(that, rr, cc);
+                aa = dirac_core_point(that, rr, cc);
                 fprintf(stderr, "node(%u,%u)@%p\n", rr, cc, aa);
                 ASSERT(*aa == CMPLX(0, 0));
             }
@@ -501,8 +500,8 @@ int main(void)
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
-                ii = dirac_index(that, rr, cc);
-                aa = &((dirac_body_mut(that))[ii]);
+                ii = dirac_core_index(that, rr, cc);
+                aa = &((dirac_core_body_mut(that))[ii]);
                 fprintf(stderr, "body(%u,%u)[%u]@%p\n", rr, cc, ii, aa);
                 ASSERT(*aa == CMPLX(0, 0));
             }
@@ -520,7 +519,7 @@ int main(void)
 
         for (rr = 0; rr < ROWS; ++rr) {
             for (cc = 0; cc < COLS; ++cc) {
-                aa = dirac_point(that, rr, cc);
+                aa = dirac_core_point(that, rr, cc);
                 bb = &((*here)[rr][cc]);
                 ASSERT(aa == bb);
             }
@@ -543,11 +542,12 @@ int main(void)
             }
         }
 
-        dirac_delete(that);
+        dirac_core_free(that);
 
         STATUS();
     }
 
+#if 0
     {
         TEST();
 
@@ -568,9 +568,9 @@ int main(void)
             for (col = 0; col < COLS; ++col) {
                 ASSERT((*array3x4p)[row][col] == (0+(0*I)));
                 (*array3x4p)[row][col] = CMPLX(row, col);
-                aa = dirac_point(that, row, col);
+                aa = dirac_core_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
-                cc = &(dirac_body_mut(that)[dirac_index(that, row, col)]);
+                cc = &(dirac_body_mut(that)[dirac_core_index(that, row, col)]);
                 ASSERT(aa == bb);
                 ASSERT(bb == cc);
                 ASSERT(aa == cc);
@@ -646,9 +646,9 @@ int main(void)
             for (col = 0; col < COLS; ++col) {
                 ASSERT((*array3x4p)[row][col] == (0+(0*I)));
                 (*array3x4p)[row][col] = CMPLX(row, col);
-                aa = dirac_point(that, row, col);
+                aa = dirac_core_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
-                cc = &(dirac_body_mut(that)[dirac_index(that, row, col)]);
+                cc = &(dirac_body_mut(that)[dirac_core_index(that, row, col)]);
                 ASSERT(aa == bb);
                 ASSERT(bb == cc);
                 ASSERT(aa == cc);
@@ -713,9 +713,9 @@ int main(void)
             for (col = 0; col < COLS; ++col) {
                 ASSERT((*array3x4p)[row][col] == (0+(0*I)));
                 (*array3x4p)[row][col] = CMPLX(row, col);
-                aa = dirac_point(that, row, col);
+                aa = dirac_core_point(that, row, col);
                 bb = &((*array3x4p)[row][col]);
-                cc = &(dirac_body_mut(that)[dirac_index(that, row, col)]);
+                cc = &(dirac_body_mut(that)[dirac_core_index(that, row, col)]);
                 ASSERT(aa == bb);
                 ASSERT(bb == cc);
                 ASSERT(aa == cc);

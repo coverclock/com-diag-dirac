@@ -89,21 +89,21 @@ extern dirac_t * dirac_core_had(const dirac_t * thata, const dirac_t * thatb);
  * INDEXING AND POINTING
  ******************************************************************************/
 
-static inline size_t dirac_index(const dirac_t * that, unsigned int row, unsigned int column) {
+static inline size_t dirac_core_index(const dirac_t * that, unsigned int row, unsigned int column) {
     return (row * dirac_core_cols_get(that)) + column;
 }
 
-static inline dirac_complex_t * dirac_point_fast(dirac_t * that, unsigned int row, unsigned int column) {
-    return &((dirac_core_body_mut(that))[dirac_index(that, row, column)]);
+static inline dirac_complex_t * dirac_core_point_fast(dirac_t * that, unsigned int row, unsigned int column) {
+    return &((dirac_core_body_mut(that))[dirac_core_index(that, row, column)]);
 }
 
-extern dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column);
+extern dirac_complex_t * dirac_core_point_safe(dirac_t * that, unsigned int row, unsigned int column);
 
-static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, unsigned int column) {
+static inline dirac_complex_t * dirac_core_point(dirac_t * that, unsigned int row, unsigned int column) {
 #if defined(DEBUG)
-    return dirac_point_safe(that, row, column);
+    return dirac_core_point_safe(that, row, column);
 #else
-    return dirac_point_fast(that, row, column);
+    return dirac_core_point_fast(that, row, column);
 #endif
 }
 
