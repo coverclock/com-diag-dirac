@@ -154,103 +154,103 @@ int main(void)
         STATUS();
     }
 
-#if 0
     {
         TEST();
 
-        dirac_t * new1 = dirac_new(0, 0);
+        dirac_t * new1 = dirac_core_allocate(0, 0);
         fprintf(stderr, "new1=%p\n", new1);
-        dirac_print(stderr, new1);
+        dirac_core_print(stderr, new1);
         ASSERT(new1 != (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * new2 = dirac_new(2, 3);
+        dirac_t * new2 = dirac_core_allocate(2, 3);
         fprintf(stderr, "new2=%p\n", new2);
-        dirac_print(stderr, new2);
+        dirac_core_print(stderr, new2);
         ASSERT(new2 != (dirac_t *)0);
         ASSERT(new2 != new1);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * new3 = dirac_new(3, 2);
+        dirac_t * new3 = dirac_core_allocate(3, 2);
         fprintf(stderr, "new3=%p\n", new3);
-        dirac_print(stderr, new3);
+        dirac_core_print(stderr, new3);
         ASSERT(new3 != (dirac_t *)0);
         ASSERT(new3 != new1);
         ASSERT(new3 != new2);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * new4 = dirac_new(4, 4);
+        dirac_t * new4 = dirac_core_allocate(4, 4);
         fprintf(stderr, "new4=%p\n", new4);
-        dirac_print(stderr, new4);
+        dirac_core_print(stderr, new4);
         ASSERT(new4 != (dirac_t *)0);
         ASSERT(new4 != new1);
         ASSERT(new4 != new2);
         ASSERT(new4 != new3);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * delete3 = dirac_delete(new3);
+        dirac_t * delete3 = dirac_core_free(new3);
         ASSERT(delete3 == (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * delete1 = dirac_delete(new1);
+        dirac_t * delete1 = dirac_core_free(new1);
         ASSERT(delete1 == (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * delete4 = dirac_delete(new4);
+        dirac_t * delete4 = dirac_core_free(new4);
         ASSERT(delete4 == (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * delete2 = dirac_delete(new2);
+        dirac_t * delete2 = dirac_core_free(new2);
         ASSERT(delete2 == (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * new5 = dirac_new(0, 0);
+        dirac_t * new5 = dirac_core_allocate(0, 0);
         fprintf(stderr, "new5=%p\n", new5);
-        dirac_print(stderr, new5);
+        dirac_core_print(stderr, new5);
         ASSERT(new5 != (dirac_t *)0);
         ASSERT(new5 == new1);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * new6 = dirac_new(2, 3);
+        dirac_t * new6 = dirac_core_allocate(2, 3);
         fprintf(stderr, "new6=%p\n", new6);
-        dirac_print(stderr, new6);
+        dirac_core_print(stderr, new6);
         ASSERT(new6 != (dirac_t *)0);
         ASSERT(new6 == new3);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * new7 = dirac_new(3, 2);
+        dirac_t * new7 = dirac_core_allocate(3, 2);
         fprintf(stderr, "new7=%p\n", new7);
-        dirac_print(stderr, new7);
+        dirac_core_print(stderr, new7);
         ASSERT(new7 != (dirac_t *)0);
         ASSERT(new7 == new2);
         ASSERT(new7 != new6);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * new8 = dirac_new(4, 4);
+        dirac_t * new8 = dirac_core_allocate(4, 4);
         fprintf(stderr, "new8=%p\n", new8);
-        dirac_print(stderr, new8);
+        dirac_core_print(stderr, new8);
         ASSERT(new8 != (dirac_t *)0);
         ASSERT(new8 == new4);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * delete7 = dirac_delete(new7);
+        dirac_t * delete7 = dirac_core_free(new7);
         ASSERT(delete7 == (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * delete5 = dirac_delete(new5);
+        dirac_t * delete5 = dirac_core_free(new5);
         ASSERT(delete5 == (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * delete8 = dirac_delete(new8);
+        dirac_t * delete8 = dirac_core_free(new8);
         ASSERT(delete8 == (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
-        dirac_t * delete6 = dirac_delete(new6);
+        dirac_t * delete6 = dirac_core_free(new6);
         ASSERT(delete6 == (dirac_t *)0);
         ASSERT(dirac_dump(stderr) >= 0);
 
         STATUS();
     }
+#if 0
 
     {
         TEST();
