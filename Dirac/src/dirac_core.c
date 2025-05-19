@@ -49,16 +49,6 @@ static inline size_t size(size_t rows, size_t columns) {
     return bytes;
 }
 
-static dirac_t * construct(dirac_t * that, size_t rows, size_t columns)
-{
-    if (that != (dirac_t *)0) {
-        memset(dirac_body_mut(that), 0, length(rows, columns));
-        that->data.head.rows = rows;
-        that->data.head.columns = columns;
-    }
-    return that;
-}
-
 static int compare(const diminuto_tree_t * a, const diminuto_tree_t * b)
 {
     dirac_t * aa = (dirac_t *)a;
@@ -73,28 +63,37 @@ static int compare(const diminuto_tree_t * a, const diminuto_tree_t * b)
     }
 }
 
-static inline dirac_t * allocate(size_t rows, size_t columns)
+/*******************************************************************************
+ * INITIALIZATION AND FINALIZATION
+ ******************************************************************************/
+
+dirac_t * dirac_core_init(dirac_t * that, size_t rows, size_t columns)
 {
-    return (dirac_t *)malloc(size(rows, columns));
+    if (that != (dirac_t *)0) {
+        memset(dirac_body_mut(that), 0, length(rows, columns));
+        that->data.head.rows = rows;
+        that->data.head.columns = columns;
+    }
+    return that;
 }
 
 /*******************************************************************************
- * MEMORY MANAGEMENT
+ * PRIVATE MEMORY MANAGEMENT
  ******************************************************************************/
 
 dirac_t * dirac_core_allocate(size_t rows, size_t columns)
 {
     dirac_t target;
     target.node.size = size(rows, columns);
-    diminuto_tree_t * me = diminuto_tree_init(&(target.node.tree));
+    diminuto_tree_t * me = diminuto_tree_init(&target.node.tree);
     dirac_t * that = (dirac_t *)0;
     int rc = 0;
     DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
         diminuto_tree_t * you = diminuto_tree_search(cache, me, compare, &rc);
         if (you == (diminuto_tree_t *)0) {
-            that = allocate(rows, columns);
+            that = (dirac_t *)malloc(size(rows, columns));
         } else if (rc != 0) {
-            that = allocate(rows, columns);
+            that = (dirac_t *)malloc(size(rows, columns));
         } else if (you->data == (void *)0) {
             that = (dirac_t *)diminuto_tree_remove(you);
         } else {
@@ -102,13 +101,14 @@ dirac_t * dirac_core_allocate(size_t rows, size_t columns)
             you->data = ((diminuto_tree_t *)(you->data))->data;
         }
     DIMINUTO_CRITICAL_SECTION_END;
-    return construct(that, rows, columns);
+    return dirac_core_init(that, rows, columns);
 }
 
 dirac_t * dirac_core_free(dirac_t * that)
 {
     if (that != (dirac_t *)0) {
-        size_t bytes = size(dirac_rows_get(that), dirac_columns_get(that));
+        size_t bytes = size(dirac_core_rows_get(that), dirac_core_columns_get(that));
+        (void)dirac_core_fini(that);
         diminuto_tree_t * me = diminuto_tree_init(&(that->node.tree));
         that->node.size = bytes;
         DIMINUTO_CRITICAL_SECTION_BEGIN(&mutex);
@@ -125,6 +125,18 @@ dirac_t * dirac_core_free(dirac_t * that)
         DIMINUTO_CRITICAL_SECTION_END;
     }
     return that;
+}
+
+/*******************************************************************************
+ * PUBLIC MEMORY MANAGEMENT
+ ******************************************************************************/
+
+dirac_matrix_t * dirac_new_base(size_t rows, size_t columns) {
+    return dirac_matrix_mut(dirac_core_allocate(rows, columns));
+}
+
+void dirac_delete(dirac_matrix_t * them) {
+    dirac_core_free(dirac_object_mut(them));
 }
 
 void dirac_free(void)
@@ -151,12 +163,67 @@ void dirac_free(void)
 }
 
 /*******************************************************************************
- * INITIALIZATION
+ * PUBLIC GETTORS
  ******************************************************************************/
 
-dirac_t * dirac_init(dirac_t * that, size_t rows, size_t columns)
-{
-    return construct(that, rows, columns);
+size_t dirac_rows_get(const dirac_matrix_t * them) {
+    return dirac_object_get(them)->data.head.rows;
+}
+
+size_t dirac_cols_get(const dirac_matrix_t * them) {
+    return dirac_object_get(them)->data.head.columns;
+}
+
+/*******************************************************************************
+ * HELPERS
+ ******************************************************************************/
+
+dirac_t * dirac_core_dup(const dirac_t * thata) {
+    return dirac_core_allocate(dirac_core_rows_get(thata), dirac_core_cols_get(thata));
+}
+
+dirac_t * dirac_core_trn(const dirac_t * thata) {
+    return dirac_core_allocate(dirac_core_cols_get(thata), dirac_core_rows_get(thata));
+}
+
+dirac_t * dirac_core_sum(const dirac_t * thata, const dirac_t * thatb) {
+    dirac_t * that = (dirac_t *)0;
+    if (dirac_core_rows_get(thata) != dirac_core_rows_get(thatb)) {
+        errno = EINVAL;
+    } else if (dirac_core_cols_get(thata) != dirac_core_cols_get(thatb)) {
+        errno = EINVAL;
+    } else {
+        that = dirac_core_allocate(dirac_core_rows_get(thata), dirac_core_cols_get(thatb));
+    }
+    return that;
+}
+
+dirac_t * dirac_core_pro(const dirac_t * thata, const dirac_t * thatb) {
+    dirac_t * that = (dirac_t *)0;
+    if (dirac_core_cols_get(thata) != dirac_core_rows_get(thatb)) {
+        errno = EINVAL;
+    } else {
+        that = dirac_core_allocate(dirac_core_cols_get(thata), dirac_core_rows_get(thatb));
+    }
+    return that;
+}
+
+/* Kronecker product */
+dirac_t * dirac_core_kro(const dirac_t * thata, const dirac_t * thatb) {
+    return dirac_core_allocate(dirac_core_rows_get(thata) * dirac_core_rows_get(thatb), dirac_core_cols_get(thata) * dirac_core_cols_get(thatb));
+}
+
+/* Hadamard product */
+dirac_t * dirac_core_had(const dirac_t * thata, const dirac_t * thatb) {
+    dirac_t * that = (dirac_t *)0;
+    if (dirac_core_rows_get(thata) != dirac_core_rows_get(thatb)) {
+        errno = EINVAL;
+    } else if (dirac_core_cols_get(thata) != dirac_core_cols_get(thatb)) {
+        errno = EINVAL;
+    } else {
+        that = dirac_core_allocate(dirac_core_rows_get(thata), dirac_core_cols_get(thatb));
+    }
+    return that;
 }
 
 /*******************************************************************************
@@ -175,9 +242,38 @@ dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned in
     return here;
 }
 
+/*******************************************************************************
+ * PRIVATE DEBUGGING
+ ******************************************************************************/
+
+const dirac_t * dirac_core_print(FILE * fp, const dirac_t * that)
+{
+    if (that == (dirac_t *)0) {
+        fprintf(fp, "dirac@%p\n", that);
+    } else {
+        const dirac_matrix_t * them = dirac_core_matrix_get(that);
+        size_t rows = dirac_rows_get(that);
+        size_t cols = dirac_columns_get(that);
+        fprintf(fp, "dirac@%p: [%zu][%zu]\n", that, rows, cols);
+        const dirac_complex_t * tt = dirac_core_body_get(that);
+        int rr;
+        int cc;
+        int ii;
+        for (rr = 0; rr < rows; ++rr) {
+            fprintf(fp, " matrix@%p:", them);
+            for (cc = 0; cc < cols; ++cc) {
+                ii = dirac_index(that, rr, cc);
+                fprintf(fp, " (%7.4le%+7.4lei)", creal((tt)[ii]), cimag((tt)[ii]));
+            }
+            fputc('\n', fp);
+        }
+    }
+    fflush(fp);
+    return that;
+}
 
 /*******************************************************************************
- * DEBUGGING
+ * PUBLIC DEBUGGING
  ******************************************************************************/
 
 dirac_t * dirac_audit(void)
@@ -218,28 +314,9 @@ ssize_t dirac_dump(FILE * fp)
     return total;
 }
 
-const dirac_t * dirac_print(FILE * fp, const dirac_t * that)
-{
-    if (that == (dirac_t *)0) {
-        fprintf(fp, "dirac@%p\n", that);
-    } else {
-        size_t rows = dirac_rows_get(that);
-        size_t cols = dirac_columns_get(that);
-        fprintf(fp, "dirac@%p[%zu][%zu]\n", that, rows, cols);
-        const dirac_complex_t * tt = dirac_body_get(that);
-        int rr;
-        int cc;
-        int ii;
-        for (rr = 0; rr < rows; ++rr) {
-            for (cc = 0; cc < cols; ++cc) {
-                ii = dirac_index(that, rr, cc);
-                fprintf(fp, " (%7.4le%+7.4lei)", creal((tt)[ii]), cimag((tt)[ii]));
-            }
-            fputc('\n', fp);
-        }
-    }
-    fflush(fp);
-    return that;
+const dirac_matrix_t * dirac_print(FILE * fp, const dirac_matrix_t * them) {
+    (void)dirac_core_print(fp, dirac_core_object_get(them));
+    return them;
 }
 
 /*******************************************************************************

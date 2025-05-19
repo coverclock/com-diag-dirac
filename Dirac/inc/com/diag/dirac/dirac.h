@@ -58,12 +58,30 @@
  ******************************************************************************/
 
 #include "com/diag/diminuto/diminuto_tree.h"
-#include "com/diag/diminuto/diminuto_containerof.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <complex.h>
+
+/*******************************************************************************
+ * CODE GENERATORS
+ ******************************************************************************/
+
+#define DIRAC_OBJECT_TYPE(_ROWS_, _COLS_) \
+    union { \
+        struct { \
+            dirac_data_t head; \
+            dirac_complex_t body[_ROWS_][_COLS_]; \
+        } data; \
+        dirac_node_t node; \
+    }
+
+#define DIRAC_OBJECT_INIT(_ROWS_, _COLS_) \
+    { { { _ROWS_, _COLS_ } } }
+
+#define DIRAC_MATRIX_TYPE(_ROWS_, _COLS_) \
+    (dirac_complex_t (*)[_ROWS_][_COLS_])
 
 /*******************************************************************************
  * TYPES
@@ -83,84 +101,28 @@ typedef struct DiracData {
     size_t columns;
 } dirac_data_t;
 
-typedef union Dirac {
-    struct {
-        dirac_data_t head;
-        dirac_complex_t body[0][0];
-    } data;
-    dirac_node_t node;
-} dirac_t;
+typedef DIRAC_TYPE(0,0) dirac_t;
 
 /*******************************************************************************
  * GETTORS
  ******************************************************************************/
 
-static inline const dirac_complex_t * dirac_body_get(const dirac_t * that) {
-    return &(that->data.body[0][0]);
-}
+extern size_t dirac_rows_get(const dirac_matrix_t * them);
 
-static inline dirac_complex_t * dirac_body_mut(dirac_t * that) {
-    return &(that->data.body[0][0]);
-}
-
-static inline const dirac_matrix_t * dirac_matrix_get(const dirac_t * that) {
-    return (that != (const dirac_t *)0) ? (dirac_matrix_t *)dirac_body_get(that) : (const dirac_matrix_t *)0;
-}
-
-static inline dirac_matrix_t * dirac_matrix_mut(dirac_t * that) {
-    return (that != (dirac_t *)0) ? (dirac_matrix_t *)dirac_body_mut(that) : (dirac_matrix_t *)0;
-}
-
-static inline const dirac_t * dirac_object_get(const dirac_matrix_t * them) {
-    return (them != (const dirac_matrix_t *)0) ? diminuto_containerof(dirac_t, data.body[0][0], them) : (const dirac_t *)0;
-}
-
-static inline dirac_t * dirac_object_mut(dirac_matrix_t * them) {
-    return (them != (dirac_matrix_t *)0) ? diminuto_containerof(dirac_t, data.body[0][0], them) : (dirac_t *)0;
-}
-
-static inline size_t dirac_rows_get(const dirac_matrix_t * them) {
-    return dirac_object_get(them)->data.head.rows;
-}
-
-static inline size_t dirac_cols_get(const dirac_matrix_t * them) {
-    return dirac_object_get(them)->data.head.columns;
-}
-
-/*******************************************************************************
- * INITIALIZERS AND FINALIZERS
- ******************************************************************************/
-
-extern dirac_t * dirac_core_init(dirac_t * that, size_t rows, size_t columns);
-
-static inline dirac_t * dirac_core_fini(dirac_t * that) {
-    return that;
-}
+extern size_t dirac_cols_get(const dirac_matrix_t * them);
 
 /*******************************************************************************
  * MEMORY MANAGEMENT
  ******************************************************************************/
 
-extern dirac_t * dirac_object_allocate(size_t rows, size_t columns);
-
-extern dirac_t * dirac_object_free(dirac_t * that);
-
-static inline dirac_matrix_t * dirac_new_base(size_t rows, size_t columns) {
-    return dirac_matrix_mut(dirac_core_allocate(rows, columns));
-}
-
-static inline void dirac_delete(dirac_matrix_t * them) {
-    dirac_object_free(dirac_object_mut(them));
-}
-
-extern void dirac_free(void);
-
-/*******************************************************************************
- * CODE GENERATORS
- ******************************************************************************/
+extern dirac_matrix_t * dirac_new_base(size_t rows, size_t columns);
 
 #define dirac_new(_ROWS_, _COLS_) \
-    ((dirac_complex_t (*)[_ROWS_][_COLS_])dirac_new_base(_ROWS_, _COLS_))
+    (DIRAC_MATRIX_TYPE(_ROWS_, _COLS_)dirac_new_base(_ROWS_, _COLS_))
+
+extern void dirac_delete(dirac_matrix_t * them);
+
+extern void dirac_free(void);
 
 /*******************************************************************************
  * DEBUGGING
@@ -170,11 +132,7 @@ extern dirac_t * dirac_audit(void);
 
 extern ssize_t dirac_dump(FILE * fp);
 
-extern const dirac_t * dirac_core_print(FILE * fp, const dirac_t * that);
-
-static inline const dirac_t * dirac_print(FILE * fp, const dirac_matrix_t * them) {
-    return dirac_core_print(fp, (them != (dirac_matrix_t)0) ? diminuto_containerof(dirac_t, data.body[0][0], them) : (dirac_t *)0);
-}
+extern const dirac_matrix_t * dirac_print(FILE * fp, const dirac_matrix_t * them);
 
 /*******************************************************************************
  * OPERATIONS

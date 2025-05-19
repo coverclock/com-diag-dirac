@@ -31,16 +31,17 @@
  * matrix operations.
  */
 
-dirac_t * dirac_matrix_trn(const dirac_t * thata)
+dirac_matrix_t * dirac_matrix_trn(const dirac_matrix_t * thema)
 {
-	dirac_t * that = dirac_new_trn(thata); 
+    dirac_t * thata = dirac_core_object_get(thema);
+	dirac_t * that = dirac_core_trn(thata); 
     if (that == (dirac_t *)0) {
         diminuto_perror("dirac_matrix_trn");
     } else {
-        const dirac_complex_t * aa = dirac_body_get(thata);
-        dirac_complex_t * tt = dirac_body_mut(that);
-        size_t rows = dirac_rows_get(thata);
-        size_t cols = dirac_columns_get(thata);
+        const dirac_complex_t * aa = dirac_core_body_get(thata);
+        dirac_complex_t * tt = dirac_core_body_mut(that);
+        size_t rows = dirac_core_rows_get(thata);
+        size_t cols = dirac_core_cols_get(thata);
         int rr;
         int cc;
         int ii;
@@ -53,20 +54,22 @@ dirac_t * dirac_matrix_trn(const dirac_t * thata)
             }
         }
     } 
-	return that;
+	return dirac_core_matrix_mut(that);
 }
 
-dirac_t * dirac_matrix_add(const dirac_t * thata, const dirac_t * thatb)
+dirac_matrix_t * dirac_matrix_add(const dirac_matrix_t * thema, const dirac_matrix_t * themb)
 {
-	dirac_t * that = dirac_new_sum(thata, thatb);
+    dirac_t * thata = dirac_core_object_get(thema);
+    dirac_t * thatb = dirac_core_object_get(themb);
+	dirac_t * that = dirac_core_sum(thata, thatb);
     if (that == (dirac_t *)0) {
         diminuto_perror("dirac_matrix_add");
     } else {
-        const dirac_complex_t * aa = dirac_body_get(thata);
-        const dirac_complex_t * bb = dirac_body_get(thatb);
-        dirac_complex_t * tt = dirac_body_mut(that);
-        size_t rows = dirac_rows_get(that);
-        size_t cols = dirac_columns_get(that);
+        const dirac_complex_t * aa = dirac_core_body_get(thata);
+        const dirac_complex_t * bb = dirac_core_body_get(thatb);
+        dirac_complex_t * tt = dirac_core_body_mut(that);
+        size_t rows = dirac_core_rows_get(that);
+        size_t cols = dirac_core_columns_get(that);
         int rr;
         int cc;
         int ii;
@@ -77,17 +80,19 @@ dirac_t * dirac_matrix_add(const dirac_t * thata, const dirac_t * thatb)
             }
         }
     } 
-	return that;
+	return dirac_core_matrix_mut(that);
 }
 
-dirac_t * dirac_matrix_sub(const dirac_t * thata, const dirac_t * thatb)
+dirac_matrix_t * dirac_matrix_sub(const dirac_matrix_t * thema, const dirac_matrix_t * themb)
 {
-	dirac_t * that = dirac_new_sum(thata, thatb);
+    dirac_t * thata = dirac_core_object_get(thema);
+    dirac_t * thatb = dirac_core_object_get(themb);
+	dirac_t * that = dirac_core_sum(thata, thatb);
     if (that == (dirac_t *)0) {
         diminuto_perror("dirac_matrix_sub");
     } else {
-        const dirac_complex_t * aa = dirac_body_get(thata);
-        const dirac_complex_t * bb = dirac_body_get(thatb);
+        const dirac_complex_t * aa = dirac_core_body_get(thata);
+        const dirac_complex_t * bb = dirac_core_body_get(thatb);
         dirac_complex_t * tt = dirac_body_mut(that);
         size_t rows = dirac_rows_get(that);
         size_t cols = dirac_columns_get(that);
@@ -101,20 +106,22 @@ dirac_t * dirac_matrix_sub(const dirac_t * thata, const dirac_t * thatb)
             }
         }
     } 
-	return that;
+	return dirac_core_matrix_mut(that);
 }
 
-dirac_t * dirac_matrix_mul(const dirac_t * thata, const dirac_t * thatb)
+dirac_matrix_t * dirac_matrix_mul(const dirac_matrix_t * thema, const dirac_matrix_t * themb)
 {
-	dirac_t * that = dirac_new_pro(thata, thatb);
+    dirac_t * thata = dirac_core_object_get(thema);
+    dirac_t * thatb = dirac_core_object_get(themb);
+	dirac_t * that = dirac_core_pro(thata, thatb);
     if (that == (dirac_t *)0) {
         diminuto_perror("dirac_matrix_mul");
     } else {
-        const dirac_complex_t * aa = dirac_body_get(thata);
-        const dirac_complex_t * bb = dirac_body_get(thatb);
-        dirac_complex_t * tt = dirac_body_mut(that);
-        size_t rows = dirac_rows_get(thata);
-        size_t muls = dirac_rows_get(thatb);
+        const dirac_complex_t * aa = dirac_core_body_get(thata);
+        const dirac_complex_t * bb = dirac_core_body_get(thatb);
+        dirac_complex_t * tt = dirac_core_body_mut(that);
+        size_t rows = dirac_core_rows_get(thata);
+        size_t muls = dirac_core_rows_get(thatb);
         size_t cols = dirac_columns_get(thatb);
         int rr;
         int mm;
@@ -133,22 +140,24 @@ dirac_t * dirac_matrix_mul(const dirac_t * thata, const dirac_t * thatb)
             }
         }
     } 
-	return that;
+	return dirac_core_matrix_mut(that);
 }
 
-dirac_t * dirac_matrix_kro(const dirac_t * thata, const dirac_t * thatb)
+dirac_matrix_t * dirac_matrix_kro(const dirac_matrix_t * thema, const dirac_matrix_t * themb)
 {
+    dirac_t * thata = dirac_core_object_get(thema);
+    dirac_t * thatb = dirac_core_object_get(themb);
 	dirac_t * that = dirac_new_kro(thata, thatb);
     if (that == (dirac_t *)0) {
         diminuto_perror("dirac_matrix_mul");
     } else {
-        const dirac_complex_t * aa = dirac_body_get(thata);
-        const dirac_complex_t * bb = dirac_body_get(thatb);
-        dirac_complex_t * tt = dirac_body_mut(that);
-        size_t rowsa = dirac_rows_get(thata);
-        size_t colsa = dirac_columns_get(thata);
-        size_t rowsb = dirac_rows_get(thatb);
-        size_t colsb = dirac_columns_get(thatb);
+        const dirac_complex_t * aa = dirac_core_body_get(thata);
+        const dirac_complex_t * bb = dirac_core_body_get(thatb);
+        dirac_complex_t * tt = dirac_core_body_mut(that);
+        size_t rowsa = dirac_core_rows_get(thata);
+        size_t colsa = dirac_core_columns_get(thata);
+        size_t rowsb = dirac_core_rows_get(thatb);
+        size_t colsb = dirac_core_columns_get(thatb);
         int ar;
         int ac;
         int br;
@@ -173,21 +182,23 @@ dirac_t * dirac_matrix_kro(const dirac_t * thata, const dirac_t * thatb)
             }
         }
     }
-    return that;
+    return dirac_core_matrix_mut(that);
 }
 
-dirac_t * dirac_matrix_had(const dirac_t * thata, const dirac_t * thatb)
+dirac_matrix_t * dirac_matrix_had(const dirac_matrix_t * thema, const dirac_matrix_t * themb)
 {
+    dirac_t * thata = dirac_core_object_get(thema);
+    dirac_t * thatb = dirac_core_object_get(themb);
 	dirac_t * that = dirac_new_had(thata, thatb);
     if (that == (dirac_t *)0) {
         diminuto_perror("dirac_matrix_had");
     } else {
-        const dirac_complex_t * aa = dirac_body_get(thata);
-        const dirac_complex_t * bb = dirac_body_get(thatb);
+        const dirac_complex_t * aa = dirac_core_body_get(thata);
+        const dirac_complex_t * bb = dirac_core_body_get(thatb);
         dirac_complex_t * tt = dirac_body_mut(that);
-        size_t rows = dirac_rows_get(thata);
-        size_t muls = dirac_rows_get(thatb);
-        size_t cols = dirac_columns_get(thatb);
+        size_t rows = dirac_core_rows_get(thata);
+        size_t muls = dirac_core_rows_get(thatb);
+        size_t cols = dirac_core_columns_get(thatb);
         int rr;
         int cc;
         int ii;
@@ -198,7 +209,7 @@ dirac_t * dirac_matrix_had(const dirac_t * thata, const dirac_t * thatb)
             }
         }
     }
-    return that;
+    return dirac_core_matrix_mut(that);
 }
 
 /*******************************************************************************

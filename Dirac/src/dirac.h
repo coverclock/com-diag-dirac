@@ -13,76 +13,88 @@
  * Defines the privae API for Dirac.
  */
 
-static inline size_t dirac_rows_get(const dirac_matrix_t * them) {
-    return dirac_object_get(them)->data.head.rows;
+#include "com/diag/diminuto/diminuto_containerof.h"
+
+/*******************************************************************************
+ * INITIALIZERS AND FINALIZERS
+ ******************************************************************************/
+
+extern dirac_t * dirac_core_init(dirac_t * that, size_t rows, size_t columns);
+
+static inline dirac_t * dirac_core_fini(dirac_t * that) {
+    return that;
 }
 
-static inline size_t dirac_cols_get(const dirac_matrix_t * them) {
-    return dirac_object_get(them)->data.head.columns;
+/*******************************************************************************
+ * MEMORY MANAGEMENT
+ ******************************************************************************/
+
+extern dirac_t * dirac_core_allocate(size_t rows, size_t columns);
+
+extern dirac_t * dirac_core_free(dirac_t * that);
+
+/*******************************************************************************
+ * GETTORS
+ ******************************************************************************/
+
+static inline size_t dirac_core_rows_get(const dirac_t * that) {
+    return that->data.head.rows;
+}
+
+static inline size_t dirac_core_cols_get(const dirac_t * that) {
+    return that->data.head.columns;
+}
+
+static inline const dirac_complex_t * dirac_core_body_get(const dirac_t * that) {
+    return &(that->data.body[0][0]);
+}
+
+static inline dirac_complex_t * dirac_core_body_mut(dirac_t * that) {
+    return &(that->data.body[0][0]);
+}
+
+static inline const dirac_matrix_t * dirac_core_matrix_get(const dirac_t * that) {
+    return (that != (const dirac_t *)0) ? (dirac_matrix_t *)dirac_body_get(that) : (const dirac_matrix_t *)0;
+}
+
+static inline dirac_matrix_t * dirac_core_matrix_mut(dirac_t * that) {
+    return (that != (dirac_t *)0) ? (dirac_matrix_t *)dirac_core_body_mut(that) : (dirac_matrix_t *)0;
+}
+
+static inline const dirac_t * dirac_core_object_get(const dirac_matrix_t * them) {
+    return (them != (const dirac_matrix_t *)0) ? diminuto_containerof(dirac_t, data.body[0][0], them) : (const dirac_t *)0;
+}
+
+static inline dirac_t * dirac_core_object_mut(dirac_matrix_t * them) {
+    return (them != (dirac_matrix_t *)0) ? diminuto_containerof(dirac_t, data.body[0][0], them) : (dirac_t *)0;
 }
 
 /*******************************************************************************
  * HELPERS
  ******************************************************************************/
 
-static inline dirac_t * dirac_new_dup(const dirac_t * thata) {
-    return dirac_new(dirac_rows_get(thata), dirac_cols_get(thata));
-}
+extern dirac_t * dirac_core_dup(const dirac_t * thata);
 
-static inline dirac_t * dirac_new_trn(const dirac_t * thata) {
-    return dirac_new(dirac_cols_get(thata), dirac_rows_get(thata));
-}
+extern dirac_t * dirac_core_trn(const dirac_t * thata);
 
-static inline dirac_t * dirac_new_sum(const dirac_t * thata, const dirac_t * thatb) {
-    dirac_t * that = (dirac_t *)0;
-    if (dirac_rows_get(thata) != dirac_rows_get(thatb)) {
-        errno = EINVAL;
-    } else if (dirac_cols_get(thata) != dirac_cols_get(thatb)) {
-        errno = EINVAL;
-    } else {
-        that = dirac_new(dirac_rows_get(thata), dirac_cols_get(thatb));
-    }
-    return that;
-}
+extern dirac_t * dirac_core_sum(const dirac_t * thata, const dirac_t * thatb);
 
-static inline dirac_t * dirac_new_pro(const dirac_t * thata, const dirac_t * thatb) {
-    dirac_t * that = (dirac_t *)0;
-    if (dirac_cols_get(thata) != dirac_rows_get(thatb)) {
-        errno = EINVAL;
-    } else {
-        that = dirac_new(dirac_cols_get(thata), dirac_rows_get(thatb));
-    }
-    return that;
-}
+extern dirac_t * dirac_core_pro(const dirac_t * thata, const dirac_t * thatb);
 
-/* Kronecker product */
-static inline dirac_t * dirac_new_kro(const dirac_t * thata, const dirac_t * thatb) {
-    return dirac_new(dirac_rows_get(thata) * dirac_rows_get(thatb), dirac_cols_get(thata) * dirac_cols_get(thatb));
-}
+extern dirac_t * dirac_core_kro(const dirac_t * thata, const dirac_t * thatb);
 
-/* Hadamard product */
-static inline dirac_t * dirac_new_had(const dirac_t * thata, const dirac_t * thatb) {
-    dirac_t * that = (dirac_t *)0;
-    if (dirac_rows_get(thata) != dirac_rows_get(thatb)) {
-        errno = EINVAL;
-    } else if (dirac_cols_get(thata) != dirac_cols_get(thatb)) {
-        errno = EINVAL;
-    } else {
-        that = dirac_new(dirac_rows_get(thata), dirac_cols_get(thatb));
-    }
-    return that;
-}
+extern dirac_t * dirac_core_had(const dirac_t * thata, const dirac_t * thatb);
 
 /*******************************************************************************
  * INDEXING AND POINTING
  ******************************************************************************/
 
 static inline size_t dirac_index(const dirac_t * that, unsigned int row, unsigned int column) {
-    return (row * dirac_cols_get(that)) + column;
+    return (row * dirac_core_cols_get(that)) + column;
 }
 
 static inline dirac_complex_t * dirac_point_fast(dirac_t * that, unsigned int row, unsigned int column) {
-    return &((dirac_body_mut(that))[dirac_index(that, row, column)]);
+    return &((dirac_core_body_mut(that))[dirac_index(that, row, column)]);
 }
 
 extern dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column);
@@ -94,5 +106,15 @@ static inline dirac_complex_t * dirac_point(dirac_t * that, unsigned int row, un
     return dirac_point_fast(that, row, column);
 #endif
 }
+
+/*******************************************************************************
+ * DEBUGGING
+ ******************************************************************************/
+
+extern const dirac_t * dirac_core_print(FILE * fp, const dirac_t * that);
+
+/*******************************************************************************
+ * END
+ ******************************************************************************/
 
 #endif
