@@ -29,7 +29,7 @@ int main(void)
 
         matrix = dirac_new(2, 3);
         ASSERT((void *)matrix != (void *)0);
-        dirac_matrix_print(stdout, matrix);
+        dirac_print(stdout, matrix);
 
         size_t rows = dirac_rows_get(matrix);
         size_t cols = dirac_cols_get(matrix);
@@ -37,12 +37,12 @@ int main(void)
         int cc;
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                (*matrix)[rr][cc] = CMPLS((double)rr, (double)cc);
+                (*matrix)[rr][cc] = CMPLX((double)rr, (double)cc);
             }
         }
-        dirac_matrix_print(stdout, matrix);
+        dirac_print(stdout, matrix);
 
-        dirac_free_matrix(matrix);
+        dirac_delete(matrix);
 
         dirac_dump(stdout);
 

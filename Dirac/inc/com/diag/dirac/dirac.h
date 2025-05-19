@@ -58,8 +58,6 @@
  ******************************************************************************/
 
 #include "com/diag/diminuto/diminuto_tree.h"
-#include <errno.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <complex.h>
@@ -76,9 +74,6 @@
         } data; \
         dirac_node_t node; \
     }
-
-#define DIRAC_OBJECT_INIT(_ROWS_, _COLS_) \
-    { { { _ROWS_, _COLS_ } } }
 
 #define DIRAC_MATRIX_TYPE(_ROWS_, _COLS_) \
     (dirac_complex_t (*)[_ROWS_][_COLS_])
@@ -101,7 +96,7 @@ typedef struct DiracData {
     size_t columns;
 } dirac_data_t;
 
-typedef DIRAC_TYPE(0,0) dirac_t;
+typedef DIRAC_OBJECT_TYPE(0,0) dirac_t;
 
 /*******************************************************************************
  * GETTORS

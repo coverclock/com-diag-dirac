@@ -70,7 +70,7 @@ static int compare(const diminuto_tree_t * a, const diminuto_tree_t * b)
 dirac_t * dirac_core_init(dirac_t * that, size_t rows, size_t columns)
 {
     if (that != (dirac_t *)0) {
-        memset(dirac_body_mut(that), 0, length(rows, columns));
+        memset(dirac_core_body_mut(that), 0, length(rows, columns));
         that->data.head.rows = rows;
         that->data.head.columns = columns;
     }
@@ -107,7 +107,7 @@ dirac_t * dirac_core_allocate(size_t rows, size_t columns)
 dirac_t * dirac_core_free(dirac_t * that)
 {
     if (that != (dirac_t *)0) {
-        size_t bytes = size(dirac_core_rows_get(that), dirac_core_columns_get(that));
+        size_t bytes = size(dirac_core_rows_get(that), dirac_core_cols_get(that));
         (void)dirac_core_fini(that);
         diminuto_tree_t * me = diminuto_tree_init(&(that->node.tree));
         that->node.size = bytes;
@@ -132,11 +132,11 @@ dirac_t * dirac_core_free(dirac_t * that)
  ******************************************************************************/
 
 dirac_matrix_t * dirac_new_base(size_t rows, size_t columns) {
-    return dirac_matrix_mut(dirac_core_allocate(rows, columns));
+    return dirac_core_matrix_mut(dirac_core_allocate(rows, columns));
 }
 
 void dirac_delete(dirac_matrix_t * them) {
-    dirac_core_free(dirac_object_mut(them));
+    dirac_core_free(dirac_core_object_mut(them));
 }
 
 void dirac_free(void)
@@ -167,11 +167,11 @@ void dirac_free(void)
  ******************************************************************************/
 
 size_t dirac_rows_get(const dirac_matrix_t * them) {
-    return dirac_object_get(them)->data.head.rows;
+    return dirac_core_object_get(them)->data.head.rows;
 }
 
 size_t dirac_cols_get(const dirac_matrix_t * them) {
-    return dirac_object_get(them)->data.head.columns;
+    return dirac_core_object_get(them)->data.head.columns;
 }
 
 /*******************************************************************************
@@ -232,9 +232,9 @@ dirac_t * dirac_core_had(const dirac_t * thata, const dirac_t * thatb) {
 
 dirac_complex_t * dirac_point_safe(dirac_t * that, unsigned int row, unsigned int column) {
     dirac_complex_t * here = (dirac_complex_t *)0;
-    if (row >= dirac_rows_get(that)) {
+    if (row >= dirac_core_rows_get(that)) {
         /* Do nothing. */
-    } else if (column >= dirac_columns_get(that)) {
+    } else if (column >= dirac_core_cols_get(that)) {
         /* Do nothing. */
     } else {
         here = dirac_point_fast(that, row, column);
@@ -252,8 +252,8 @@ const dirac_t * dirac_core_print(FILE * fp, const dirac_t * that)
         fprintf(fp, "dirac@%p\n", that);
     } else {
         const dirac_matrix_t * them = dirac_core_matrix_get(that);
-        size_t rows = dirac_rows_get(that);
-        size_t cols = dirac_columns_get(that);
+        size_t rows = dirac_core_rows_get(that);
+        size_t cols = dirac_core_cols_get(that);
         fprintf(fp, "dirac@%p: [%zu][%zu]\n", that, rows, cols);
         const dirac_complex_t * tt = dirac_core_body_get(that);
         int rr;

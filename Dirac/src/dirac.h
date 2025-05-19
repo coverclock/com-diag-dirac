@@ -54,7 +54,7 @@ static inline dirac_complex_t * dirac_core_body_mut(dirac_t * that) {
 }
 
 static inline const dirac_matrix_t * dirac_core_matrix_get(const dirac_t * that) {
-    return (that != (const dirac_t *)0) ? (dirac_matrix_t *)dirac_body_get(that) : (const dirac_matrix_t *)0;
+    return (that != (const dirac_t *)0) ? (dirac_matrix_t *)dirac_core_body_get(that) : (const dirac_matrix_t *)0;
 }
 
 static inline dirac_matrix_t * dirac_core_matrix_mut(dirac_t * that) {
