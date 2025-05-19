@@ -355,76 +355,113 @@ int main(void)
         STATUS();
     }
 
+    {
+        TEST();
+
+        dirac_t * that1 = dirac_core_allocate(3, 5);
+        ASSERT(that1 != (dirac_t *)0);
+
+        dirac_t * that2 = dirac_core_allocate(9, 3);
+        ASSERT(that2 != (dirac_t *)0);
+
+        dirac_t * that3 = dirac_core_allocate(5, 7);
+        ASSERT(that3 != (dirac_t *)0);
+
+        dirac_t * that;
+
+        that = dirac_core_pro(that1, that2);
+        ASSERT(that == (dirac_t *)0);
+
+        that = dirac_core_pro(that1, that3);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_core_rows_get(that) == 5);
+        ASSERT(dirac_core_cols_get(that) == 5);
+
+        that = dirac_core_free(that);
+        ASSERT(that == (dirac_t *)0);
+
+        that2 = dirac_core_free(that2);
+        ASSERT(that2 == (dirac_t *)0);
+
+        that1 = dirac_core_free(that1);
+        ASSERT(that1 == (dirac_t *)0);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        dirac_t * that1 = dirac_core_allocate(3, 5);
+        ASSERT(that1 != (dirac_t *)0);
+
+        dirac_t * that2 = dirac_core_allocate(7, 11);
+        ASSERT(that2 != (dirac_t *)0);
+
+        dirac_t * that = dirac_core_kro(that1, that2);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_core_rows_get(that) == (3 * 7));
+        ASSERT(dirac_core_cols_get(that) == (5 * 11));
+
+        that = dirac_core_free(that);
+        ASSERT(that == (dirac_t *)0);
+
+        that2 = dirac_core_free(that2);
+        ASSERT(that2 == (dirac_t *)0);
+
+        that1 = dirac_core_free(that1);
+        ASSERT(that1 == (dirac_t *)0);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        dirac_t * that1 = dirac_core_allocate(3, 5);
+        ASSERT(that1 != (dirac_t *)0);
+
+        dirac_t * that2 = dirac_core_allocate(5, 3);
+        ASSERT(that2 != (dirac_t *)0);
+
+        dirac_t * that3 = dirac_core_allocate(7, 11);
+        ASSERT(that3 != (dirac_t *)0);
+
+        dirac_t * that4 = dirac_core_allocate(3, 5);
+        ASSERT(that4 != (dirac_t *)0);
+
+        dirac_t * that;
+
+        that = dirac_core_had(that1, that2);
+        ASSERT(that == (dirac_t *)0);
+
+        that = dirac_core_had(that1, that3);
+        ASSERT(that == (dirac_t *)0);
+
+        that = dirac_core_had(that1, that4);
+        ASSERT(that != (dirac_t *)0);
+        ASSERT(dirac_core_rows_get(that) == 3);
+        ASSERT(dirac_core_cols_get(that) == 5);
+
+        that = dirac_core_free(that);
+        ASSERT(that == (dirac_t *)0);
+
+        that4 = dirac_core_free(that4);
+        ASSERT(that4 == (dirac_t *)0);
+
+        that3 = dirac_core_free(that3);
+        ASSERT(that3 == (dirac_t *)0);
+
+        that2 = dirac_core_free(that2);
+        ASSERT(that2 == (dirac_t *)0);
+
+        that1 = dirac_core_free(that1);
+        ASSERT(that1 == (dirac_t *)0);
+
+        STATUS();
+    }
+
 #if 0
-    {
-        TEST();
-
-        DIRAC_OBJECT_DECL(3, 5) thing1 = DIRAC_OBJECT_INIT(3, 5);
-        DIRAC_OBJECT_DECL(3, 5) thing2 = DIRAC_OBJECT_INIT(3, 5);
-        DIRAC_OBJECT_DECL(5, 7) thing3 = DIRAC_OBJECT_INIT(5, 7);
-
-        dirac_t * that;
-
-        that = dirac_new_pro((dirac_t *)&thing1, (dirac_t *)&thing2);
-        ASSERT(that == (dirac_t *)0);
-
-        that = dirac_new_pro((dirac_t *)&thing1, (dirac_t *)&thing3);
-        ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get(that) == 5);
-        ASSERT(dirac_columns_get(that) == 5);
-
-        that = dirac_delete(that);
-        ASSERT(that == (dirac_t *)0);
-
-        STATUS();
-    }
-
-    {
-        TEST();
-
-        DIRAC_OBJECT_DECL(3, 5) thing1 = DIRAC_OBJECT_INIT(3, 5);
-        DIRAC_OBJECT_DECL(7, 11) thing2 = DIRAC_OBJECT_INIT(7, 11);
-
-        dirac_t * that;
-
-        that = dirac_new_kro((dirac_t *)&thing1, (dirac_t *)&thing2);
-        ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get((dirac_t *)that) == (3 * 7));
-        ASSERT(dirac_columns_get((dirac_t *)that) == (5 * 11));
-
-        that = dirac_delete(that);
-        ASSERT(that == (dirac_t *)0);
-
-        STATUS();
-    }
-
-    {
-        TEST();
-
-        DIRAC_OBJECT_DECL(3, 5) thing1 = DIRAC_OBJECT_INIT(3, 5);
-        DIRAC_OBJECT_DECL(3, 11) thing2 = DIRAC_OBJECT_INIT(7, 11);
-        DIRAC_OBJECT_DECL(7, 5) thing3 = DIRAC_OBJECT_INIT(7, 11);
-        DIRAC_OBJECT_DECL(3, 5) thing4 = DIRAC_OBJECT_INIT(3, 5);
-
-        dirac_t * that;
-
-        that = dirac_new_had((dirac_t *)&thing1, (dirac_t *)&thing2);
-        ASSERT(that == (dirac_t *)0);
-
-        that = dirac_new_had((dirac_t *)&thing1, (dirac_t *)&thing3);
-        ASSERT(that == (dirac_t *)0);
-
-        that = dirac_new_had((dirac_t *)&thing1, (dirac_t *)&thing4);
-        ASSERT(that != (dirac_t *)0);
-        ASSERT(dirac_rows_get((dirac_t *)that) == 3);
-        ASSERT(dirac_columns_get((dirac_t *)that) == 5);
-
-        that = dirac_delete(that);
-        ASSERT(that == (dirac_t *)0);
-
-        STATUS();
-    }
-
     {
         TEST();
 
