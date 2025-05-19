@@ -295,18 +295,18 @@ ssize_t dirac_dump(FILE * fp)
             for (rootp = &cache, nodep = diminuto_tree_first(rootp); nodep != DIMINUTO_TREE_NULL; nodep = diminuto_tree_next(nodep)) {
                 that = (dirac_t *)nodep;
                 total += that->node.size;
-                if (fp != (FILE *)0) { fprintf(fp, "dirac_dump: @%p[%zu]", that, that->node.size); }
+                if (fp != (FILE *)0) { fprintf(fp, "dirac_dump: dirac@%p[%zu]", that, that->node.size); }
                 nextp = nodep->data;
                 while (nextp != (void *)0) {
                     that = (dirac_t *)nextp;
-                    if (fp != (FILE *)0) { fprintf(fp, " @%p[%zu]", that, that->node.size); }
+                    if (fp != (FILE *)0) { fprintf(fp, " dirac@%p[%zu]", that, that->node.size); }
                     nextp = nextp->data;
                 }
                 if (fp != (FILE *)0) { fputc('\n', fp); }
             }
             if (fp != (FILE *)0) { fprintf(fp, "dirac_dump: end [%zd]\n", total); }
         } else {
-            if (fp != (FILE *)0) { fprintf(fp, "dirac_dump: @%p[%zu] FAILED!\n", that, that->node.size); }
+            if (fp != (FILE *)0) { fprintf(fp, "dirac_dump: dirac@%p[%zu] FAILED!\n", that, that->node.size); }
             total = -1;
         }
     DIMINUTO_CRITICAL_SECTION_END;

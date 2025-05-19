@@ -15,6 +15,7 @@
 #include "com/diag/diminuto/diminuto_dump.h"
 #include "com/diag/diminuto/diminuto_log.h"
 #include "com/diag/dirac/dirac.h"
+#include "dirac.h"
 
 int main(void)
 {
@@ -53,14 +54,13 @@ int main(void)
         STATUS();
     }
 
-#if 0
-
     {
         TEST();
 
         fprintf(stderr, "sizeof(double)=%zu\n", sizeof(double));
         fprintf(stderr, "sizeof(complex double)=%zu\n", sizeof(complex double));
         fprintf(stderr, "sizeof(dirac_complex_t)=%zu\n", sizeof(dirac_complex_t));
+        fprintf(stderr, "sizeof(dirac_matrix_t)=%zu\n", sizeof(dirac_matrix_t));
         ASSERT(sizeof(complex double) == sizeof(dirac_complex_t));
 
         static const double thirteen = 13.0;
@@ -113,26 +113,48 @@ int main(void)
     {
         TEST();
 
-        dirac_t that;
+        dirac_t object;
+
+        object.data.head.rows = 5;
+        object.data.head.columns = 7;
+
+        dirac_matrix_t * them = dirac_core_matrix_mut(&object);
+        ASSERT(them == &(object.data.body[0][0]));
+
+        const dirac_matrix_t * them2 = dirac_core_matrix_get(&object);
+        ASSERT(them2 == &(object.data.body[0][0]));
+
         size_t rows;
         size_t columns;
-        const dirac_complex_t * matrix;
 
-        that.data.head.rows = 5;
-        that.data.head.columns = 7;
-
-        rows = dirac_rows_get(&that);
+        rows = dirac_rows_get(them);
         ASSERT(rows == 5);
 
-        columns = dirac_columns_get(&that);
+        columns = dirac_cols_get(them);
         ASSERT(columns == 7);
 
-        matrix = dirac_body_get(&that);
-        ASSERT(matrix == &(that.data.body[0][0]));
+        dirac_t * that = dirac_core_object_mut(them);
+        ASSERT(that == &object);
+
+        const dirac_t * that2 = dirac_core_object_get(them2);
+        ASSERT(that == &object);
+
+        rows = dirac_core_rows_get(that2);
+        ASSERT(rows == 5);
+
+        columns = dirac_core_cols_get(that2);
+        ASSERT(columns == 7);
+
+        dirac_complex_t * body = dirac_core_body_mut(that);
+        ASSERT(body == &(object.data.body[0][0]));
+
+        const dirac_complex_t * body2 = dirac_core_body_get(that2);
+        ASSERT(body2 == &(object.data.body[0][0]));
 
         STATUS();
     }
 
+#if 0
     {
         TEST();
 
@@ -651,6 +673,7 @@ int main(void)
 
         STATUS();
     }
+#endif
 
     {
         TEST();
@@ -668,8 +691,6 @@ int main(void)
 
         STATUS();
     }
-
-#endif
 
     EXIT();
 }
