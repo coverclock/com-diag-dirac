@@ -547,30 +547,33 @@ int main(void)
         STATUS();
     }
 
-#if 0
     {
         TEST();
 
         static const size_t ROWS = 3;
         static const size_t COLS = 4;
-        dirac_t * that;
-        DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
-        array3x4_t * array3x4p;
+
+        dirac_complex_t (*them)[ROWS][COLS] = dirac_new(ROWS, COLS);
+        dirac_t * that = dirac_core_object_mut(them);
+
         dirac_complex_t * aa;
         dirac_complex_t * bb;
         dirac_complex_t * cc;
         unsigned int row, col;
 
-        that = dirac_new(ROWS, COLS);
-        array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
+        ASSERT(dirac_rows_get(them) == ROWS);
+        ASSERT(dirac_cols_get(them) == COLS);
+
+        ASSERT(dirac_core_rows_get(that) == ROWS);
+        ASSERT(dirac_core_cols_get(that) == COLS);
 
         for (row = 0; row < ROWS; ++row) {
             for (col = 0; col < COLS; ++col) {
-                ASSERT((*array3x4p)[row][col] == (0+(0*I)));
-                (*array3x4p)[row][col] = CMPLX(row, col);
+                ASSERT((*them)[row][col] == (0+(0*I)));
+                (*them)[row][col] = CMPLX(row, col);
                 aa = dirac_core_point(that, row, col);
-                bb = &((*array3x4p)[row][col]);
-                cc = &(dirac_body_mut(that)[dirac_core_index(that, row, col)]);
+                bb = &((*them)[row][col]);
+                cc = &(dirac_core_body_mut(that)[dirac_core_index(that, row, col)]);
                 ASSERT(aa == bb);
                 ASSERT(bb == cc);
                 ASSERT(aa == cc);
@@ -583,154 +586,10 @@ int main(void)
             }
         }
 
-        dirac_delete(that);
+        dirac_delete(them);
 
         STATUS();
     }
-
-    {
-        TEST();
-
-        DIRAC_OBJECT_DECL(0, 0) thing = DIRAC_OBJECT_INIT(0, 0);
-        dirac_t * that = (dirac_t *)&thing;
-
-        ASSERT(dirac_rows_get(that) == 0);
-        ASSERT(dirac_columns_get(that) == 0);
-
-        ASSERT(sizeof(thing) == sizeof(*that));
-
-        STATUS();
-    }
-
-    {
-        TEST();
-
-#define ROWS 5
-#define COLS 7
-
-        DIRAC_OBJECT_DECL(ROWS, COLS) thing = DIRAC_OBJECT_INIT(ROWS, COLS);
-        dirac_t * that = (dirac_t *)&thing;
-        DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
-        array3x4_t * array3x4p;
-        dirac_complex_t * aa;
-        dirac_complex_t * bb;
-        dirac_complex_t * cc;
-        dirac_complex_t * dd;
-        unsigned int row, col;
-
-        ASSERT(dirac_rows_get(that) == ROWS);
-        ASSERT(dirac_columns_get(that) == COLS);
-
-        ASSERT(sizeof(thing) > sizeof(*that));
-
-        fprintf(stderr, "sizeof(thing)=%zu\n", sizeof(thing));
-        fprintf(stderr, "sizeof(thing.data)=%zu\n", sizeof(thing.data));
-        fprintf(stderr, "sizeof(thing.data.head)=%zu\n", sizeof(thing.data.head));
-        fprintf(stderr, "sizeof(thing.data.body)=%zu\n", sizeof(thing.data.body));
-        fprintf(stderr, "sizeof(thing.node)=%zu\n", sizeof(thing.node));
-
-        aa = &((dirac_body_mut(that))[0]);
-        bb = &((dirac_body_mut(that))[(ROWS * COLS) - 1]);
-        cc = &(thing.data.body[0][0]);
-        dd = &(thing.data.body[ROWS - 1][COLS - 1]);
-        fprintf(stderr, "that[%u]=%p\n", 0, aa);
-        fprintf(stderr, "that[%u]=%p\n", (ROWS * COLS) - 1, bb);
-        fprintf(stderr, "thing[%u]=%p\n", 0, cc);
-        fprintf(stderr, "thing[%zu]=%p\n", countof(thing.data.body) - 1, dd);
-        ASSERT(aa == cc);
-        ASSERT(bb == dd);
-
-        array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
-
-        for (row = 0; row < ROWS; ++row) {
-            for (col = 0; col < COLS; ++col) {
-                ASSERT((*array3x4p)[row][col] == (0+(0*I)));
-                (*array3x4p)[row][col] = CMPLX(row, col);
-                aa = dirac_core_point(that, row, col);
-                bb = &((*array3x4p)[row][col]);
-                cc = &(dirac_body_mut(that)[dirac_core_index(that, row, col)]);
-                ASSERT(aa == bb);
-                ASSERT(bb == cc);
-                ASSERT(aa == cc);
-                ASSERT((unsigned int)creal(*aa) == row);
-                ASSERT((unsigned int)cimag(*aa) == col);
-                ASSERT((unsigned int)creal(*bb) == row);
-                ASSERT((unsigned int)cimag(*bb) == col);
-                ASSERT((unsigned int)creal(*cc) == row);
-                ASSERT((unsigned int)cimag(*cc) == col);
-            }
-        }
-
-#undef COLS
-#undef ROWS
-
-        STATUS();
-    }
-
-    {
-        TEST();
-
-        const size_t ROWS = 5;
-        const size_t COLS = 7;
-
-        DIRAC_OBJECT_DECL(ROWS, COLS) thing;
-        DIRAC_ARRAY_TYPE(array3x4_t, ROWS, COLS);
-        array3x4_t * array3x4p;
-        dirac_complex_t * aa;
-        dirac_complex_t * bb;
-        dirac_complex_t * cc;
-        dirac_complex_t * dd;
-        unsigned int row, col;
-
-        dirac_t * that = dirac_init((dirac_t *)&thing, ROWS, COLS);
-        ASSERT(that == (dirac_t *)&thing);
-
-        ASSERT(dirac_rows_get(that) == ROWS);
-        ASSERT(dirac_columns_get(that) == COLS);
-
-        ASSERT(sizeof(thing) > sizeof(*that));
-
-        fprintf(stderr, "sizeof(thing)=%zu\n", sizeof(thing));
-        fprintf(stderr, "sizeof(thing.data)=%zu\n", sizeof(thing.data));
-        fprintf(stderr, "sizeof(thing.data.head)=%zu\n", sizeof(thing.data.head));
-        fprintf(stderr, "sizeof(thing.data.body)=%zu\n", sizeof(thing.data.body));
-        fprintf(stderr, "sizeof(thing.node)=%zu\n", sizeof(thing.node));
-
-        aa = &((dirac_body_mut(that))[0]);
-        bb = &((dirac_body_mut(that))[(ROWS * COLS) - 1]);
-        cc = &(thing.data.body[0][0]);
-        dd = &(thing.data.body[ROWS - 1][COLS - 1]);
-        fprintf(stderr, "that[%u]=%p\n", 0, aa);
-        fprintf(stderr, "that[%zu]=%p\n", (ROWS * COLS) - 1, bb);
-        fprintf(stderr, "thing[%u]=%p\n", 0, cc);
-        fprintf(stderr, "thing[%zu]=%p\n", countof(thing.data.body) - 1, dd);
-        ASSERT(aa == cc);
-        ASSERT(bb == dd);
-
-        array3x4p = DIRAC_ARRAY_POINTER(array3x4_t, that);
-
-        for (row = 0; row < ROWS; ++row) {
-            for (col = 0; col < COLS; ++col) {
-                ASSERT((*array3x4p)[row][col] == (0+(0*I)));
-                (*array3x4p)[row][col] = CMPLX(row, col);
-                aa = dirac_core_point(that, row, col);
-                bb = &((*array3x4p)[row][col]);
-                cc = &(dirac_body_mut(that)[dirac_core_index(that, row, col)]);
-                ASSERT(aa == bb);
-                ASSERT(bb == cc);
-                ASSERT(aa == cc);
-                ASSERT((unsigned int)creal(*aa) == row);
-                ASSERT((unsigned int)cimag(*aa) == col);
-                ASSERT((unsigned int)creal(*bb) == row);
-                ASSERT((unsigned int)cimag(*bb) == col);
-                ASSERT((unsigned int)creal(*cc) == row);
-                ASSERT((unsigned int)cimag(*cc) == col);
-            }
-        }
-
-        STATUS();
-    }
-#endif
 
     {
         TEST();
