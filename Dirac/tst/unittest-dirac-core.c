@@ -224,7 +224,7 @@ int main(void)
 
         dirac_matrix_t * them = dirac_new(0, 0);
         ASSERT(them != (dirac_matrix_t *)0);
-        dirac_print(stdout, them);
+        ASSERT(dirac_print(stdout, them) == them);
         dirac_delete(them);
 
         STATUS();
@@ -238,7 +238,7 @@ int main(void)
         dirac_complex_t (*them)[2][3] = dirac_new(2, 3);
         ASSERT((void *)them != (void *)0);
 
-        dirac_print(stdout, them);
+        ASSERT(dirac_print(stdout, them) == them);
 
         size_t rows = dirac_rows_get(them);
         size_t cols = dirac_cols_get(them);
@@ -252,7 +252,8 @@ int main(void)
                 (*them)[rr][cc] = CMPLX((double)rr, (double)cc);
             }
         }
-        dirac_print(stdout, them);
+
+        ASSERT(dirac_print(stdout, them) == them);
 
         dirac_delete(them);
 

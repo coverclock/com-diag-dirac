@@ -18,90 +18,99 @@ int main(void)
 {
     SETLOGMASK();
 
-#if 0
-
     int ii = 0;
 
-    DIRAC_STACK_CODE(thing2x3a, 2, 3);
+    dirac_complex_t (*that2x3a)[2][3] = dirac_new(2, 3);
 
     {
         TEST();
 
-        int rows = dirac_rows_get(thing2x3a_p);
-        int cols = dirac_columns_get(thing2x3a_p);
+        int rows = dirac_rows_get(that2x3a);
+        int cols = dirac_cols_get(that2x3a);
         int rr;
         int cc;
 
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                (*thing2x3a_m)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
+                (*that2x3a)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
             }
         }
 
-        ASSERT(dirac_print(stdout, thing2x3a_p) == (dirac_t *)&thing2x3a);
+        dirac_print(stdout, that2x3a);
 
         STATUS();
     }
 
-    DIRAC_STACK_CODE(thing2x3b, 2, 3);
+    dirac_complex_t (*that2x3b)[2][3] = dirac_new(2, 3);
 
     {
         TEST();
 
-        int rows = dirac_rows_get(thing2x3b_p);
-        int cols = dirac_columns_get(thing2x3b_p);
+        int rows = dirac_rows_get(that2x3b);
+        int cols = dirac_cols_get(that2x3b);
         int rr;
         int cc;
 
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                (*thing2x3b_m)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
+                (*that2x3b)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
             }
         }
 
-        ASSERT(dirac_print(stdout, thing2x3b_p) == (dirac_t *)&thing2x3b);
+        dirac_print(stdout, that2x3b);
 
         STATUS();
     }
 
-    DIRAC_STACK_CODE(thing3x2c, 3, 2);
+    dirac_complex_t (*that3x2c)[3][2] = dirac_new(3, 2);
 
     {
         TEST();
 
-        int rows = dirac_rows_get(thing3x2c_p);
-        int cols = dirac_columns_get(thing3x2c_p);
+        int rows = dirac_rows_get(that3x2c);
+        int cols = dirac_cols_get(that3x2c);
         int rr;
         int cc;
 
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                (*thing3x2c_m)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
+                (*that3x2c)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
             }
         }
 
-        ASSERT(dirac_print(stdout, thing3x2c_p) == (dirac_t *)&thing3x2c);
+        dirac_print(stdout, that3x2c);
 
         STATUS();
     }
 
-    DIRAC_STACK_CODE(thing5x7d, 5, 7);
+    dirac_complex_t (*that5x7d)[5][7] = dirac_new(5, 7);
 
     {
         TEST();
 
-        int rows = dirac_rows_get(thing5x7d_p);
-        int cols = dirac_columns_get(thing5x7d_p);
+        int rows = dirac_rows_get(that5x7d);
+        int cols = dirac_cols_get(that5x7d);
         int rr;
         int cc;
 
         for (rr = 0; rr < rows; ++rr) {
             for (cc = 0; cc < cols; ++cc) {
-                (*thing5x7d_m)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
+                (*that5x7d)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
             }
         }
 
-        ASSERT(dirac_print(stdout, thing5x7d_p) == (dirac_t *)&thing5x7d);
+        dirac_print(stdout, that5x7d);
+
+        STATUS();
+    }
+
+#if 0
+    {
+        TEST();
+
+        dirac_complex_t (*that)[7][5] = dirac_matrix_trn(that5x7d);
+        dirac_print(stdout, that);
+        dirac_delete(that);
 
         STATUS();
     }
@@ -109,41 +118,39 @@ int main(void)
     {
         TEST();
 
-        dirac_t * that = dirac_matrix_trn(thing5x7d_p);
+        dirac_complex_t * that = dirac_matrix_add(thing2x3a_p, thing2x3b_p);
         ASSERT(dirac_print(stdout, that) == that);
         ASSERT(dirac_delete(that) == (dirac_t *)0);
 
         STATUS();
     }
+#endif
 
     {
         TEST();
 
-        dirac_t * that = dirac_matrix_add(thing2x3a_p, thing2x3b_p);
-        ASSERT(dirac_print(stdout, that) == that);
-        ASSERT(dirac_delete(that) == (dirac_t *)0);
-
-        STATUS();
-    }
-
-    {
-        TEST();
+        dirac_delete(that2x3a);
+        dirac_delete(that2x3b);
+        dirac_delete(that3x2c);
+        dirac_delete(that5x7d);
 
         dirac_t * that = dirac_audit();
         ASSERT(that == (dirac_t *)0);
 
-        ssize_t total = dirac_dump(stderr);
+        ssize_t total;
+
+        total = dirac_dump(stderr);
         fprintf(stderr, "cache[%zd]\n", total);
         ASSERT(total >= 0);
 
         dirac_free();
+
         total = dirac_dump((FILE *)0);
+        fprintf(stderr, "cache[%zd]\n", total);
         ASSERT(total == 0);
 
         STATUS();
     }
-
-#endif
 
     EXIT();
 }
