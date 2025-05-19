@@ -104,11 +104,11 @@ int main(void)
         STATUS();
     }
 
-#if 0
     {
         TEST();
 
         dirac_complex_t (*that)[7][5] = dirac_matrix_trn(that5x7d);
+        ASSERT(that != (dirac_complex_t (*)[7][5])0);
         dirac_print(stdout, that);
         dirac_delete(that);
 
@@ -118,13 +118,13 @@ int main(void)
     {
         TEST();
 
-        dirac_complex_t * that = dirac_matrix_add(thing2x3a_p, thing2x3b_p);
-        ASSERT(dirac_print(stdout, that) == that);
-        ASSERT(dirac_delete(that) == (dirac_t *)0);
+        dirac_complex_t (*that)[2][3] = dirac_matrix_add(that2x3a, that2x3b);
+        ASSERT(that != (dirac_complex_t (*)[2][3])0);
+        dirac_print(stdout, that);
+        dirac_delete(that);
 
         STATUS();
     }
-#endif
 
     {
         TEST();
