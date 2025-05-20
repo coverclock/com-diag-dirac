@@ -1,6 +1,6 @@
 # com-diag-dirac
 
-Dirac is a library to support matrix arithmetic with complex numbers in C99 and later.
+Dirac supports matrix arithmetic with complex numbers in C99 and later.
 
 # Copyright
 

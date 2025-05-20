@@ -265,7 +265,7 @@ int main(void)
         TEST();
 
         DIRAC_OBJECT_DECL(2, 3) those = DIRAC_OBJECT_INIT(2, 3);
-        dirac_complex_t (*them)[2][3] = DIRAC_MATRIX_MUT(those);
+        dirac_complex_t (*them)[2][3] = DIRAC_MATRIX_REF(those);
 
         ASSERT(dirac_print(stdout, them) == them);
 
@@ -295,7 +295,7 @@ int main(void)
                 { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
                 { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
             DIRAC_OBJECT_INIT_END;
-        const dirac_complex_t (*them)[2][3] = DIRAC_MATRIX_MUT(those);
+        const dirac_complex_t (*them)[2][3] = DIRAC_MATRIX_REF(those);
 
         ASSERT(dirac_print(stdout, them) == them);
 

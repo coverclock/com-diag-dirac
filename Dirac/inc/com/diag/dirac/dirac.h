@@ -89,7 +89,7 @@
 #define DIRAC_MATRIX_CAST(_ROWS_, _COLS_) \
     (dirac_complex_t (*)[_ROWS_][_COLS_])
 
-#define DIRAC_MATRIX_MUT(_OBJECT_) \
+#define DIRAC_MATRIX_REF(_OBJECT_) \
     (&((_OBJECT_).data.body))
 
 /*******************************************************************************
