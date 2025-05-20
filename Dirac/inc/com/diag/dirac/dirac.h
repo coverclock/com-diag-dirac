@@ -75,8 +75,16 @@
         dirac_node_t node; \
     }
 
+#define DIRAC_OBJECT_INIT_BEGIN(_ROWS_, _COLS_) \
+    { { { _ROWS_, _COLS_ }, {
+
+#define DIRAC_OBJECT_INIT_END \
+    } } }
+
 #define DIRAC_OBJECT_INIT(_ROWS_, _COLS_) \
-    { { { _ROWS_, _COLS_ }, { { 0+0i, } } } }
+    DIRAC_OBJECT_INIT_BEGIN(_ROWS_, _COLS_) \
+      { 0+0i, }, \
+    DIRAC_OBJECT_INIT_END
 
 #define DIRAC_MATRIX_CAST(_ROWS_, _COLS_) \
     (dirac_complex_t (*)[_ROWS_][_COLS_])

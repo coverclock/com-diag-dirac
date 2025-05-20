@@ -290,6 +290,26 @@ int main(void)
     {
         TEST();
 
+        static const DIRAC_OBJECT_DECL(2, 3) those =
+            DIRAC_OBJECT_INIT_BEGIN(2, 3)
+                { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
+                { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
+            DIRAC_OBJECT_INIT_END;
+        const dirac_complex_t (*them)[2][3] = DIRAC_MATRIX_MUT(those);
+
+        ASSERT(dirac_print(stdout, them) == them);
+
+        size_t rows = dirac_rows_get(them);
+        size_t cols = dirac_cols_get(them);
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
         dirac_t * that0 = dirac_core_allocate(11, 17);
         ASSERT(that0 != (dirac_t *)0);
         ASSERT(dirac_core_rows_get(that0) == 11);
