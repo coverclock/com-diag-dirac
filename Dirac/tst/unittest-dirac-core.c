@@ -259,10 +259,6 @@ int main(void)
 
         dirac_dump(stdout);
 
-        dirac_free();
-
-        dirac_dump(stdout);
-
         STATUS();
     }
 
@@ -380,6 +376,9 @@ int main(void)
 
         that = dirac_core_free(that);
         ASSERT(that == (dirac_t *)0);
+
+        that3 = dirac_core_free(that3);
+        ASSERT(that3 == (dirac_t *)0);
 
         that2 = dirac_core_free(that2);
         ASSERT(that2 == (dirac_t *)0);
@@ -543,7 +542,8 @@ int main(void)
             }
         }
 
-        dirac_core_free(that);
+        that = dirac_core_free(that);
+        ASSERT(that == (dirac_t *)0);
 
         STATUS();
     }

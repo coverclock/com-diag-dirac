@@ -66,7 +66,7 @@
  * CODE GENERATORS
  ******************************************************************************/
 
-#define DIRAC_OBJECT_TYPE(_ROWS_, _COLS_) \
+#define DIRAC_OBJECT_DECL(_ROWS_, _COLS_) \
     union { \
         struct { \
             dirac_data_t head; \
@@ -75,7 +75,7 @@
         dirac_node_t node; \
     }
 
-#define DIRAC_MATRIX_TYPE(_ROWS_, _COLS_) \
+#define DIRAC_MATRIX_CAST(_ROWS_, _COLS_) \
     (dirac_complex_t (*)[_ROWS_][_COLS_])
 
 /*******************************************************************************
@@ -96,7 +96,7 @@ typedef struct DiracData {
     size_t columns;
 } dirac_data_t;
 
-typedef DIRAC_OBJECT_TYPE(0,0) dirac_t;
+typedef DIRAC_OBJECT_DECL(0,0) dirac_t;
 
 /*******************************************************************************
  * GETTORS
@@ -113,7 +113,7 @@ extern size_t dirac_cols_get(const dirac_matrix_t * them);
 extern dirac_matrix_t * dirac_new_base(size_t rows, size_t columns);
 
 #define dirac_new(_ROWS_, _COLS_) \
-    (DIRAC_MATRIX_TYPE(_ROWS_, _COLS_)dirac_new_base(_ROWS_, _COLS_))
+    (DIRAC_MATRIX_CAST(_ROWS_, _COLS_)dirac_new_base(_ROWS_, _COLS_))
 
 extern void dirac_delete(dirac_matrix_t * them);
 
