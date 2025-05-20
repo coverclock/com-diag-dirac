@@ -107,6 +107,17 @@ int main(void)
     {
         TEST();
 
+        dirac_complex_t (*that)[5][7] = dirac_matrix_dup(that5x7d);
+        ASSERT(that != (dirac_complex_t (*)[5][7])0);
+        dirac_print(stdout, that);
+        dirac_delete(that);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
         dirac_complex_t (*that)[7][5] = dirac_matrix_trn(that5x7d);
         ASSERT(that != (dirac_complex_t (*)[7][5])0);
         dirac_print(stdout, that);

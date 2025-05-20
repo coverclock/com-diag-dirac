@@ -75,8 +75,14 @@
         dirac_node_t node; \
     }
 
+#define DIRAC_OBJECT_INIT(_ROWS_, _COLS_) \
+    { { { _ROWS_, _COLS_ }, { { 0+0i, } } } }
+
 #define DIRAC_MATRIX_CAST(_ROWS_, _COLS_) \
     (dirac_complex_t (*)[_ROWS_][_COLS_])
+
+#define DIRAC_MATRIX_MUT(_OBJECT_) \
+    (&((_OBJECT_).data.body))
 
 /*******************************************************************************
  * TYPES
@@ -96,7 +102,7 @@ typedef struct DiracData {
     size_t columns;
 } dirac_data_t;
 
-typedef DIRAC_OBJECT_DECL(0,0) dirac_t;
+typedef DIRAC_OBJECT_DECL(0, 0) dirac_t;
 
 /*******************************************************************************
  * GETTORS
@@ -132,6 +138,8 @@ extern const dirac_matrix_t * dirac_print(FILE * fp, const dirac_matrix_t * them
 /*******************************************************************************
  * OPERATIONS
  ******************************************************************************/
+
+extern dirac_matrix_t * dirac_matrix_dup(const dirac_matrix_t * thema);
 
 extern dirac_matrix_t * dirac_matrix_trn(const dirac_matrix_t * thema);
 

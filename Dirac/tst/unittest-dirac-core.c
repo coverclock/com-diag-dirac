@@ -218,7 +218,6 @@ int main(void)
         STATUS();
     }
 
-
     {
         TEST();
 
@@ -258,6 +257,32 @@ int main(void)
         dirac_delete(them);
 
         dirac_dump(stdout);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        DIRAC_OBJECT_DECL(2, 3) those = DIRAC_OBJECT_INIT(2, 3);
+        dirac_complex_t (*them)[2][3] = DIRAC_MATRIX_MUT(those);
+
+        ASSERT(dirac_print(stdout, them) == them);
+
+        size_t rows = dirac_rows_get(them);
+        size_t cols = dirac_cols_get(them);
+        ASSERT(rows == 2);
+        ASSERT(cols == 3);
+
+        int rr;
+        int cc;
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                (*them)[rr][cc] = CMPLX((double)rr, (double)cc);
+            }
+        }
+
+        ASSERT(dirac_print(stdout, them) == them);
 
         STATUS();
     }

@@ -31,6 +31,30 @@
  * matrix operations.
  */
 
+dirac_matrix_t * dirac_matrix_dup(const dirac_matrix_t * thema)
+{
+    const dirac_t * thata = dirac_core_object_get(thema);
+	dirac_t * that = dirac_core_dup(thata); 
+    if (that == (dirac_t *)0) {
+        diminuto_perror("dirac_matrix_dup");
+    } else {
+        const dirac_complex_t * aa = dirac_core_body_get(thata);
+        dirac_complex_t * tt = dirac_core_body_mut(that);
+        size_t rows = dirac_core_rows_get(thata);
+        size_t cols = dirac_core_cols_get(thata);
+        int rr;
+        int cc;
+        int ii;
+        for (rr = 0; rr < rows; ++rr) {
+            for (cc = 0; cc < cols; ++cc) {
+                ii = dirac_core_index(thata, rr, cc);
+                (tt)[ii] = (aa)[ii];
+            }
+        }
+    } 
+	return dirac_core_matrix_mut(that);
+}
+
 dirac_matrix_t * dirac_matrix_trn(const dirac_matrix_t * thema)
 {
     const dirac_t * thata = dirac_core_object_get(thema);
