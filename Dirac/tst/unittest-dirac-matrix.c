@@ -20,118 +20,37 @@ int main(void)
 
     int ii = 0;
 
-    dirac_complex_t (*that2x3a)[2][3] = dirac_new(2, 3);
-
     {
         TEST();
 
-        int rows = dirac_rows_get(that2x3a);
-        int cols = dirac_cols_get(that2x3a);
-        int rr;
-        int cc;
+        DIRAC_OBJECT_DECL(2, 3) those = 
+            DIRAC_OBJECT_INIT_BEGIN(2, 3)
+                { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
+                { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
+            DIRAC_OBJECT_INIT_END;
+        dirac_complex_t (*them)[2][3] = DIRAC_MATRIX_REF(those);
 
-        for (rr = 0; rr < rows; ++rr) {
-            for (cc = 0; cc < cols; ++cc) {
-                (*that2x3a)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
-            }
-        }
+        dirac_print(stdout, them);
 
-        dirac_print(stdout, that2x3a);
+        ASSERT(dirac_rows_get(them) == 2);
+        ASSERT(dirac_cols_get(them) == 3);
 
-        STATUS();
-    }
-
-    dirac_complex_t (*that2x3b)[2][3] = dirac_new(2, 3);
-
-    {
-        TEST();
-
-        int rows = dirac_rows_get(that2x3b);
-        int cols = dirac_cols_get(that2x3b);
-        int rr;
-        int cc;
-
-        for (rr = 0; rr < rows; ++rr) {
-            for (cc = 0; cc < cols; ++cc) {
-                (*that2x3b)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
-            }
-        }
-
-        dirac_print(stdout, that2x3b);
-
-        STATUS();
-    }
-
-    dirac_complex_t (*that3x2c)[3][2] = dirac_new(3, 2);
-
-    {
-        TEST();
-
-        int rows = dirac_rows_get(that3x2c);
-        int cols = dirac_cols_get(that3x2c);
-        int rr;
-        int cc;
-
-        for (rr = 0; rr < rows; ++rr) {
-            for (cc = 0; cc < cols; ++cc) {
-                (*that3x2c)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
-            }
-        }
-
-        dirac_print(stdout, that3x2c);
-
-        STATUS();
-    }
-
-    dirac_complex_t (*that5x7d)[5][7] = dirac_new(5, 7);
-
-    {
-        TEST();
-
-        int rows = dirac_rows_get(that5x7d);
-        int cols = dirac_cols_get(that5x7d);
-        int rr;
-        int cc;
-
-        for (rr = 0; rr < rows; ++rr) {
-            for (cc = 0; cc < cols; ++cc) {
-                (*that5x7d)[rr][cc] = CMPLX((double)PRIMES[ii++], 0.0);
-            }
-        }
-
-        dirac_print(stdout, that5x7d);
-
-        STATUS();
-    }
-
-    {
-        TEST();
-
-        dirac_complex_t (*that)[5][7] = dirac_matrix_dup(that5x7d);
-        ASSERT(that != (dirac_complex_t (*)[5][7])0);
-        dirac_print(stdout, that);
-        dirac_delete(that);
-
-        STATUS();
-    }
-
-    {
-        TEST();
-
-        dirac_complex_t (*that)[7][5] = dirac_matrix_trn(that5x7d);
-        ASSERT(that != (dirac_complex_t (*)[7][5])0);
-        dirac_print(stdout, that);
-        dirac_delete(that);
-
-        STATUS();
-    }
-
-    {
-        TEST();
-
-        dirac_complex_t (*that)[2][3] = dirac_matrix_add(that2x3a, that2x3b);
+        dirac_complex_t (*that)[2][3] = dirac_matrix_dup(them);
         ASSERT(that != (dirac_complex_t (*)[2][3])0);
+
         dirac_print(stdout, that);
+
+        ASSERT(dirac_rows_get(that) == 2);
+        ASSERT(dirac_cols_get(that) == 3);
+
+        int rr;
+        int cc;
+        for (rr = 0; rr < 2; ++rr) {
+            for (cc = 0; cc < 3; ++cc) {
+                ASSERT((*them)[rr][cc] == (*that)[rr][cc]);
+            }
+        }
+
         dirac_delete(that);
 
         STATUS();
@@ -140,10 +59,101 @@ int main(void)
     {
         TEST();
 
-        dirac_delete(that2x3a);
-        dirac_delete(that2x3b);
-        dirac_delete(that3x2c);
-        dirac_delete(that5x7d);
+        DIRAC_OBJECT_DECL(2, 3) those = 
+            DIRAC_OBJECT_INIT_BEGIN(2, 3)
+                { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
+                { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
+            DIRAC_OBJECT_INIT_END;
+        dirac_complex_t (*them)[2][3] = DIRAC_MATRIX_REF(those);
+
+        dirac_print(stdout, them);
+
+        ASSERT(dirac_rows_get(them) == 2);
+        ASSERT(dirac_cols_get(them) == 3);
+
+        dirac_complex_t (*that)[3][2] = dirac_matrix_trn(them);
+        ASSERT(that != (dirac_complex_t (*)[3][2])0);
+
+        dirac_print(stdout, that);
+
+        ASSERT(dirac_rows_get(that) == 3);
+        ASSERT(dirac_cols_get(that) == 2);
+
+        int rr;
+        int cc;
+        for (rr = 0; rr < 2; ++rr) {
+            for (cc = 0; cc < 3; ++cc) {
+                ASSERT((*them)[rr][cc] == (*that)[cc][rr]);
+            }
+        }
+
+        dirac_delete(that);
+
+        STATUS();
+    }
+
+    {
+        TEST();
+
+        DIRAC_OBJECT_DECL(2, 3) those1 = 
+            DIRAC_OBJECT_INIT_BEGIN(2, 3)
+                { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
+                { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
+            DIRAC_OBJECT_INIT_END;
+        dirac_complex_t (*them1)[2][3] = DIRAC_MATRIX_REF(those1);
+
+        dirac_print(stdout, them1);
+
+        ASSERT(dirac_rows_get(them1) == 2);
+        ASSERT(dirac_cols_get(them1) == 3);
+
+        DIRAC_OBJECT_DECL(2, 3) those2 = 
+            DIRAC_OBJECT_INIT_BEGIN(2, 3)
+                { 2.0+4.0i, 2.0+5.0i, 2.0+6.0i, },
+                { 3.0+4.0i, 3.0+5.0i, 3.0+6.0i, },
+            DIRAC_OBJECT_INIT_END;
+        dirac_complex_t (*them2)[2][3] = DIRAC_MATRIX_REF(those2);
+
+        dirac_print(stdout, them2);
+
+        ASSERT(dirac_rows_get(them2) == 2);
+        ASSERT(dirac_cols_get(them2) == 3);
+
+        DIRAC_OBJECT_DECL(2, 3) those3 = 
+            DIRAC_OBJECT_INIT_BEGIN(2, 3)
+                { 2.0+4.0i, 2.0+6.0i, 2.0+8.0i, },
+                { 4.0+4.0i, 4.0+6.0i, 4.0+8.0i, },
+            DIRAC_OBJECT_INIT_END;
+        dirac_complex_t (*them3)[2][3] = DIRAC_MATRIX_REF(those3);
+
+        dirac_print(stdout, them3);
+
+        ASSERT(dirac_rows_get(them3) == 2);
+        ASSERT(dirac_cols_get(them3) == 3);
+
+        dirac_complex_t (*that)[2][3] = dirac_matrix_add(them1, them2);
+        ASSERT(that != (dirac_complex_t (*)[2][3])0);
+
+        dirac_print(stdout, that);
+
+        ASSERT(dirac_rows_get(that) == 2);
+        ASSERT(dirac_cols_get(that) == 3);
+
+        int rr;
+        int cc;
+        for (rr = 0; rr < 2; ++rr) {
+            for (cc = 0; cc < 3; ++cc) {
+                ASSERT((*them3)[rr][cc] == (*that)[rr][cc]);
+            }
+        }
+
+        dirac_delete(that);
+
+        STATUS();
+    }
+
+    {
+        TEST();
 
         dirac_t * that = dirac_audit();
         ASSERT(that == (dirac_t *)0);
