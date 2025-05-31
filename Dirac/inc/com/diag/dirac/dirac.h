@@ -75,6 +75,9 @@
         dirac_node_t node; \
     }
 
+#define DIRAC_OBJECT_CONST(_ROWS_, _COLS_) \
+    const DIRAC_OBJECT_DECL(_ROWS_, _COLS_)
+
 #define DIRAC_OBJECT_INIT_BEGIN(_ROWS_, _COLS_) \
     { { { _ROWS_, _COLS_ }, {
 
@@ -89,7 +92,7 @@
 #define DIRAC_MATRIX_CAST(_ROWS_, _COLS_) \
     (dirac_complex_t (*)[_ROWS_][_COLS_])
 
-#define DIRAC_MATRIX_REF(_OBJECT_) \
+#define DIRAC_MATRIX_GET(_OBJECT_) \
     (&((_OBJECT_).data.body))
 
 /*******************************************************************************
