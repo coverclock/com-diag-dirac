@@ -13,7 +13,7 @@ Licensed under the terms in LICENSE.txt.
 # Disclaimer
 
 Dirac is a work in progress. Any rational person would have written
-this in Python. But I wanted to be able to include code using this repo
+this in Python. But I wanted to be able to include code from this repo
 in my other real-time and embedded projects that I have written in C.
 
 # Trademarks
