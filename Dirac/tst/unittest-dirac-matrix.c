@@ -23,7 +23,7 @@ int main(void)
     {
         TEST();
 
-        DIRAC_OBJECT_CONST(2, 3) those = 
+        static DIRAC_OBJECT_CONST(2, 3) those = 
             DIRAC_OBJECT_INIT_BEGIN(2, 3)
                 { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
                 { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
@@ -59,7 +59,7 @@ int main(void)
     {
         TEST();
 
-        DIRAC_OBJECT_CONST(2, 3) those = 
+        static DIRAC_OBJECT_CONST(2, 3) those = 
             DIRAC_OBJECT_INIT_BEGIN(2, 3)
                 { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
                 { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
@@ -95,7 +95,7 @@ int main(void)
     {
         TEST();
 
-        DIRAC_OBJECT_CONST(2, 3) those1 = 
+        static DIRAC_OBJECT_CONST(2, 3) those1 = 
             DIRAC_OBJECT_INIT_BEGIN(2, 3)
                 { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
                 { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
@@ -155,7 +155,7 @@ int main(void)
     {
         TEST();
 
-        DIRAC_OBJECT_CONST(2, 3) those1 = 
+        static DIRAC_OBJECT_CONST(2, 3) those1 = 
             DIRAC_OBJECT_INIT_BEGIN(2, 3)
                 { 3.0+6.0i, 5.0+9.0i, 7.0+12.0i, },
                 { 10.0+12.0i, 12.0+15.0i, 14.0+18.0i, },
@@ -167,7 +167,7 @@ int main(void)
         ASSERT(dirac_rows_get(them1) == 2);
         ASSERT(dirac_cols_get(them1) == 3);
 
-        DIRAC_OBJECT_CONST(2, 3) those2 = 
+        static DIRAC_OBJECT_CONST(2, 3) those2 = 
             DIRAC_OBJECT_INIT_BEGIN(2, 3)
                 { 0.0+0.0i, 0.0+1.0i, 0.0+2.0i, },
                 { 1.0+0.0i, 1.0+1.0i, 1.0+2.0i, },
@@ -179,7 +179,7 @@ int main(void)
         ASSERT(dirac_rows_get(them2) == 2);
         ASSERT(dirac_cols_get(them2) == 3);
 
-        DIRAC_OBJECT_CONST(2, 3) those3 = 
+        static DIRAC_OBJECT_CONST(2, 3) those3 = 
             DIRAC_OBJECT_INIT_BEGIN(2, 3)
                 { 3.0+6.0i, 5.0+8.0i, 7.0+10.0i, },
                 { 9.0+12.0i, 11.0+14.0i, 13.0+16.0i, },
